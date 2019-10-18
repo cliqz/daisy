@@ -10,12 +10,14 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
+import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
+import org.mozilla.reference.browser.history.usecases.HistoryUseCases
 
 /**
  * Component group for all use cases. Use cases are provided by feature
@@ -27,7 +29,8 @@ class UseCases(
     private val store: BrowserStore,
     private val engineSettings: Settings,
     private val searchEngineManager: SearchEngineManager,
-    private val client: Client
+    private val client: Client,
+    private val historyStorage: HistoryStorage
 ) {
     /**
      * Use cases that provide engine interactions for a given browser session.
@@ -58,4 +61,9 @@ class UseCases(
      * Uses cases that provides context menu
      */
     val contextMenuUseCases: ContextMenuUseCases by lazy { ContextMenuUseCases(sessionManager, store) }
+
+    /**
+     * Uses cases that provides history integration
+     */
+    val historyUseCases by lazy { HistoryUseCases(historyStorage)}
 }

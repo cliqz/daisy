@@ -152,4 +152,9 @@
     <string name="menu_share_with">Share with…</string>
     <string name="toast_copied">Copied!</string>
 
+    <!-- 3 dots menu items -->
+    <string name="menu_item_history">History</string>
+
+    <!-- History -->
+    <string name="history_title_untitled">Untitled</string>
 </resources>

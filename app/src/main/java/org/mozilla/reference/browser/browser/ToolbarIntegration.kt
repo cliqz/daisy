@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import androidx.fragment.app.FragmentManager
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -28,17 +29,19 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
+import org.mozilla.reference.browser.history.ui.HistoryFragment
 import org.mozilla.reference.browser.settings.SettingsActivity
 
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
-    historyStorage: HistoryStorage,
+    private val historyStorage: HistoryStorage,
     sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
-    sessionId: String? = null
+    sessionId: String? = null,
+    private val fragmentManager: FragmentManager?
 ) : LifecycleAwareFeature, BackHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
@@ -107,6 +110,10 @@ class ToolbarIntegration(
 
             SimpleBrowserMenuItem("Settings") {
                 openSettingsActivity(context)
+            },
+
+            SimpleBrowserMenuItem(context.getString(R.string.menu_item_history)) {
+                openHistoryFragment()
             }
         )
     }
@@ -153,5 +160,12 @@ class ToolbarIntegration(
     private fun openSettingsActivity(context: Context) {
         val intent = Intent(context, SettingsActivity::class.java)
         context.startActivity(intent)
+    }
+
+    private fun openHistoryFragment() {
+        fragmentManager?.beginTransaction()?.apply {
+            replace(R.id.container, HistoryFragment())
+            commit()
+        }
     }
 }

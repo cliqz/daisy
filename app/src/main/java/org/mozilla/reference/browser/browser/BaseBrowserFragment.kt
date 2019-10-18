@@ -93,7 +93,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
-                sessionId),
+                sessionId,
+                activity?.supportFragmentManager),
             owner = this,
             view = view)
 

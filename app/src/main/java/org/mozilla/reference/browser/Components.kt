@@ -5,13 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import org.mozilla.reference.browser.components.Core
-import org.mozilla.reference.browser.components.Analytics
-import org.mozilla.reference.browser.components.BackgroundServices
-import org.mozilla.reference.browser.components.Services
-import org.mozilla.reference.browser.components.Search
-import org.mozilla.reference.browser.components.Utilities
-import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.*
 
 /**
  * Provides access to all components.
@@ -26,7 +20,8 @@ class Components(private val context: Context) {
             core.store,
             core.engine.settings,
             search.searchEngineManager,
-            core.client
+            core.client,
+            core.historyStorage
         )
     }
 
