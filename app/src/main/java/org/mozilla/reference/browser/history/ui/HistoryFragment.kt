@@ -18,40 +18,40 @@ import org.mozilla.reference.browser.ext.requireComponents
  */
 class HistoryFragment : Fragment(), BackHandler, HistoryPresenter.View {
 
-	private lateinit var historyPresenter: HistoryPresenter
-	private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var historyPresenter: HistoryPresenter
+    private lateinit var historyAdapter: HistoryAdapter
 
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		historyAdapter = HistoryAdapter(requireComponents.core.icons)
-		historyPresenter = HistoryPresenter(this, requireComponents.useCases.historyUseCases
-		)
-	}
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        historyAdapter = HistoryAdapter(requireComponents.core.icons)
+        historyPresenter = HistoryPresenter(this, requireComponents.useCases.historyUseCases
+        )
+    }
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_history, container, false)
-	}
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_history, container, false)
+    }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		history_list.adapter = historyAdapter
-		historyPresenter.onCreate()
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        history_list.adapter = historyAdapter
+        historyPresenter.onCreate()
+    }
 
-	override fun onDestroy() {
-		historyPresenter.onDestroy()
-		super.onDestroy()
-	}
+    override fun onDestroy() {
+        historyPresenter.onDestroy()
+        super.onDestroy()
+    }
 
-	override fun renderHistory(historyItems: List<VisitInfo>) {
-		historyAdapter.items = historyItems
-	}
+    override fun renderHistory(historyItems: List<VisitInfo>) {
+        historyAdapter.items = historyItems
+    }
 
-	override fun onBackPressed(): Boolean {
-		activity?.supportFragmentManager?.beginTransaction()?.apply {
-			replace(R.id.container, BrowserFragment.create())
-			commit()
-		}
-		return true
-	}
+    override fun onBackPressed(): Boolean {
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.container, BrowserFragment.create())
+            commit()
+        }
+        return true
+    }
 }

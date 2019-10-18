@@ -16,9 +16,9 @@ import kotlin.properties.Delegates
  * @author Ravjit Uppal
  */
 class HistoryAdapter(private val browserIcons: BrowserIcons)
-	: RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
-    var items: List<VisitInfo> by Delegates.observable(emptyList()) {_, _, _ -> notifyDataSetChanged()}
+    var items: List<VisitInfo> by Delegates.observable(emptyList()) { _, _, _ -> notifyDataSetChanged() }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.history_item))
@@ -27,16 +27,16 @@ class HistoryAdapter(private val browserIcons: BrowserIcons)
         holder.bind(items[position])
     }
 
-	override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
- 		fun bind(historyItem: VisitInfo) {
-			containerView.history_item_title.text = if (!historyItem.title.isNullOrBlank())
-				historyItem.title else containerView.resources.getString(R.string.history_title_untitled)
-			containerView.history_item_url.text = historyItem.url
-			browserIcons.loadIntoView(containerView.history_item_icon, IconRequest(historyItem.url))
-		}
+        fun bind(historyItem: VisitInfo) {
+            containerView.history_item_title.text = if (!historyItem.title.isNullOrBlank())
+                historyItem.title else containerView.resources.getString(R.string.history_title_untitled)
+            containerView.history_item_url.text = historyItem.url
+            browserIcons.loadIntoView(containerView.history_item_icon, IconRequest(historyItem.url))
+        }
     }
 }

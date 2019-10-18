@@ -65,5 +65,5 @@ class UseCases(
     /**
      * Uses cases that provides history integration
      */
-    val historyUseCases by lazy { HistoryUseCases(historyStorage)}
+    val historyUseCases by lazy { HistoryUseCases(historyStorage) }
 }

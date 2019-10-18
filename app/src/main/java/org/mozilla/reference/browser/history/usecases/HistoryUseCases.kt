@@ -8,11 +8,11 @@ import mozilla.components.concept.storage.VisitInfo
  */
 class HistoryUseCases(historyStorage: HistoryStorage) {
 
-	class GetHistoryUseCase(private val historyStorage: HistoryStorage) {
-		suspend operator fun invoke(): List<VisitInfo> {
-			return historyStorage.getDetailedVisits(0)
-		}
-	}
+    class GetHistoryUseCase(private val historyStorage: HistoryStorage) {
+        suspend operator fun invoke(): List<VisitInfo> {
+            return historyStorage.getDetailedVisits(0)
+        }
+    }
 
-	val getHistory: GetHistoryUseCase by lazy { GetHistoryUseCase(historyStorage) }
+    val getHistory: GetHistoryUseCase by lazy { GetHistoryUseCase(historyStorage) }
 }

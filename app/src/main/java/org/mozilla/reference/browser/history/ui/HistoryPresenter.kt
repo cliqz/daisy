@@ -11,19 +11,19 @@ import org.mozilla.reference.browser.history.usecases.HistoryUseCases
  * @author Ravjit Uppal
  */
 class HistoryPresenter(
-	private var view: View?,
-	private val historyUseCases: HistoryUseCases
+    private var view: View?,
+    private val historyUseCases: HistoryUseCases
 ) {
-	interface View {
-		fun renderHistory(historyItems: List<VisitInfo>)
-	}
+    interface View {
+        fun renderHistory(historyItems: List<VisitInfo>)
+    }
 
-	fun onCreate() = GlobalScope.launch(Dispatchers.Main) {
-		val historyInfo = withContext(Dispatchers.IO) { historyUseCases.getHistory() }
-		view?.renderHistory(historyInfo)
-	}
+    fun onCreate() = GlobalScope.launch(Dispatchers.Main) {
+        val historyInfo = withContext(Dispatchers.IO) { historyUseCases.getHistory() }
+        view?.renderHistory(historyInfo)
+    }
 
-	fun onDestroy() {
-		view = null
-	}
+    fun onDestroy() {
+        view = null
+    }
 }
