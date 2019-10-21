@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.browser
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
@@ -24,6 +25,7 @@ import org.mozilla.reference.browser.tabs.TabsTrayFragment
 class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<ThumbnailsFeature>()
     private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
+    private val freshTabIntegration = ViewBoundFeatureWrapper<FreshTabIntegration>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,6 +43,20 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
                 requireComponents.core.historyStorage,
                 requireComponents.useCases.sessionUseCases.loadUrl)
             .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
+
+        freshTabIntegration.set(
+            feature = FreshTabIntegration(toolbar, freshTab, engineView,
+                requireComponents.core.sessionManager.selectedSession)
+                .addNewsFeature(
+                    newsView,
+                    lifecycleScope,
+                    requireComponents.useCases.sessionUseCases.loadUrl,
+                    requireComponents.useCases.getNewsUseCase,
+                    requireComponents.core.icons
+                ),
+                owner = this,
+                view = view
+        )
 
         TabsToolbarFeature(
             toolbar = toolbar,

@@ -157,4 +157,7 @@
 
     <!-- History -->
     <string name="history_title_untitled">Untitled</string>
+
+    <!-- News -->
+    <string name="news_label">News</string>
 </resources>

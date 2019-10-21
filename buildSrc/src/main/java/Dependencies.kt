@@ -5,7 +5,11 @@
 // Synchronized version numbers for dependencies used by (some) modules
 private object Versions {
     const val kotlin = "1.3.30"
-    const val coroutines = "1.0.1"
+    const val coroutines = "1.3.2"
+
+    const val junit = "4.12"
+    const val mockk = "1.9.3"
+    const val androidx_test_ext = "1.1.1"
 
     const val androidx_appcompat = "1.0.2"
     const val androidx_constraintlayout = "1.1.3"
@@ -14,6 +18,7 @@ private object Versions {
     const val workmanager = "2.0.0"
     const val google_material = "1.0.0"
 
+    const val androidx_lifecycle = "2.2.0-alpha05"
     const val android_gradle_plugin = "3.4.1"
 
     const val mozilla_android_components = "+" // Always use the latest snapshot
@@ -33,12 +38,19 @@ private object Versions {
 object Deps {
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     const val kotlin_coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    const val kotlin_coroutines_core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
+    const val kotlin_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
+
+    const val testing_junit = "junit:junit:${Versions.junit}"
+    const val testing_mockk = "io.mockk:mockk:${Versions.mockk}"
+    const val androidx_test_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
 
     const val mozilla_concept_engine = "org.mozilla.components:concept-engine:${Versions.mozilla_android_components}"
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"
     const val mozilla_concept_toolbar = "org.mozilla.components:concept-toolbar:${Versions.mozilla_android_components}"
     const val mozilla_concept_storage = "org.mozilla.components:concept-storage:${Versions.mozilla_android_components}"
     const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
+    const val mozilla_concept_fetch = "org.mozilla.components:concept-fetch:${Versions.mozilla_android_components}"
 
     const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
     const val mozilla_browser_engine_gecko = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
@@ -96,6 +108,7 @@ object Deps {
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
     const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
     const val androidx_work_runtime = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
+    const val androidx_lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"

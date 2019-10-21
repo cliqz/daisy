@@ -5,13 +5,14 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
-import org.mozilla.reference.browser.components.Core
-import org.mozilla.reference.browser.components.Search
+import org.mozilla.reference.browser.components.News
 import org.mozilla.reference.browser.components.Services
-import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.Search
 import org.mozilla.reference.browser.components.Utilities
+import org.mozilla.reference.browser.components.UseCases
 
 /**
  * Provides access to all components.
@@ -19,6 +20,7 @@ import org.mozilla.reference.browser.components.Utilities
 class Components(private val context: Context) {
     val core by lazy { Core(context) }
     val search by lazy { Search(context) }
+    val news by lazy { News(core.client) }
     val useCases by lazy {
         UseCases(
             context,
@@ -27,7 +29,8 @@ class Components(private val context: Context) {
             core.engine.settings,
             search.searchEngineManager,
             core.client,
-            core.historyStorage
+            core.historyStorage,
+            news.newsRepository
         )
     }
 
