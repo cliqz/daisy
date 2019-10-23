@@ -1,56 +1,81 @@
 package com.cliqz.browser.freshtab
 
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.SessionManager
 import mozilla.components.concept.engine.EngineView
-import mozilla.components.concept.toolbar.Toolbar
+import mozilla.components.browser.toolbar.BrowserToolbar
 
 class FreshTabFeature(
-    toolbar: Toolbar,
+    private val toolbar: BrowserToolbar,
     private val freshTab: FreshTab,
     private val engineView: EngineView,
-    private val selectedSession: Session? = null
-) {
+    private val sessionManager: SessionManager
+) : SessionManager.Observer, Session.Observer {
+
+    @VisibleForTesting
+    val currentUrl : String?
+        get() = sessionManager.selectedSession?.url
+
+    var isUrlBarActive = toolbar.isFocused || toolbar.isInEditMode
+
     init {
-        showFreshTab()
-        toolbar.setOnUrlCommitListener {
-            hideFreshTab()
-            true
+        toolbar.setOnEditFocusChangeListener {
+            isUrlBarActive = it || toolbar.isInEditMode
+            updateVisibility()
         }
-        toolbar.setOnEditListener(ToolbarEditListener(
-                ::showFreshTab,
-                ::hideFreshTab
-        ))
+        sessionManager.register(this)
+        sessionManager.sessions.forEach { addSession(it) }
+        updateVisibility()
     }
 
-    private fun showFreshTab() {
-        if (selectedSession == null || selectedSession.isFreshTab()) {
-            freshTab.visibility = View.VISIBLE
-            engineView.asView().visibility = View.GONE
-        }
+    private fun addSession(session: Session) {
+        session.register(this)
     }
 
-    private fun hideFreshTab() {
-        if (selectedSession == null || selectedSession.isFreshTab()) {
+    override fun onSessionAdded(session: Session) {
+        updateVisibility()
+        addSession(session)
+    }
+
+    override fun onSessionsRestored() {
+        updateVisibility()
+        sessionManager.sessions.forEach { addSession(it) }
+    }
+
+    override fun onSessionSelected(session: Session) {
+        updateVisibility()
+    }
+
+    override fun onSessionRemoved(session: Session) {
+        updateVisibility()
+        session.unregister(this)
+    }
+
+    override fun onUrlChanged(session: Session, url: String) {
+        updateVisibility()
+    }
+
+    @VisibleForTesting
+    fun updateVisibility() {
+        if (isUrlBarActive) {
             freshTab.visibility = View.GONE
-            engineView.asView().visibility = View.VISIBLE
+        } else {
+            val showFreshTab = currentUrl == null || currentUrl!!.isFreshTab()
+            if (showFreshTab) {
+                freshTab.visibility = View.VISIBLE
+                engineView.asView().visibility = View.GONE
+            } else {
+                freshTab.visibility = View.GONE
+                engineView.asView().visibility = View.VISIBLE
+            }
         }
     }
-}
 
-internal class ToolbarEditListener(
-    private val showFreshTab: () -> Unit,
-    private val hideFreshTab: () -> Unit
-) : Toolbar.OnEditListener {
-
-    override fun onStartEditing() {
-        hideFreshTab()
-    }
-
-    override fun onCancelEditing(): Boolean {
-        showFreshTab()
-        return true
+    companion object {
+        const val NEW_TAB_URL = "about:blank"
     }
 }
 
-private fun Session.isFreshTab() = this.url == "about:blank"
+fun CharSequence.isFreshTab() = (this == FreshTabFeature.NEW_TAB_URL) || (this == "")

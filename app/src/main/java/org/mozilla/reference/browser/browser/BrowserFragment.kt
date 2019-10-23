@@ -46,7 +46,7 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
 
         freshTabIntegration.set(
             feature = FreshTabIntegration(toolbar, freshTab, engineView,
-                requireComponents.core.sessionManager.selectedSession)
+                requireComponents.core.sessionManager)
                 .addNewsFeature(
                     newsView,
                     lifecycleScope,

@@ -130,7 +130,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             feature = PromptFeature(
                 fragment = this,
                 store = requireComponents.core.store,
-                sessionId = sessionId,
+                customTabId = sessionId,
                 fragmentManager = requireFragmentManager(),
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)

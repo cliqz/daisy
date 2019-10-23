@@ -27,7 +27,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation Deps.mozilla_concept_engine
-    implementation Deps.mozilla_concept_toolbar
+    implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_concept_fetch
 
     implementation Deps.mozilla_browser_session

@@ -1,6 +1,5 @@
 package org.mozilla.reference.browser.browser
 
-import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.cliqz.browser.freshtab.FreshTab
@@ -10,24 +9,24 @@ import com.cliqz.browser.news.ui.NewsView
 import com.cliqz.browser.news.domain.GetNewsUseCase
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.icons.IconRequest
-import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
-import mozilla.components.concept.toolbar.Toolbar
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class FreshTabIntegration(
-    toolbar: Toolbar,
-    private val freshTab: FreshTab,
-    private val engineView: EngineView,
-    selectedSession: Session? = null
+    toolbar: BrowserToolbar,
+    freshTab: FreshTab,
+    engineView: EngineView,
+    sessionManager: SessionManager
 ) : LifecycleAwareFeature {
 
     private var feature: NewsFeature? = null
     private var icons: BrowserIcons? = null
 
     init {
-        FreshTabFeature(toolbar, freshTab, engineView, selectedSession)
+        FreshTabFeature(toolbar, freshTab, engineView, sessionManager)
     }
 
     override fun start() {
@@ -57,8 +56,7 @@ class FreshTabIntegration(
     }
 
     private fun onNewsItemSelected() {
-        freshTab.visibility = View.GONE
-        engineView.asView().visibility = View.VISIBLE
+        // no-op
     }
 
     private fun loadNewsItemIcon(view: ImageView, url: String) {

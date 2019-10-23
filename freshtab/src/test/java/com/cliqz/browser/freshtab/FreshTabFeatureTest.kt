@@ -5,9 +5,9 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.concept.engine.EngineView
-import mozilla.components.concept.toolbar.Toolbar
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -19,20 +19,10 @@ class FreshTabFeatureTest {
      */
     @Test
     fun `Feature connects Toolbar and EngineView with FreshTab`() = runBlockingTest {
-        val toolbar: Toolbar = mockk()
+        val toolbar: BrowserToolbar = mockk(relaxed = true)
         val freshTab: FreshTab = mockk()
         val engineView: EngineView = mockk()
-
-        var urlCommitListener: ((String) -> Boolean)? = null
-        every { toolbar.setOnUrlCommitListener(any()) } answers {
-            @Suppress("UNCHECKED_CAST")
-            urlCommitListener = args[0] as ((String) -> Boolean)
-        }
-
-        var editListener: Toolbar.OnEditListener? = null
-        every { toolbar.setOnEditListener(any()) } answers {
-            editListener = args[0] as Toolbar.OnEditListener
-        }
+        val sessionManager: SessionManager = mockk(relaxed = true)
 
         var freshTabVisibility: Int? = null
         every { freshTab.visibility  = any() } answers {
@@ -44,20 +34,16 @@ class FreshTabFeatureTest {
             engineViewVisibility = args[0] as Int
         }
 
-        FreshTabFeature(toolbar, freshTab, engineView)
-
-        assertNotNull(urlCommitListener)
-
-        assertNotNull(editListener)
-
-        editListener!!.onStartEditing()
-
-        assertTrue(freshTabVisibility == View.GONE)
-        assertTrue(engineViewVisibility == View.VISIBLE)
-
-        editListener!!.onCancelEditing()
+        val freshTabFeature = FreshTabFeature(toolbar, freshTab, engineView, sessionManager)
 
         assertTrue(freshTabVisibility == View.VISIBLE)
         assertTrue(engineViewVisibility == View.GONE)
+
+        every { freshTabFeature.currentUrl } answers { "www.cliqz.com" }
+
+        freshTabFeature.updateVisibility()
+
+        assertTrue(freshTabVisibility == View.GONE)
+        assertTrue(engineViewVisibility == View.VISIBLE)
     }
 }
