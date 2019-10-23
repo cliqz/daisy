@@ -32,6 +32,8 @@ private object Versions {
     const val tools_test_rules = "1.1.0"
     const val tools_test_runner = "1.1.0"
     const val uiautomator = "2.2.0"
+
+    const val leakcanary = "2.0-beta-3"
 }
 
 // Synchronized dependencies used by (some) modules
@@ -123,4 +125,6 @@ object Deps {
     const val tools_test_rules = "androidx.test:rules:${Versions.tools_test_rules}"
     const val tools_test_runner = "androidx.test:runner:${Versions.tools_test_runner}"
     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
+
+    const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
 }

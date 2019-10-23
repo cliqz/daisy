@@ -242,6 +242,8 @@ dependencies {
     implementation Deps.androidx_lifecycle_runtime
     implementation Deps.google_material
 
+    debugImplementation Deps.leakcanary
+
     androidTestImplementation Deps.uiautomator
 
     androidTestImplementation Deps.espresso_core, {
