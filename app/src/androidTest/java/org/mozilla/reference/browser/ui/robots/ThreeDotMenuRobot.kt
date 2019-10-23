@@ -7,15 +7,15 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import org.mozilla.reference.browser.helpers.click
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.helpers.click
 
 /**
  * Implementation of Robot Pattern for three dot menu.
@@ -88,6 +88,11 @@ class ThreeDotMenuRobot {
             SettingsViewRobot().interact()
             return SettingsViewRobot.Transition()
         }
+
+        fun openHistory(interact: HistoryViewRobot.() -> Unit) {
+            historyButton().click()
+            HistoryViewRobot().interact()
+        }
     }
 }
 
@@ -104,6 +109,7 @@ private fun requestDesktopSiteToggle() = onView(ViewMatchers.withText("Request d
 private fun findInPageButton() = onView(ViewMatchers.withText("Find in Page"))
 private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
+private fun historyButton() = onView(ViewMatchers.withText("History"))
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
