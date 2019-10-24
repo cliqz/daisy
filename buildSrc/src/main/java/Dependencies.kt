@@ -111,6 +111,7 @@ object Deps {
     const val androidx_preference = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
     const val androidx_work_runtime = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
     const val androidx_lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
+    const val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidx_lifecycle}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"

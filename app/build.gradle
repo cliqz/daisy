@@ -240,6 +240,7 @@ dependencies {
     implementation Deps.androidx_preference
     implementation Deps.androidx_work_runtime
     implementation Deps.androidx_lifecycle_runtime
+    implementation Deps.androidx_lifecycle_viewmodel_ktx
     implementation Deps.google_material
 
     debugImplementation Deps.leakcanary
