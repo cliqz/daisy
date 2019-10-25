@@ -79,7 +79,9 @@ class NewsView @JvmOverloads constructor(
         val inflater = LayoutInflater.from(context)
         for (newsItem in newsList) {
             val itemView = inflater.inflate(R.layout.three_line_list_item_layout, topNewsListView, false)
-            NewsItemViewHolder(itemView, this).bind(newsItem, icons)
+            NewsItemViewHolder(itemView, this).bind(newsItem, icons) {
+                presenter?.onOpenInNormalTab(it)
+            }
             topNewsListView.addView(itemView)
         }
         toggleNewsLabelIcon(isNewsViewExpanded)

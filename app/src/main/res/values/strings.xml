@@ -96,6 +96,9 @@
     <!-- Preference category for data choices e.g. usage data -->
     <string name="data_choices_category">Data Choices</string>
 
+    <!-- Preference show news view -->
+    <string name="preferences_show_news_view">Show News</string>
+
     <!-- Menu option on the toolbar that takes you to settings page-->
     <string name="settings">Settings</string>
 

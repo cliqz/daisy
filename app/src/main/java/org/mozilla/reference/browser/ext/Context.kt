@@ -17,6 +17,7 @@ import mozilla.components.support.base.log.Log
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.Components
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.utils.PreferenceHelper
 
 /**
  * Get the BrowserApplication object from a context.
@@ -60,3 +61,5 @@ fun Context.share(text: String, subject: String = ""): Boolean {
         false
     }
 }
+
+fun Context.preferences() = PreferenceHelper.getInstance(this)

@@ -45,6 +45,7 @@ class SettingsViewTest {
             verifyRemoteDebuggingToggle()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
+            verifyShowNewsViewCheckBox()
         }
     }
 

@@ -57,6 +57,6 @@ class NewsFeatureTest {
         val emptyResult: Success<List<NewsItem>> = Success(listOf())
         coEvery { presenter.getNews() } returns emptyResult
         feature.start()
-        verify { newsView.displayNews(any(), any()) }
+        verify { newsView.displayNews(emptyResult.data, any(), any()) }
     }
 }

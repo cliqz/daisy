@@ -46,18 +46,18 @@
             android:id="@+id/newsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
             android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="3dp"
+            android:orientation="vertical"
             android:visibility="gone"
             cliqz:newsViewBackgroundColor="@color/newsview_default_background_color"
             cliqz:newsViewTitleTextColor="@color/newsview_default_title_text_color"
-            cliqz:newsViewUrlTextColor="@color/newsview_default_url_text_color"
-            android:elevation="3dp"
-            android:orientation="vertical" />
+            cliqz:newsViewUrlTextColor="@color/newsview_default_url_text_color" />
 
     </com.cliqz.browser.freshtab.FreshTab>
 

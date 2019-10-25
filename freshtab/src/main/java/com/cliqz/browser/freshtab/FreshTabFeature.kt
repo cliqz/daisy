@@ -8,7 +8,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.browser.toolbar.BrowserToolbar
 
 class FreshTabFeature(
-    private val toolbar: BrowserToolbar,
+    toolbar: BrowserToolbar,
     private val freshTab: FreshTab,
     private val engineView: EngineView,
     private val sessionManager: SessionManager
@@ -25,13 +25,13 @@ class FreshTabFeature(
             isUrlBarActive = it || toolbar.isInEditMode
             updateVisibility()
         }
-        sessionManager.register(this)
+        sessionManager.register(this, freshTab)
         sessionManager.sessions.forEach { addSession(it) }
         updateVisibility()
     }
 
     private fun addSession(session: Session) {
-        session.register(this)
+        session.register(this, freshTab)
     }
 
     override fun onSessionAdded(session: Session) {

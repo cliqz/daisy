@@ -36,6 +36,7 @@ class SettingsViewRobot {
     fun verifyRemoteDebuggingToggle() = assertRemoteDebuggingToggle()
     fun verifyMozillaHeading() = assertMozillaHeading()
     fun verifyAboutReferenceBrowserButton() = assertAboutReferenceBrowserButton()
+    fun verifyShowNewsViewCheckBox() = assertShowNewsViewCheckBox()
 
     // toggleRemoteDebugging does not yet verify that the debug service is started
     // server runs on port 6000
@@ -105,6 +106,7 @@ private fun remoteDebuggingText() = Espresso.onView(ViewMatchers.withText("Remot
 private fun remoteDebuggingToggle() = Espresso.onView(ViewMatchers.withId(R.id.switchWidget))
 private fun mozillaHeading() = Espresso.onView(ViewMatchers.withText("Mozilla"))
 private fun aboutReferenceBrowserButton() = Espresso.onView(ViewMatchers.withText("About Reference Browser"))
+private fun showNewsViewCheckBox() = Espresso.onView(ViewMatchers.withText("Show News"))
 
 private fun assertNavigateUpButton() {
     mDevice.wait(Until.findObject(By.text("Navigate up")), TestAssetHelper.waitingTimeShort)
@@ -132,4 +134,6 @@ private fun assertRemoteDebuggingToggle() = remoteDebuggingToggle()
 private fun assertMozillaHeading() = mozillaHeading()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertAboutReferenceBrowserButton() = aboutReferenceBrowserButton()
+        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertShowNewsViewCheckBox() = showNewsViewCheckBox()
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
