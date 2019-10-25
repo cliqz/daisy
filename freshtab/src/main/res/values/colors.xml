@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="textColorPrimary">#000000</color>
-
-    <color name="fresh_tab_news_background_color">#CCFFFFFF</color>
+    <color name="newsview_default_title_text_color">#000000</color>
+    <color name="newsview_default_url_text_color">#4D000000</color>
+    <color name="newsview_default_background_color">#CCFFFFFF</color>
 </resources>

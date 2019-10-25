@@ -18,8 +18,8 @@ class DefaultNewsRepository(
         if (cachedNews.isNotEmpty()) {
             return Success(cachedNews)
         }
-        val news = fetchNewsFromRemoteOrLocal()
-        cacheNews((news as Success).data)
+        val newsList = fetchNewsFromRemoteOrLocal()
+        (newsList as? Success)?.let { cacheNews(it.data) }
         return Success(cachedNews)
     }
 

@@ -5,6 +5,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cliqz="http://schemas.android.com/apk/res-auto"
     xmlns:mozac="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -51,7 +52,10 @@
             android:layout_marginRight="25dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="10dp"
-            android:background="@null"
+            android:visibility="gone"
+            cliqz:newsViewBackgroundColor="@color/newsview_default_background_color"
+            cliqz:newsViewTitleTextColor="@color/newsview_default_title_text_color"
+            cliqz:newsViewUrlTextColor="@color/newsview_default_url_text_color"
             android:elevation="3dp"
             android:orientation="vertical" />
 

@@ -31,12 +31,14 @@ dependencies {
     implementation Deps.mozilla_concept_fetch
 
     implementation Deps.mozilla_browser_session
+    implementation Deps.mozilla_browser_icons
 
     implementation Deps.mozilla_feature_session
 
     implementation Deps.kotlin_stdlib
 
     implementation Deps.androidx_appcompat
+    implementation Deps.androidx_constraintlayout
     implementation Deps.androidx_lifecycle_runtime
     implementation Deps.google_material
 

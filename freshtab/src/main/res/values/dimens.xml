@@ -18,6 +18,9 @@
     <!-- List dimensions as per material design guidelines -->
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="two_line_list_item_icon_size">40dp</dimen>
+    <dimen name="three_line_list_item_height">88dp</dimen>
+    <dimen name="three_line_list_item_icon_size">40dp</dimen>
+    <dimen name="cliqz_list_item_icon_size">56dp</dimen>
 
     <dimen name="freshtab_icons_size">50dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>

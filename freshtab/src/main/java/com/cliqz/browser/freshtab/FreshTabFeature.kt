@@ -18,7 +18,7 @@ class FreshTabFeature(
     val currentUrl : String?
         get() = sessionManager.selectedSession?.url
 
-    var isUrlBarActive = toolbar.isFocused || toolbar.isInEditMode
+    private var isUrlBarActive = toolbar.isFocused || toolbar.isInEditMode
 
     init {
         toolbar.setOnEditFocusChangeListener {

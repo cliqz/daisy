@@ -4,6 +4,7 @@ import com.cliqz.browser.news.data.NewsItem
 import com.cliqz.browser.news.data.Result.Success
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
@@ -15,16 +16,18 @@ import org.junit.Test
 class NewsFeatureTest {
 
     private val newsView: NewsView = mockk(relaxed = true)
-    private val presenter: NewsPresenter = mockk(relaxed = true)
 
     private val coroutineScope = TestCoroutineScope()
 
     private lateinit var feature: NewsFeature
+    private lateinit var presenter: DefaultNewsPresenter
 
     @Before
     fun setup() {
-        feature = NewsFeature(newsView, coroutineScope, mockk(), mockk())
+        presenter = spyk(DefaultNewsPresenter(mockk(), newsView, coroutineScope, mockk(), mockk()))
+        feature = NewsFeature(mockk(), newsView, coroutineScope, mockk(), mockk())
         feature.presenter = presenter
+        coEvery { presenter.isNewsViewExpanded } returns true
     }
 
     @After
@@ -36,7 +39,7 @@ class NewsFeatureTest {
      * Derived from FindInPageFeatureTest
      */
     @Test
-    fun `Start is forwarded to interactor`() {
+    fun `Start is forwarded to presenter`() {
         val emptyResult: Success<List<NewsItem>> = Success(listOf())
         coEvery { presenter.getNews() } returns emptyResult
         feature.start()
@@ -44,16 +47,16 @@ class NewsFeatureTest {
     }
 
     @Test
-    fun `Stop is forwarded to interactor`() {
+    fun `Stop is forwarded to presenter`() {
         feature.stop()
         verify { presenter.stop() }
     }
 
     @Test
-    fun `Data is forwarded to view through interactor`() {
+    fun `Data is forwarded to view through presenter`() {
         val emptyResult: Success<List<NewsItem>> = Success(listOf())
         coEvery { presenter.getNews() } returns emptyResult
         feature.start()
-        verify { newsView.displayNews(emptyResult.data) }
+        verify { newsView.displayNews(any(), any()) }
     }
 }

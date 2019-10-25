@@ -45,9 +45,13 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
             .addClipboardProvider(requireContext(), requireComponents.useCases.sessionUseCases.loadUrl)
 
         freshTabIntegration.set(
-            feature = FreshTabIntegration(toolbar, freshTab, engineView,
+            feature = FreshTabIntegration(
+                toolbar,
+                freshTab,
+                engineView,
                 requireComponents.core.sessionManager)
                 .addNewsFeature(
+                    requireContext(),
                     newsView,
                     lifecycleScope,
                     requireComponents.useCases.sessionUseCases.loadUrl,

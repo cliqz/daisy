@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fresh_tab_news_background_color"
     android:paddingStart="5dp"
     android:paddingTop="10dp"
     android:paddingEnd="5dp"
@@ -46,7 +45,7 @@
         android:maxLines="2"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
-        android:textColor="@color/textColorPrimary"
+        android:textColor="?android:textColorPrimary"
         android:textSize="12sp" />
 
 </RelativeLayout>
