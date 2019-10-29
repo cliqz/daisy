@@ -1,5 +1,7 @@
 package com.cliqz.browser.news.data
 
+import java.io.Serializable
+
 data class NewsItem(
     val url: String,
     val title: String,
@@ -11,4 +13,4 @@ data class NewsItem(
     val breaking: Boolean,
     val isLocalNews: Boolean,
     val localLabel: String?
-)
+): Serializable

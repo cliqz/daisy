@@ -5,5 +5,5 @@ import com.cliqz.browser.news.data.Result
 
 interface NewsRepository {
 
-    suspend fun getNews(forceUpdate: Boolean = false): Result<List<NewsItem>>
+    suspend fun getNews(): Result<List<NewsItem>>
 }

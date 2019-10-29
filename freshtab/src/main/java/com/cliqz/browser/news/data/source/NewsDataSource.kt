@@ -6,4 +6,6 @@ import com.cliqz.browser.news.data.Result
 interface NewsDataSource {
 
     suspend fun getNews(): Result<List<NewsItem>>
+
+    suspend fun saveNews(newsList: List<NewsItem>)
 }

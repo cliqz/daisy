@@ -22,7 +22,7 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
     override suspend fun getNews(): Result<List<NewsItem>> {
         val url = getNewsUrl()
         val headers = MutableHeaders(
-                Headers.Names.CONTENT_TYPE to CONTENT_TYPE_JSON
+            Headers.Names.CONTENT_TYPE to CONTENT_TYPE_JSON
         )
         val request = Request(
             url = url,
@@ -44,6 +44,10 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
                 else -> throw e
             }
         }
+    }
+
+    override suspend fun saveNews(newsList: List<NewsItem>) {
+        // no-op
     }
 
     private fun getNewsUrl(): String {
@@ -96,7 +100,7 @@ private fun Response.toNewsList(): List<NewsItem> {
     }
     val newsList = ArrayList<NewsItem>()
     val data = result.getJSONArray("results").getJSONObject(0)
-            .getJSONObject("snippet").getJSONObject("extra")
+        .getJSONObject("snippet").getJSONObject("extra")
     val articles = data.getJSONArray("articles")
     for (i in 0 until articles.length()) {
         val article = articles.getJSONObject(i)
@@ -112,7 +116,7 @@ private fun Response.toNewsList(): List<NewsItem> {
         val isLocalNews = article.has("local_news")
         val localLabel = article.optString("local_label", "")
         newsList.add(NewsItem(url, title, description, domain, shortTitle, media,
-                breakingLabel, breaking, isLocalNews, localLabel))
+            breakingLabel, breaking, isLocalNews, localLabel))
     }
     return newsList
 }

@@ -20,7 +20,7 @@ import org.mozilla.reference.browser.components.UseCases
 class Components(private val context: Context) {
     val core by lazy { Core(context) }
     val search by lazy { Search(context) }
-    val news by lazy { News(core.client) }
+    val news by lazy { News(core.client, context) }
     val useCases by lazy {
         UseCases(
             context,
