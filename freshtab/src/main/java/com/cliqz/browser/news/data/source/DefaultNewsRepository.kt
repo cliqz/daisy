@@ -66,10 +66,14 @@ class DefaultNewsRepository(
         @Volatile
         private var instance: NewsRepository? = null
 
-        fun getInstance(newsRemoteDataSource: NewsRemoteDataSource,
-                        newsLocalDataSource: NewsLocalDataSource) =
-            instance ?: synchronized(this) {
-                instance ?: DefaultNewsRepository(newsRemoteDataSource, newsLocalDataSource).also { instance = it }
+        fun getInstance(
+            newsRemoteDataSource: NewsRemoteDataSource,
+            newsLocalDataSource: NewsLocalDataSource
+        ): NewsRepository {
+            return instance ?: synchronized(this) {
+                instance
+                        ?: DefaultNewsRepository(newsRemoteDataSource, newsLocalDataSource).also { instance = it }
             }
+        }
     }
 }

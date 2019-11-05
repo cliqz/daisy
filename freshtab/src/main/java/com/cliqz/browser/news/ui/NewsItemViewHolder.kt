@@ -19,7 +19,7 @@ import java.util.Locale
 class NewsItemViewHolder(
     itemView: View,
     private val newsView: NewsView
-): RecyclerView.ViewHolder(itemView) {
+) : RecyclerView.ViewHolder(itemView) {
 
     private val iconView: ImageView = itemView.findViewById(R.id.icon_view)
 
@@ -36,7 +36,7 @@ class NewsItemViewHolder(
     fun bind(
         newsItem: NewsItem,
         icons: BrowserIcons?,
-        clickListener : ((newsItem: NewsItem) -> Unit)
+        clickListener: ((newsItem: NewsItem) -> Unit)
     ) {
         this.newsItem = newsItem
         titleView.text = buildTitleSpannable(newsItem)
@@ -64,5 +64,4 @@ class NewsItemViewHolder(
         builder.setSpan(ForegroundColorSpan(color), oldLen, builder.length,
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
     }
-
 }

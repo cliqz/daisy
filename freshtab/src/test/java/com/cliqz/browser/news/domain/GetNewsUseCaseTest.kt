@@ -90,5 +90,4 @@ class GetNewsUseCaseTest {
 
         assertTrue(result is Error)
     }
-
 }

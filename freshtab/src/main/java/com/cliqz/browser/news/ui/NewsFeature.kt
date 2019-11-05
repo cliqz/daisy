@@ -1,7 +1,6 @@
 package com.cliqz.browser.news.ui
 
 import android.content.Context
-import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
 import com.cliqz.browser.news.domain.GetNewsUseCase
 import kotlinx.coroutines.CoroutineScope

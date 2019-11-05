@@ -15,7 +15,7 @@ class FreshTabFeature(
 ) : SessionManager.Observer, Session.Observer {
 
     @VisibleForTesting
-    val currentUrl : String?
+    val currentUrl: String?
         get() = sessionManager.selectedSession?.url
 
     private var isUrlBarActive = toolbar.isFocused || toolbar.isInEditMode

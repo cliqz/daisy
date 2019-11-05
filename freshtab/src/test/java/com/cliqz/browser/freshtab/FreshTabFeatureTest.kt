@@ -25,12 +25,12 @@ class FreshTabFeatureTest {
         val sessionManager: SessionManager = mockk(relaxed = true)
 
         var freshTabVisibility: Int? = null
-        every { freshTab.visibility  = any() } answers {
+        every { freshTab.visibility = any() } answers {
             freshTabVisibility = args[0] as Int
         }
 
         var engineViewVisibility: Int? = null
-        every { engineView.asView().visibility  = any() } answers {
+        every { engineView.asView().visibility = any() } answers {
             engineViewVisibility = args[0] as Int
         }
 

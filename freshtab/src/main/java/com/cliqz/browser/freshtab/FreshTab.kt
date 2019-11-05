@@ -59,5 +59,4 @@ class FreshTab @JvmOverloads constructor(
             super.addView(child, index, params)
         }
     }
-
 }
