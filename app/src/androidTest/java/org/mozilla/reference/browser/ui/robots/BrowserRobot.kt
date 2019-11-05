@@ -4,11 +4,11 @@
 
 package org.mozilla.reference.browser.ui.robots
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
@@ -50,6 +50,13 @@ class BrowserRobot {
     fun verifyAboutBrowser() {
         // Testing About Reference Browser crashes in Java String
         // https://github.com/mozilla-mobile/reference-browser/issues/680
+    }
+
+    fun verifyCustomUrl(url: String) {
+        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        mDevice.wait(Until.findObject(By.res("mozac_browser_toolbar_url_view")), waitingTime)
+        onView(withId(R.id.mozac_browser_toolbar_url_view))
+            .check(matches(withText(containsString(url))))
     }
 
     class Transition {

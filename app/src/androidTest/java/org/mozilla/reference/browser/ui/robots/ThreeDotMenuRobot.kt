@@ -89,9 +89,10 @@ class ThreeDotMenuRobot {
             return SettingsViewRobot.Transition()
         }
 
-        fun openHistory(interact: HistoryViewRobot.() -> Unit) {
+        fun openHistory(interact: HistoryViewRobot.() -> Unit): HistoryViewRobot.Transition {
             historyButton().click()
             HistoryViewRobot().interact()
+            return HistoryViewRobot.Transition()
         }
 
         fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {

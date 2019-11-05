@@ -7,12 +7,16 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mozilla.components.concept.storage.VisitInfo
+import mozilla.components.feature.session.SessionUseCases
 import org.mozilla.reference.browser.history.usecases.HistoryUseCases
 
 /**
  * @author Ravjit Uppal
  */
-class HistoryViewModel(private val historyUseCases: HistoryUseCases) : ViewModel() {
+class HistoryViewModel(
+    private val historyUseCases: HistoryUseCases,
+    private val sessionUseCases: SessionUseCases
+) : ViewModel() {
 
     private val historyItems = MutableLiveData<List<VisitInfo>>().apply { value = emptyList() }
 
@@ -22,6 +26,13 @@ class HistoryViewModel(private val historyUseCases: HistoryUseCases) : ViewModel
 
     fun getHistoryItems(): LiveData<List<VisitInfo>> {
         return historyItems
+    }
+
+    fun onItemClicked(position: Int) {
+        val historyItem = historyItems.value?.get(position)
+        if (historyItem != null) {
+            sessionUseCases.loadUrl(historyItem.url)
+        }
     }
 
     private fun fetchHistoryItems() {

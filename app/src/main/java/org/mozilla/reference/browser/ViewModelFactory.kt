@@ -14,7 +14,8 @@ class ViewModelFactory(private val applicationContext: BrowserApplication) : Vie
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass == HistoryViewModel::class.java) {
             return HistoryViewModel(
-                applicationContext.components.useCases.historyUseCases) as T
+                applicationContext.components.useCases.historyUseCases,
+                applicationContext.components.useCases.sessionUseCases) as T
         }
         throw IllegalArgumentException("Unknown model class $modelClass")
     }

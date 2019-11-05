@@ -45,7 +45,9 @@ class HistoryTest {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
         }.openHistory {
-            verifyHistoryExists("http://localhost:${mockWebServer.port}/pages/generic1.html")
+            verifyHistoryExists(defaultWebPage.url.toString())
+        }.openHistoryUrl(defaultWebPage.url.toString()) {
+            verifyCustomUrl(defaultWebPage.url.toString())
         }
     }
 }
