@@ -28,6 +28,12 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
+    aaptOptions {
+        // default ignoreAssetsPattern list includes all files and folders starting with _
+        // that breaks webextensions i18n as traslation are located in _locales folder
+        ignoreAssetsPattern  '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+
     def releaseTemplate = {
         minifyEnabled false
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -178,6 +184,8 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 
 dependencies {
     implementation project(':freshtab')
+    implementation project(':dat')
+    implementation project(':privacy')
 
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_tabstray

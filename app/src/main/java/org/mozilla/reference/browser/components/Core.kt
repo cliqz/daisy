@@ -7,6 +7,8 @@ package org.mozilla.reference.browser.components
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.cliqz.dat.DatFeature
+import com.cliqz.privacy.PrivacyFeature
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -24,11 +26,11 @@ import mozilla.components.feature.media.state.MediaStateMachine
 import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
-import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import java.util.concurrent.TimeUnit
 
 /**
@@ -49,9 +51,11 @@ class Core(private val context: Context) {
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
             historyTrackingDelegate = HistoryDelegate(historyStorage)
         )
-        EngineProvider.createEngine(context, defaultSettings)
+        val engine = EngineProvider.createEngine(context, defaultSettings)
+        DatFeature.install(engine)
+        PrivacyFeature.install(engine)
+        engine
     }
-
     /**
      * The [Client] implementation (`concept-fetch`) used for HTTP requests.
      */

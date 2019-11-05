@@ -1,0 +1,58 @@
+plugins {
+    id ("de.undercouch.download").version("4.0.0")
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion 29
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    aaptOptions{
+        // default ignoreAssetsPattern list includes all files and folders starting with _
+        // that breaks webextensions i18n as traslation are located in _locales folder
+        ignoreAssetsPattern  '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+def addonsPath = 'src/main/assets/extensions'
+
+task downloadAddon(type: Download) {
+    src 'https://cdncliqz.s3.amazonaws.com/update/edge/cliqz_privacy/master/12.40.0.161aabe.zip'
+    dest new File(downloadTaskDir, "privacy@cliqz.com.zip")
+}
+
+task extractAddon(dependsOn: [downloadAddon], type: Copy) {
+    from zipTree(downloadAddon.dest)
+    into "${addonsPath}/cliqz"
+}
+
+task deleteAddon(type: Delete) {
+    delete "${addonsPath}/cliqz"
+}
+
+preBuild.dependsOn(extractAddon)
+clean.dependsOn deleteAddon
+
+dependencies {
+    implementation Deps.mozilla_concept_engine
+}

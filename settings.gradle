@@ -1,4 +1,4 @@
-include ':app', ':freshtab'
+include ':app', ':freshtab', ':dat', ':privacy'
 
 Properties localProperties = null;
 String settingAppServicesPath = "substitutions.application-services.dir";
