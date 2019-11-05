@@ -76,13 +76,15 @@ class ToolbarIntegration(
     private val menuItems: List<BrowserMenuItem> by lazy {
         listOf(
             menuToolbar,
+            SimpleBrowserMenuItem("New Tab") {
+                tabsUseCases.addTab.invoke("about:blank")
+            },
             SimpleBrowserMenuItem("Share") {
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
             }.apply {
                 visible = { sessionManager.selectedSession != null }
             },
-
             BrowserMenuSwitch("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->

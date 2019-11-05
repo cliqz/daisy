@@ -199,4 +199,14 @@ class ThreeDotMenuTest {
             verifySettingsViewExists()
         }
     }
+
+    @Test
+    fun openNewTabTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openNewTab {
+            verifyNewTabAddressView()
+            checkNumberOfTabsTabCounter("1")
+        }
+    }
 }

@@ -93,6 +93,12 @@ class ThreeDotMenuRobot {
             historyButton().click()
             HistoryViewRobot().interact()
         }
+
+        fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            newTabButton().click()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
+        }
     }
 }
 
@@ -110,6 +116,7 @@ private fun findInPageButton() = onView(ViewMatchers.withText("Find in Page"))
 private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun historyButton() = onView(ViewMatchers.withText("History"))
+private fun newTabButton() = onView(ViewMatchers.withText("New Tab"))
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
