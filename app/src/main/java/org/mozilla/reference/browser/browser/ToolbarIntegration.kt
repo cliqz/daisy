@@ -41,7 +41,8 @@ class ToolbarIntegration(
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
-    private val fragmentManager: FragmentManager?
+    private val fragmentManager: FragmentManager?,
+    toolbarEditMode: Boolean = false
 ) : LifecycleAwareFeature, BackHandler {
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
@@ -126,7 +127,9 @@ class ToolbarIntegration(
         toolbar.displayTrackingProtectionIcon = true
         toolbar.displaySeparatorView = true
         toolbar.setMenuBuilder(menuBuilder)
-
+        if (toolbarEditMode) {
+            toolbar.editMode()
+        }
         toolbar.hint = context.getString(R.string.toolbar_hint)
 
         ToolbarAutocompleteFeature(toolbar).apply {

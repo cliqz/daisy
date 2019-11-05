@@ -12,6 +12,7 @@ import mozilla.components.feature.pwa.ManifestStorage
 import mozilla.components.feature.pwa.intent.WebAppIntentProcessor
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.feature.tabs.TabsUseCases
 
 /**
  * Component group for miscellaneous components.
@@ -20,7 +21,8 @@ class Utilities(
     private val context: Context,
     private val sessionManager: SessionManager,
     private val sessionUseCases: SessionUseCases,
-    private val searchUseCases: SearchUseCases
+    private val searchUseCases: SearchUseCases,
+    private val tabsUseCases: TabsUseCases
 ) {
 
     /**
@@ -40,5 +42,9 @@ class Utilities(
     val intentProcessors by lazy {
         externalIntentProcessors +
             TabIntentProcessor(sessionManager, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
+    }
+
+    val startSearchIntentProcessor by lazy {
+        StartSearchIntentProcessor(tabsUseCases, sessionManager)
     }
 }

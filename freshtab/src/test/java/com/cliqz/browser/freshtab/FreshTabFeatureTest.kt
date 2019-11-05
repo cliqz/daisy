@@ -7,6 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.engine.EngineView
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -19,6 +20,7 @@ class FreshTabFeatureTest {
      */
     @Test
     fun `Feature connects Toolbar and EngineView with FreshTab`() = runBlockingTest {
+        val awesomeBar: AwesomeBar = mockk(relaxed = true)
         val toolbar: BrowserToolbar = mockk(relaxed = true)
         val freshTab: FreshTab = mockk()
         val engineView: EngineView = mockk()
@@ -34,7 +36,7 @@ class FreshTabFeatureTest {
             engineViewVisibility = args[0] as Int
         }
 
-        val freshTabFeature = FreshTabFeature(toolbar, freshTab, engineView, sessionManager)
+        val freshTabFeature = FreshTabFeature(awesomeBar, toolbar, freshTab, engineView, sessionManager)
 
         assertTrue(freshTabVisibility == View.VISIBLE)
         assertTrue(engineViewVisibility == View.GONE)

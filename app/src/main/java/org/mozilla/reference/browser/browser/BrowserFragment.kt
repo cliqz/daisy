@@ -47,6 +47,7 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
         freshTabIntegration.set(
             feature = FreshTabIntegration(
                 requireContext(),
+                awesomeBar,
                 toolbar,
                 freshTab,
                 engineView,
@@ -103,9 +104,12 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
         readerViewFeature.onBackPressed() || super.onBackPressed()
 
     companion object {
-        fun create(sessionId: String? = null) = BrowserFragment().apply {
-            arguments = Bundle().apply {
-                putSessionId(sessionId)
+        fun create(sessionId: String? = null, openToSearch: Boolean = false): BrowserFragment {
+            return BrowserFragment().apply {
+                arguments = Bundle().apply {
+                    putSessionId(sessionId)
+                    setOpenToSearch(openToSearch)
+                }
             }
         }
     }

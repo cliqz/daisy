@@ -39,7 +39,13 @@ class Components(private val context: Context) {
 
     val analytics by lazy { Analytics(context) }
     val utils by lazy {
-        Utilities(context, core.sessionManager, useCases.sessionUseCases, useCases.searchUseCases)
+        Utilities(
+            context,
+            core.sessionManager,
+            useCases.sessionUseCases,
+            useCases.searchUseCases,
+            useCases.tabsUseCases
+        )
     }
     val services by lazy { Services(backgroundServices.accountManager, useCases.tabsUseCases) }
 }

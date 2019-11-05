@@ -10,11 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import mozilla.components.browser.icons.BrowserIcons
+import mozilla.components.concept.toolbar.Toolbar
 import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 
 class DefaultNewsPresenter(
     private val context: Context,
     private val newsView: NewsView,
+    private val toolbar: Toolbar,
     private val scope: CoroutineScope,
     private val loadUrlUseCase: LoadUrlUseCase,
     private val getNewsUseCase: GetNewsUseCase,
@@ -56,6 +58,7 @@ class DefaultNewsPresenter(
 
     override fun onOpenInNormalTab(item: NewsItem) {
         loadUrlUseCase.invoke(item.url)
+        toolbar.displayMode()
     }
 
     private fun isNewsViewExpanded(context: Context): Boolean {

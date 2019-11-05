@@ -24,8 +24,8 @@ class NewsFeatureTest {
 
     @Before
     fun setup() {
-        presenter = spyk(DefaultNewsPresenter(mockk(), newsView, coroutineScope, mockk(), mockk()))
-        feature = NewsFeature(mockk(), newsView, coroutineScope, mockk(), mockk())
+        presenter = spyk(DefaultNewsPresenter(mockk(), newsView, mockk(), coroutineScope, mockk(), mockk()))
+        feature = NewsFeature(mockk(), newsView, mockk(), coroutineScope, mockk(), mockk())
         feature.presenter = presenter
         coEvery { presenter.isNewsViewExpanded } returns true
     }

@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
@@ -37,19 +38,23 @@ open class BrowserActivity : AppCompatActivity() {
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
 
+    private val openToSearch: Boolean
+        get() = SafeIntent(intent).getBooleanExtra(EXTRA_OPEN_TO_SEARCH, false)
+
     /**
      * Returns a new instance of [BrowserFragment] to display.
      */
-    open fun createBrowserFragment(sessionId: String?): Fragment =
-        BrowserFragment.create(sessionId)
+    open fun createBrowserFragment(sessionId: String?, openToSearch: Boolean): Fragment =
+        BrowserFragment.create(sessionId, openToSearch)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
+            components.utils.startSearchIntentProcessor.process(openToSearch)
             supportFragmentManager.beginTransaction().apply {
-                replace(R.id.container, createBrowserFragment(sessionId))
+                replace(R.id.container, createBrowserFragment(sessionId, openToSearch))
                 commit()
             }
         }
@@ -62,6 +67,19 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         DataReportingNotification.checkAndNotifyPolicy(this)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent ?: return
+
+        components.utils.startSearchIntentProcessor.process(openToSearch)
+        if (openToSearch) {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.container, createBrowserFragment(null, openToSearch = true))
+                commit()
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -125,5 +143,9 @@ open class BrowserActivity : AppCompatActivity() {
             .setAction(R.string.crash_report_non_fatal_action) {
                 crashIntegration.sendCrashReport(crash)
             }.show()
+    }
+
+    companion object {
+        const val EXTRA_OPEN_TO_SEARCH = "OPEN_TO_SEARCH"
     }
 }

@@ -15,7 +15,7 @@ import org.mozilla.reference.browser.browser.ExternalAppBrowserFragment
  * such as custom tabs and progressive web apps.
  */
 class ExternalAppBrowserActivity : BrowserActivity() {
-    override fun createBrowserFragment(sessionId: String?): Fragment =
+    override fun createBrowserFragment(sessionId: String?, openToSearch: Boolean): Fragment =
         if (sessionId != null) {
             val manifest = intent.getWebAppManifest()
             val scope = when (manifest?.display) {
@@ -34,6 +34,6 @@ class ExternalAppBrowserActivity : BrowserActivity() {
             )
         } else {
             // Fall back to browser fragment
-            super.createBrowserFragment(sessionId)
+            super.createBrowserFragment(sessionId, openToSearch)
         }
 }

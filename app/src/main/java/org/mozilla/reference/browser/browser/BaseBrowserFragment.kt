@@ -65,7 +65,10 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
     protected val sessionId: String?
         get() = arguments?.getString(SESSION_ID)
 
-    final override fun onCreateView(
+    private val openToSearch: Boolean
+        get() = arguments?.getBoolean(OPEN_TO_SEARCH) ?: false
+
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -94,7 +97,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
-                activity?.supportFragmentManager),
+                activity?.supportFragmentManager, toolbarEditMode = openToSearch),
             owner = this,
             view = view)
 
@@ -239,10 +242,16 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
 
     companion object {
         private const val SESSION_ID = "session_id"
+        private const val OPEN_TO_SEARCH = "open_to_search"
 
         @JvmStatic
         protected fun Bundle.putSessionId(sessionId: String?) {
             putString(SESSION_ID, sessionId)
+        }
+
+        @JvmStatic
+        protected fun Bundle.setOpenToSearch(openToSearch: Boolean) {
+            putBoolean(OPEN_TO_SEARCH, openToSearch)
         }
     }
 

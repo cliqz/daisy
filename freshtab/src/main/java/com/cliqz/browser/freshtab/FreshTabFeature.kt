@@ -6,28 +6,58 @@ import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.awesomebar.AwesomeBar
+import mozilla.components.concept.toolbar.Toolbar
 
 class FreshTabFeature(
+    private val awesomeBar: AwesomeBar,
     private val toolbar: BrowserToolbar,
     private val freshTab: FreshTab,
     private val engineView: EngineView,
     private val sessionManager: SessionManager
-) : SessionManager.Observer, Session.Observer {
+) : SessionManager.Observer, Session.Observer, Toolbar.OnEditListener {
 
     @VisibleForTesting
     val currentUrl: String?
         get() = sessionManager.selectedSession?.url
 
-    private var isUrlBarActive = toolbar.isFocused || toolbar.isInEditMode
-
     init {
-        toolbar.setOnEditFocusChangeListener {
-            isUrlBarActive = it || toolbar.isInEditMode
-            updateVisibility()
-        }
+        toolbar.setOnEditListener(this)
         sessionManager.register(this, freshTab)
         sessionManager.sessions.forEach { addSession(it) }
         updateVisibility()
+    }
+
+    private var inputStarted = false
+
+    override fun onTextChanged(text: String) {
+        if (inputStarted) {
+            if (text.isNotBlank()) {
+                freshTab.visibility = View.GONE
+                awesomeBar.asView().visibility = View.VISIBLE
+            } else {
+                freshTab.visibility = View.VISIBLE
+                awesomeBar.asView().visibility = View.GONE
+            }
+            awesomeBar.onInputChanged(text)
+        }
+    }
+
+    override fun onStartEditing() {
+        inputStarted = true
+        awesomeBar.onInputStarted()
+        engineView.asView().visibility = View.GONE
+    }
+
+    override fun onStopEditing() {
+        awesomeBar.onInputCancelled()
+        awesomeBar.asView().visibility = View.GONE
+        updateVisibility()
+        inputStarted = false
+    }
+
+    override fun onCancelEditing(): Boolean {
+        return true
     }
 
     private fun addSession(session: Session) {
@@ -59,9 +89,6 @@ class FreshTabFeature(
 
     @VisibleForTesting
     fun updateVisibility() {
-        if (isUrlBarActive) {
-            freshTab.visibility = View.GONE
-        } else {
             val showFreshTab = currentUrl == null || currentUrl!!.isFreshTab()
             if (showFreshTab) {
                 freshTab.visibility = View.VISIBLE
@@ -72,7 +99,6 @@ class FreshTabFeature(
                 engineView.asView().visibility = View.VISIBLE
                 toolbar.displaySiteSecurityIcon = true
             }
-        }
     }
 
     companion object {

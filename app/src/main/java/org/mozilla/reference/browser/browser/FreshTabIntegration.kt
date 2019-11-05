@@ -10,6 +10,7 @@ import com.cliqz.browser.news.domain.GetNewsUseCase
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
@@ -17,7 +18,8 @@ import org.mozilla.reference.browser.ext.preferences
 
 class FreshTabIntegration(
     private val context: Context,
-    toolbar: BrowserToolbar,
+    awesomeBar: AwesomeBar,
+    private val toolbar: BrowserToolbar,
     freshTab: FreshTab,
     engineView: EngineView,
     sessionManager: SessionManager
@@ -26,7 +28,7 @@ class FreshTabIntegration(
     private var newsFeature: NewsFeature? = null
 
     init {
-        FreshTabFeature(toolbar, freshTab, engineView, sessionManager)
+        FreshTabFeature(awesomeBar, toolbar, freshTab, engineView, sessionManager)
     }
 
     override fun start() {
@@ -51,6 +53,7 @@ class FreshTabIntegration(
         newsFeature = NewsFeature(
             context,
             newsView,
+            toolbar,
             lifecycleScope,
             loadUrl,
             newsUseCase,
