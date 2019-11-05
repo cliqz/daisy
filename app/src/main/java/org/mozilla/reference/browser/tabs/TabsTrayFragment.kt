@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
 import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
+import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.BackHandler
 import org.mozilla.reference.browser.R
@@ -20,7 +22,7 @@ import org.mozilla.reference.browser.ext.requireComponents
 /**
  * A fragment for displaying the tabs tray.
  */
-class TabsTrayFragment : Fragment(), BackHandler {
+class TabsTrayFragment : Fragment(), BackHandler, SessionManager.Observer {
     private var tabsFeature: TabsFeature? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -42,12 +44,30 @@ class TabsTrayFragment : Fragment(), BackHandler {
         super.onStart()
 
         tabsFeature?.start()
+        requireComponents.core.sessionManager.register(this)
     }
 
     override fun onStop() {
         super.onStop()
 
         tabsFeature?.stop()
+        requireComponents.core.sessionManager.unregister(this)
+    }
+
+    override fun onSessionRemoved(session: Session) {
+        super.onSessionRemoved(session)
+        requireComponents.core.sessionManager.apply {
+            if (size == 0) {
+                add(Session(""), selected = true)
+            }
+        }
+    }
+
+    override fun onAllSessionsRemoved() {
+        super.onAllSessionsRemoved()
+        requireComponents.core.sessionManager.apply {
+            add(Session(""), selected = true)
+        }
     }
 
     override fun onBackPressed(): Boolean {

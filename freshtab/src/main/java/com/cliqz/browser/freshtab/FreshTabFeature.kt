@@ -8,7 +8,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.browser.toolbar.BrowserToolbar
 
 class FreshTabFeature(
-    toolbar: BrowserToolbar,
+    private val toolbar: BrowserToolbar,
     private val freshTab: FreshTab,
     private val engineView: EngineView,
     private val sessionManager: SessionManager
@@ -66,9 +66,11 @@ class FreshTabFeature(
             if (showFreshTab) {
                 freshTab.visibility = View.VISIBLE
                 engineView.asView().visibility = View.GONE
+                toolbar.displaySiteSecurityIcon = false
             } else {
                 freshTab.visibility = View.GONE
                 engineView.asView().visibility = View.VISIBLE
+                toolbar.displaySiteSecurityIcon = true
             }
         }
     }
