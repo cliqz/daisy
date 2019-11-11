@@ -6,6 +6,7 @@ import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.toolbar.Toolbar
 
@@ -93,11 +94,11 @@ class FreshTabFeature(
             if (showFreshTab) {
                 freshTab.visibility = View.VISIBLE
                 engineView.asView().visibility = View.GONE
-                toolbar.displaySiteSecurityIcon = false
+                toolbar.display.indicators = emptyList()
             } else {
                 freshTab.visibility = View.GONE
                 engineView.asView().visibility = View.VISIBLE
-                toolbar.displaySiteSecurityIcon = true
+                toolbar.display.indicators = listOf(DisplayToolbar.Indicators.SECURITY)
             }
     }
 

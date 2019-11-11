@@ -21,7 +21,7 @@ private object Versions {
     const val androidx_lifecycle = "2.2.0-alpha05"
     const val android_gradle_plugin = "3.4.1"
 
-    const val mozilla_android_components = "18.0.0"
+    const val mozilla_android_components = "20.0.0"
 
     const val thirdparty_sentry = "1.7.10"
 

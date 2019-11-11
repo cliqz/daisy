@@ -6,7 +6,6 @@ package org.mozilla.reference.browser.browser
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.fragment.app.FragmentManager
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -18,6 +17,7 @@ import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
+import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -78,7 +78,7 @@ class ToolbarIntegration(
         listOf(
             menuToolbar,
             SimpleBrowserMenuItem("New Tab") {
-                tabsUseCases.addTab.invoke("about:blank")
+                tabsUseCases.addTab.invoke("")
             },
             SimpleBrowserMenuItem("Share") {
                 val url = sessionManager.selectedSession?.url ?: ""
@@ -124,22 +124,21 @@ class ToolbarIntegration(
     private val menuBuilder = BrowserMenuBuilder(menuItems)
 
     init {
-        toolbar.displayTrackingProtectionIcon = true
-        toolbar.displaySeparatorView = true
-        toolbar.setMenuBuilder(menuBuilder)
+        toolbar.display.indicators = listOf(DisplayToolbar.Indicators.SECURITY)
+        toolbar.display.displayIndicatorSeparator = true
+        toolbar.display.menuBuilder = menuBuilder
         if (toolbarEditMode) {
             toolbar.editMode()
         }
-        toolbar.hint = context.getString(R.string.toolbar_hint)
+        toolbar.display.hint = context.getString(R.string.toolbar_hint)
+        toolbar.edit.hint = context.getString(R.string.toolbar_hint)
 
         ToolbarAutocompleteFeature(toolbar).apply {
             addHistoryStorageProvider(historyStorage)
             addDomainProvider(shippedDomainsProvider)
         }
 
-        toolbar.urlBoxView = View(context).apply {
-            background = context.resources.getDrawable(R.drawable.url_background, context.theme)
-        }
+        toolbar.display.setUrlBackground(context.resources.getDrawable(R.drawable.url_background, context.theme))
     }
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(
