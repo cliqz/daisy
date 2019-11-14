@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
+import com.cliqz.browser.freshtab.isFreshTab
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -97,7 +98,11 @@ class ToolbarIntegration(
             SimpleBrowserMenuItem("Add to homescreen") {
                 MainScope().launch { webAppUseCases.addToHomescreen() }
             }.apply {
-                visible = { webAppUseCases.isPinningSupported() }
+                visible = {
+                    webAppUseCases.isPinningSupported() &&
+                        (sessionManager.selectedSession != null &&
+                            !sessionManager.selectedSession!!.url.isFreshTab())
+                }
             },
 
             SimpleBrowserMenuItem("Find in Page") {
