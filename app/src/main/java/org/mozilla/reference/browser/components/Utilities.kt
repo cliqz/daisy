@@ -35,13 +35,16 @@ class Utilities(
         )
     }
 
+    val tabIntentProcessor by lazy {
+        TabIntentProcessor(sessionManager, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
+    }
+
     /**
      * Provides intent processing functionality for ACTION_VIEW and ACTION_SEND intents,
      * along with external intent processors.
      */
     val intentProcessors by lazy {
-        externalIntentProcessors +
-            TabIntentProcessor(sessionManager, sessionUseCases.loadUrl, searchUseCases.newTabSearch)
+        externalIntentProcessors + tabIntentProcessor
     }
 
     val startSearchIntentProcessor by lazy {

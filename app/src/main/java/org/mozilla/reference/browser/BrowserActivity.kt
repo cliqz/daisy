@@ -38,9 +38,6 @@ open class BrowserActivity : AppCompatActivity() {
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
 
-    private val openToSearch: Boolean
-        get() = SafeIntent(intent).getBooleanExtra(EXTRA_OPEN_TO_SEARCH, false)
-
     /**
      * Returns a new instance of [BrowserFragment] to display.
      */
@@ -52,7 +49,7 @@ open class BrowserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            components.utils.startSearchIntentProcessor.process(openToSearch)
+            val openToSearch = components.utils.startSearchIntentProcessor.process(intent)
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(sessionId, openToSearch))
                 commit()
@@ -73,10 +70,14 @@ open class BrowserActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent ?: return
 
-        components.utils.startSearchIntentProcessor.process(openToSearch)
-        if (openToSearch) {
+        if (components.utils.startSearchIntentProcessor.process(intent)) {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(null, openToSearch = true))
+                commit()
+            }
+        } else if (components.utils.tabIntentProcessor.matches(intent)) {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.container, createBrowserFragment(null, openToSearch = false))
                 commit()
             }
         }
