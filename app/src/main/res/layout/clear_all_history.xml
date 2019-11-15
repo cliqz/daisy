@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wrapping the button in FrameLayout to center it in RecyclerView -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- TODO:
+          Remove tint when there's a theme.
+          Material Button takes ?attr/colorPrimary as the background tint color and we should use the same. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clear_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin_padding_size_medium"
+        android:backgroundTint="@color/accent"
+        android:text="@string/history_clear_all"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size_small" />
+</FrameLayout>

@@ -23,12 +23,12 @@
         android:layout_marginStart="@dimen/margin_padding_size_medium"
         android:ellipsize="end"
         android:maxLines="2"
-        tools:textColor="?android:textColorPrimary"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon_view"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@tools:sample/lorem/random" />
+        tools:text="@tools:sample/lorem/random"
+        tools:textColor="?android:textColorPrimary" />
 
     <TextView
         android:id="@+id/url_view"
@@ -36,12 +36,12 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:textColor="?android:textColorSecondary"
         android:textSize="@dimen/text_size_micro"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/title_view"
         app:layout_constraintTop_toBottomOf="@id/title_view"
-        tools:text="@tools:sample/lorem/random" />
+        tools:text="@tools:sample/lorem/random"
+        tools:textColor="?android:textColorSecondary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

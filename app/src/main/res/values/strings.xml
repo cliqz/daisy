@@ -159,6 +159,11 @@
 
     <!-- History -->
     <string name="history_title_untitled">Untitled</string>
+    <string name="history_clear_all">Clear Browsing History</string>
+    <string name="history_clear_all_dialog_msg">Are you sure you want to clear history?</string>
+    <string name="history_clear_all_dialog_postive_btn">Clear</string>
+    <string name="history_clear_all_dialog_negative_btn">Cancel</string>
+    <string name="no_history_available">No history to show</string>
 
     <!-- News -->
     <string name="news_label">News</string>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -26,15 +27,30 @@ class HistoryFragment : Fragment(), BackHandler {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        historyAdapter = HistoryAdapter(requireComponents.core.icons, ::onItemClicked)
+        historyAdapter = HistoryAdapter(
+            requireComponents.core.icons,
+            ::onItemClicked,
+            ::onDeleteHistoryItemClicked,
+            ::clearHistoryClicked)
         historyViewModel = ViewModelProviders.of(this,
             ViewModelFactory.getInstance(context.application)).get(HistoryViewModel::class.java)
         historyViewModel.getHistoryItems().observe(this, Observer {
+            if (it.isEmpty()) {
+                history_list.visibility = View.GONE
+                empty_view.visibility = View.VISIBLE
+            } else {
+                history_list.visibility = View.VISIBLE
+                empty_view.visibility = View.GONE
+            }
             historyAdapter.items = it
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
@@ -43,9 +59,30 @@ class HistoryFragment : Fragment(), BackHandler {
         history_list.adapter = historyAdapter
     }
 
-    fun onItemClicked(position: Int) {
+    private fun onItemClicked(position: Int) {
         historyViewModel.onItemClicked(position)
         onBackPressed()
+    }
+
+    private fun onDeleteHistoryItemClicked(position: Int) {
+        historyViewModel.onDeleteHistoryItemClicked(position)
+    }
+
+    private fun clearHistoryClicked() {
+        context?.let {
+            AlertDialog.Builder(it).apply {
+                setMessage(R.string.history_clear_all_dialog_msg)
+                setPositiveButton(R.string.history_clear_all_dialog_postive_btn) { dialog, _ ->
+                    historyViewModel.clearHistoryClicked()
+                    dialog.dismiss()
+                }
+                setNegativeButton(R.string.history_clear_all_dialog_negative_btn) { dialog, _ ->
+                    dialog.cancel()
+                }
+                create()
+                show()
+            }
+        }
     }
 
     override fun onBackPressed(): Boolean {
