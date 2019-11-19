@@ -5,14 +5,14 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
-import com.cliqz.browser.news.domain.GetNewsUseCase
 import com.cliqz.browser.news.data.source.NewsRepository
+import com.cliqz.browser.news.domain.GetNewsUseCase
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
@@ -32,7 +32,7 @@ class UseCases(
     private val engineSettings: Settings,
     private val searchEngineManager: SearchEngineManager,
     private val client: Client,
-    private val historyStorage: HistoryStorage,
+    private val historyStorage: PlacesHistoryStorage,
     private val newsRepository: NewsRepository
 ) {
     /**

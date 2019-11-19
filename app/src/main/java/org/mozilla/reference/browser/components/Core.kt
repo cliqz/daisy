@@ -27,9 +27,7 @@ import mozilla.components.feature.session.HistoryDelegate
 import org.mozilla.reference.browser.AppRequestInterceptor
 import org.mozilla.reference.browser.EngineProvider
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
-import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
-import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.R.string.*
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import java.util.concurrent.TimeUnit
 

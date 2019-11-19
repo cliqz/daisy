@@ -1,4 +1,4 @@
-include ':app', ':freshtab', ':dat', ':privacy'
+include ':app', ':freshtab', ':dat', ':privacy', ':storage-sync'
 
 Properties localProperties = null;
 String settingAppServicesPath = "substitutions.application-services.dir";
@@ -23,7 +23,12 @@ if (localProperties != null) {
     if (appServicesLocalPath != null) {
         logger.lifecycle("Local configuration: substituting application-services modules from path: $appServicesLocalPath")
 
-        includeBuild(appServicesLocalPath)
+        includeBuild(appServicesLocalPath) {
+            dependencySubstitution {
+                substitute module('org.mozilla.appservices:places') with project(':places')
+                substitute module('org.mozilla.appservices:full-megazord') with project(':full-megazord')
+            }
+        }
 
     } else {
         logger.lifecycle("Local configuration: application-services substitution path missing. You may specify it via '$settingAppServicesPath' setting.")

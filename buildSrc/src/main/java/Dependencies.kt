@@ -19,9 +19,9 @@ private object Versions {
     const val google_material = "1.0.0"
 
     const val androidx_lifecycle = "2.2.0-alpha05"
-    const val android_gradle_plugin = "3.4.1"
+    const val android_gradle_plugin = "3.5.0"
 
-    const val mozilla_android_components = "20.0.0"
+    const val mozilla_android_components = "24.0.0"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -46,6 +46,9 @@ object Deps {
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_mockk = "io.mockk:mockk:${Versions.mockk}"
     const val androidx_test_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
+
+    const val mozilla_places = "org.mozilla.appservices:places:0.42.2"
+    const val mozilla_support_sync_telemetry = "org.mozilla.components:support-sync-telemetry:20.0.0"
 
     const val mozilla_concept_engine = "org.mozilla.components:concept-engine:${Versions.mozilla_android_components}"
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"

@@ -58,6 +58,11 @@ class BrowserFragment : BaseBrowserFragment(), BackHandler, UserInteractionHandl
                     requireComponents.useCases.sessionUseCases.loadUrl,
                     requireComponents.useCases.getNewsUseCase,
                     requireComponents.core.icons
+                ).addTopSitesFeature(
+                    topSitesView,
+                    requireComponents.useCases.sessionUseCases.loadUrl,
+                    requireComponents.useCases.historyUseCases.getTopSites,
+                    requireComponents.core.icons
                 ),
                 owner = this,
                 view = view

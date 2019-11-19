@@ -5,12 +5,13 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import mozilla.appservices.Megazord
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
-import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.rusthttp.RustHttpConfig
+import mozilla.components.support.rustlog.RustLog
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 open class BrowserApplication : Application() {
@@ -18,7 +19,7 @@ open class BrowserApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        Megazord.init()
         setupCrashReporting(this)
 
         RustHttpConfig.setClient(lazy { components.core.client })
