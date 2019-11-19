@@ -16,6 +16,7 @@ import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.application
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.history.data.HistoryItem
 
 /**
  * @author Ravjit Uppal
@@ -29,9 +30,10 @@ class HistoryFragment : Fragment(), BackHandler {
         super.onAttach(context)
         historyAdapter = HistoryAdapter(
             requireComponents.core.icons,
-            ::onItemClicked,
-            ::onDeleteHistoryItemClicked,
-            ::clearHistoryClicked)
+            ::openHistoryItem,
+            ::deleteHistoryItem,
+            ::showClearAllHistoryDialog
+        )
         historyViewModel = ViewModelProviders.of(this,
             ViewModelFactory.getInstance(context.application)).get(HistoryViewModel::class.java)
         historyViewModel.getHistoryItems().observe(this, Observer {
@@ -42,7 +44,7 @@ class HistoryFragment : Fragment(), BackHandler {
                 history_list.visibility = View.VISIBLE
                 empty_view.visibility = View.GONE
             }
-            historyAdapter.items = it
+            historyAdapter.submitList(it)
         })
     }
 
@@ -59,21 +61,21 @@ class HistoryFragment : Fragment(), BackHandler {
         history_list.adapter = historyAdapter
     }
 
-    private fun onItemClicked(position: Int) {
-        historyViewModel.onItemClicked(position)
+    private fun openHistoryItem(item: HistoryItem) {
+        historyViewModel.openHistoryItem(item)
         onBackPressed()
     }
 
-    private fun onDeleteHistoryItemClicked(position: Int) {
-        historyViewModel.onDeleteHistoryItemClicked(position)
+    private fun deleteHistoryItem(item: HistoryItem) {
+        historyViewModel.deleteHistoryItem(item)
     }
 
-    private fun clearHistoryClicked() {
+    private fun showClearAllHistoryDialog() {
         context?.let {
             AlertDialog.Builder(it).apply {
                 setMessage(R.string.history_clear_all_dialog_msg)
                 setPositiveButton(R.string.history_clear_all_dialog_postive_btn) { dialog, _ ->
-                    historyViewModel.clearHistoryClicked()
+                    historyViewModel.clearAllHistory()
                     dialog.dismiss()
                 }
                 setNegativeButton(R.string.history_clear_all_dialog_negative_btn) { dialog, _ ->
