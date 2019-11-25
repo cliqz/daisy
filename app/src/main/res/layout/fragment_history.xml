@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/empty_view"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="@string/no_history_available" />
+        android:layout_height="56dp"
+        app:titleMarginEnd="16dp"
+        app:titleMarginStart="16dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/history_list"
+    <FrameLayout
+        android:id="@+id/history_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/two_line_list_item_layout" />
-</FrameLayout>
+        android:layout_below="@id/toolbar" />
+
+</RelativeLayout>

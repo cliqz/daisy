@@ -29,6 +29,14 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
+    class DeleteMultipleHistoryUseCase(private val historyStorage: HistoryStorage) {
+        suspend operator fun invoke(historyItemList: Set<HistoryItem>) {
+            historyItemList.forEach { historyItem ->
+                historyStorage.deleteVisit(historyItem.url, historyItem.visitTime)
+            }
+        }
+    }
+
     class DeleteHistoryUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(historyItem: HistoryItem) {
             historyStorage.deleteVisit(historyItem.url, historyItem.visitTime)
@@ -41,10 +49,11 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
-    val getHistory: GetHistoryUseCase by lazy { GetHistoryUseCase(historyStorage) }
-    val getPagedHistory: GetPagedHistoryUseCase by lazy { GetPagedHistoryUseCase(historyStorage) }
-    val deleteHistory: DeleteHistoryUseCase by lazy { DeleteHistoryUseCase(historyStorage) }
-    val clearAllHistory: ClearAllHistoryUseCase by lazy { ClearAllHistoryUseCase(historyStorage) }
+    val getHistory by lazy { GetHistoryUseCase(historyStorage) }
+    val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
+    val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
+    val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }
+    val clearAllHistory by lazy { ClearAllHistoryUseCase(historyStorage) }
 
     companion object {
         private const val PAGE_SIZE = 25

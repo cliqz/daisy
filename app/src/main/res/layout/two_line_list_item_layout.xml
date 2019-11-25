@@ -1,68 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/two_line_list_item_height">
+    android:layout_height="@dimen/two_line_list_item_height"
+    android:background="?android:attr/selectableItemBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false">
+    <ImageButton
+        android:id="@+id/meta_btn"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_clear"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/delete_btn"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_clear"
-            android:tint="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageSwitcher
+        android:id="@+id/icon_view"
+        android:layout_width="@dimen/two_line_list_item_icon_size"
+        android:layout_height="@dimen/two_line_list_item_icon_size"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/icon_view"
-            android:layout_width="@dimen/two_line_list_item_icon_size"
-            android:layout_height="@dimen/two_line_list_item_icon_size"
-            android:layout_margin="@dimen/margin_padding_size_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/favicon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             tools:src="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/url_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="@dimen/text_size_micro"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/delete_btn"
-            app:layout_constraintStart_toStartOf="@+id/history_item_title"
-            app:layout_constraintTop_toBottomOf="@id/history_item_title"
-            tools:text="@tools:sample/lorem/random" />
+        <ImageView
+            android:id="@+id/checkmark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_done"
+            android:tint="@android:color/white" />
+    </ImageSwitcher>
 
-        <TextView
-            android:id="@+id/history_item_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_medium"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="@dimen/text_size_medium"
-            app:layout_constraintEnd_toStartOf="@id/delete_btn"
-            app:layout_constraintStart_toEndOf="@id/icon_view"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@tools:sample/lorem/random" />
+    <TextView
+        android:id="@+id/url_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="@dimen/text_size_micro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/meta_btn"
+        app:layout_constraintStart_toStartOf="@+id/title_view"
+        app:layout_constraintTop_toBottomOf="@id/title_view"
+        tools:text="@tools:sample/lorem/random" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toStartOf="@id/meta_btn"
+        app:layout_constraintStart_toEndOf="@id/icon_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@tools:sample/lorem/random" />
+</androidx.constraintlayout.widget.ConstraintLayout>
