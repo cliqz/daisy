@@ -10,7 +10,7 @@ class HistoryInteractor(
     private val historyViewModel: HistoryViewModel,
     private val openToBrowser: (item: HistoryItem) -> Unit,
     private val deleteAll: () -> Unit,
-    private val invalidateOptionsMenu: () -> Unit
+    private val onBackPressed: () -> Boolean
 ) : MultiSelectionInteractor<HistoryItem> {
 
     override fun open(item: HistoryItem) {
@@ -29,8 +29,12 @@ class HistoryInteractor(
         historyViewModel.deleteMultipleHistoryItem(items)
     }
 
-    fun onModeSwitched() {
-        invalidateOptionsMenu.invoke()
+    fun exitEditingMode(): Boolean {
+        if (historyViewModel.viewMode == ViewMode.Editing) {
+            historyViewModel.clearSelectedItems()
+            return true
+        }
+        return exitView()
     }
 
     override fun onBackPressed(): Boolean {
@@ -47,5 +51,9 @@ class HistoryInteractor(
 
     fun onDeleteAll() {
         deleteAll.invoke()
+    }
+
+    fun exitView(): Boolean {
+        return onBackPressed.invoke()
     }
 }

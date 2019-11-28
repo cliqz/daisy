@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -31,11 +30,6 @@ class HistoryFragment : Fragment(), BackHandler {
     private lateinit var historyView: HistoryView
     private lateinit var historyInteractor: HistoryInteractor
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -46,7 +40,7 @@ class HistoryFragment : Fragment(), BackHandler {
             historyViewModel,
             ::openHistoryItem,
             ::deleteAll,
-            ::invalidateOptionsMenu
+            ::onBackPressed
         )
 
         historyViewModel.getHistoryItems().observe(this, Observer {
@@ -70,12 +64,6 @@ class HistoryFragment : Fragment(), BackHandler {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
-        (activity as AppCompatActivity).apply {
-            setSupportActionBar(view.findViewById(R.id.toolbar))
-            title = activity?.getString(R.string.history_screen_title)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.show()
-        }
         historyView = HistoryView(view.history_layout, historyViewModel, historyInteractor)
         return view
     }
@@ -127,10 +115,6 @@ class HistoryFragment : Fragment(), BackHandler {
 
     private fun deleteAll() {
         showClearAllHistoryDialog()
-    }
-
-    private fun invalidateOptionsMenu() {
-        activity?.invalidateOptionsMenu()
     }
 
     override fun onBackPressed(): Boolean {

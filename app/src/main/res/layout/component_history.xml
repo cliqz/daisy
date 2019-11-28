@@ -2,7 +2,14 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:parentTag="android.widget.FrameLayout">
+    tools:parentTag="android.widget.RelativeLayout">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:titleMarginEnd="16dp"
+        app:titleMarginStart="16dp" />
 
     <TextView
         android:id="@+id/empty_view"
@@ -10,13 +17,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_history_available"
-        android:visibility="gone" />
+        android:layout_below="@id/toolbar"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:layout_below="@id/toolbar"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/two_line_list_item_layout" />
 </merge>

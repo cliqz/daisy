@@ -17,7 +17,7 @@ import org.mozilla.reference.browser.library.LibraryPageView
  */
 class HistoryView(
     containerView: ViewGroup,
-    historyViewModel: HistoryViewModel,
+    private val historyViewModel: HistoryViewModel,
     private val interactor: HistoryInteractor
 ) : LibraryPageView(containerView), BackHandler {
 
@@ -31,11 +31,49 @@ class HistoryView(
 
     init {
         view.history_list.adapter = historyAdapter
+        createToolbarMenu()
+        setupToolbarListeners()
+        update(ViewMode.Normal, emptySet())
+    }
+
+    private fun createToolbarMenu() {
+        val layout = when (historyViewModel.viewMode) {
+            ViewMode.Normal -> R.menu.history_menu
+            ViewMode.Editing -> R.menu.history_multi_select_menu
+        }
+        view.toolbar.menu.clear()
+        view.toolbar.inflateMenu(layout)
+    }
+
+    private fun setupToolbarListeners() {
+        view.toolbar.setNavigationIcon(R.drawable.mozac_ic_back)
+        view.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.close -> {
+                    interactor.exitView()
+                    true
+                }
+                R.id.delete -> {
+                    historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
+                    historyViewModel.viewMode = ViewMode.Normal
+                    true
+                }
+                else -> throw IllegalArgumentException("Invalid menu item")
+            }
+        }
+        view.toolbar.setNavigationOnClickListener {
+            interactor.exitEditingMode()
+        }
+    }
+
+    private fun onModeSwitched() {
+        view.toolbar.invalidate()
+        createToolbarMenu()
     }
 
     fun update(newViewMode: ViewMode, newSelectedItems: Set<HistoryItem>) {
         if (viewMode != newViewMode) {
-            interactor.onModeSwitched()
+            onModeSwitched()
             historyAdapter.updateViewMode(newViewMode)
 
             // Deselect all the previously selected items
@@ -55,11 +93,12 @@ class HistoryView(
         }
 
         if (newViewMode == ViewMode.Normal) {
-            setUiForNormalMode(context.getString(R.string.history_screen_title), view.history_list)
+            setUiForNormalMode(context.getString(R.string.history_screen_title), view.history_list, view.toolbar)
         } else {
             setUiForEditingMode(
                 context.getString(R.string.history_multiple_selected, historyAdapter.selectedItems.size),
-                view.history_list
+                view.history_list,
+                view.toolbar
             )
         }
         viewMode = newViewMode
