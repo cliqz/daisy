@@ -164,7 +164,10 @@
     <string name="history_clear_all_dialog_postive_btn">Clear</string>
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
     <string name="no_history_available">No history to show</string>
-
+    <string name="history_screen_title">History</string>
+    <string name="history_multiple_selected">%1$d selected</string>
+    <string name="history_menu_delete_button">Delete</string>
+    <string name="history_menu_close_button">Close</string>
     <!-- News -->
     <string name="news_label">News</string>
 

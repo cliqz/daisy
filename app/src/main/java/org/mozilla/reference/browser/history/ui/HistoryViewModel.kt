@@ -1,11 +1,13 @@
 package org.mozilla.reference.browser.history.ui
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mozilla.components.feature.session.SessionUseCases
 import org.mozilla.reference.browser.history.data.HistoryItem
 import org.mozilla.reference.browser.history.usecases.HistoryUseCases
@@ -20,8 +22,28 @@ class HistoryViewModel(
 
     private lateinit var historyItems: LiveData<PagedList<HistoryItem>>
 
+    var viewMode = ViewMode.Normal
+
+    val selectedItems = mutableSetOf<HistoryItem>()
+    val selectedItemsLiveData = MutableLiveData<MutableSet<HistoryItem>>()
+
     init {
         fetchHistoryItems()
+    }
+
+    fun addToSelectedItems(item: HistoryItem) {
+        selectedItems.add(item)
+        selectedItemsLiveData.value = selectedItems
+    }
+
+    fun removeFromSelectedItems(item: HistoryItem) {
+        selectedItems.remove(item)
+        selectedItemsLiveData.value = selectedItems
+    }
+
+    fun clearSelectedItems() {
+        selectedItems.clear()
+        selectedItemsLiveData.value = selectedItems
     }
 
     fun getHistoryItems(): LiveData<PagedList<HistoryItem>> {
@@ -32,21 +54,39 @@ class HistoryViewModel(
         sessionUseCases.loadUrl(item.url)
     }
 
+    fun deleteMultipleHistoryItem(itemList: Set<HistoryItem>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            historyUseCases.deleteMultipleHistoryUseCase(itemList)
+            invalidate()
+            withContext(Dispatchers.Main) {
+                clearSelectedItems()
+            }
+        }
+    }
+
     fun deleteHistoryItem(item: HistoryItem) {
         viewModelScope.launch(Dispatchers.IO) {
             historyUseCases.deleteHistory(item)
-            historyItems.value?.dataSource?.invalidate()
+            invalidate()
         }
     }
 
     fun clearAllHistory() {
         viewModelScope.launch(Dispatchers.IO) {
             historyUseCases.clearAllHistory()
-            historyItems.value?.dataSource?.invalidate()
+            invalidate()
         }
+    }
+
+    private fun invalidate() {
+        historyItems.value?.dataSource?.invalidate()
     }
 
     private fun fetchHistoryItems() {
         historyItems = historyUseCases.getPagedHistory()
     }
+}
+
+enum class ViewMode {
+    Normal, Editing
 }

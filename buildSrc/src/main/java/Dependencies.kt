@@ -21,7 +21,7 @@ private object Versions {
 
     const val androidx_lifecycle = "2.2.0-rc02"
     const val android_gradle_plugin = "3.4.1"
-
+    const val androidx_core = "1.2.0-rc01"
     const val mozilla_android_components = "20.0.0"
 
     const val thirdparty_sentry = "1.7.10"
@@ -115,6 +115,8 @@ object Deps {
     const val androidx_lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
     const val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidx_lifecycle}"
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
+
+    const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.androidx_core}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"

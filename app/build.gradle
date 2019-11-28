@@ -252,6 +252,8 @@ dependencies {
     implementation Deps.androidx_lifecycle_viewmodel_ktx
     implementation Deps.google_material
 
+    implementation Deps.androidx_core_ktx
+
     debugImplementation Deps.leakcanary
 
     androidTestImplementation Deps.uiautomator
