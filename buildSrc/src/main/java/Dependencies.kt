@@ -19,7 +19,7 @@ private object Versions {
     const val workmanager = "2.0.0"
     const val google_material = "1.1.0-beta02"
 
-    const val androidx_lifecycle = "2.2.0-alpha05"
+    const val androidx_lifecycle = "2.2.0-rc02"
     const val android_gradle_plugin = "3.4.1"
 
     const val mozilla_android_components = "20.0.0"
