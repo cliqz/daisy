@@ -1,11 +1,11 @@
-package org.mozilla.reference.browser.history.ui.viewholders
+package org.mozilla.reference.browser.library.history.ui.viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.history.data.HistoryItem
-import org.mozilla.reference.browser.history.ui.HistoryInteractor
-import org.mozilla.reference.browser.history.ui.ViewMode
+import org.mozilla.reference.browser.library.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.ui.HistoryInteractor
+import org.mozilla.reference.browser.library.history.ui.ViewMode
 import org.mozilla.reference.browser.library.LibraryItemView
 import org.mozilla.reference.browser.library.SelectionHolder
 

@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.ui
+package org.mozilla.reference.browser.library.history.ui
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.inflate
-import org.mozilla.reference.browser.history.data.HistoryItem
-import org.mozilla.reference.browser.history.ui.viewholders.DeleteAllViewHolder
-import org.mozilla.reference.browser.history.ui.viewholders.HistoryItemViewHolder
+import org.mozilla.reference.browser.library.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.ui.viewholders.DeleteAllViewHolder
+import org.mozilla.reference.browser.library.history.ui.viewholders.HistoryItemViewHolder
 import org.mozilla.reference.browser.library.LibraryItemView
 import org.mozilla.reference.browser.library.SelectionHolder
 

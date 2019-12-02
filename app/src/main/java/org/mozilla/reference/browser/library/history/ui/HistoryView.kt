@@ -1,15 +1,16 @@
-package org.mozilla.reference.browser.history.ui
+package org.mozilla.reference.browser.library.history.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.component_history.view.*
 import mozilla.components.support.base.feature.BackHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.distinct
-import org.mozilla.reference.browser.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.LibraryPageView
 
 /**
@@ -27,7 +28,7 @@ class HistoryView(
     val view: View = LayoutInflater.from(containerView.context)
         .inflate(R.layout.component_history, containerView, true)
 
-    val historyAdapter: HistoryAdapter = HistoryAdapter(interactor, historyViewModel)
+    private val historyAdapter: HistoryAdapter = HistoryAdapter(interactor, historyViewModel)
 
     init {
         view.history_list.adapter = historyAdapter
@@ -69,6 +70,10 @@ class HistoryView(
     private fun onModeSwitched() {
         view.toolbar.invalidate()
         createToolbarMenu()
+    }
+
+    fun submitList(pagedList: PagedList<HistoryItem>?) {
+        historyAdapter.submitList(pagedList)
     }
 
     fun update(newViewMode: ViewMode, newSelectedItems: Set<HistoryItem>) {

@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.data
+package org.mozilla.reference.browser.library.history.data
 
 import androidx.paging.ItemKeyedDataSource
 import mozilla.components.concept.storage.VisitInfo

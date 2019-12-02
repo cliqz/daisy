@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.ui.viewholders
+package org.mozilla.reference.browser.library.history.ui.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

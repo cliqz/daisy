@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.ui
+package org.mozilla.reference.browser.library.history.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -18,7 +18,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.application
-import org.mozilla.reference.browser.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 /**
  * @author Ravjit Uppal
@@ -43,9 +43,9 @@ class HistoryFragment : Fragment(), BackHandler {
             ::onBackPressed
         )
 
-        historyViewModel.getHistoryItems().observe(this, Observer {
-            historyView.updateEmptyState(userHasHistory = it.isNotEmpty())
-            historyView.historyAdapter.submitList(it)
+        historyViewModel.getHistoryItems().observe(this, Observer { historyList ->
+            historyView.updateEmptyState(userHasHistory = historyList.isNotEmpty())
+            historyView.submitList(historyList)
         })
 
         historyViewModel.selectedItemsLiveData.observe(this, Observer {

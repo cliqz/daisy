@@ -1,6 +1,6 @@
-package org.mozilla.reference.browser.history.ui
+package org.mozilla.reference.browser.library.history.ui
 
-import org.mozilla.reference.browser.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.MultiSelectionInteractor
 
 /**
