@@ -37,7 +37,7 @@ class HistoryDataSource(
     }
 
     companion object {
-        private const val INITIAL_OFFSET = 1L
+        private const val INITIAL_OFFSET = 0L
 
         fun List<VisitInfo>.convertToHistoryItems(offset: Int): List<HistoryItem> {
             return mapIndexed { index, visitInfo ->

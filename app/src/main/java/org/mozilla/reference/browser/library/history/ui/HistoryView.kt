@@ -23,7 +23,7 @@ class HistoryView(
 ) : LibraryPageView(containerView), BackHandler {
 
     private var viewMode = ViewMode.Normal
-    private var selectedItems = mutableSetOf<HistoryItem>()
+    private var selectedItems = setOf<HistoryItem>()
 
     val view: View = LayoutInflater.from(containerView.context)
         .inflate(R.layout.component_history, containerView, true)
@@ -83,7 +83,8 @@ class HistoryView(
 
             // Deselect all the previously selected items
             selectedItems.forEach {
-                historyAdapter.notifyItemChanged(it.id)
+                val position = it.id + 1
+                historyAdapter.notifyItemChanged(position)
             }
             (view.history_list.layoutManager as LinearLayoutManager).apply {
                 historyAdapter.notifyItemRangeChanged(0, findFirstVisibleItemPosition())
@@ -93,7 +94,8 @@ class HistoryView(
 
         if (newViewMode == ViewMode.Editing) {
             selectedItems.distinct(newSelectedItems).forEach {
-                historyAdapter.notifyItemChanged(it.id)
+                val position = it.id + 1
+                historyAdapter.notifyItemChanged(position)
             }
         }
 
@@ -107,7 +109,7 @@ class HistoryView(
             )
         }
         viewMode = newViewMode
-        selectedItems = newSelectedItems.toMutableSet()
+        selectedItems = newSelectedItems.toSet()
     }
 
     override fun onBackPressed(): Boolean {
