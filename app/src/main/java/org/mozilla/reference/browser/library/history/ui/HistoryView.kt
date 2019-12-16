@@ -1,5 +1,10 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.library.history.ui
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,24 +52,28 @@ class HistoryView(
         view.toolbar.inflateMenu(layout)
     }
 
+    @SuppressLint("PrivateResource")
     private fun setupToolbarListeners() {
-        view.toolbar.setNavigationIcon(R.drawable.mozac_ic_back)
-        view.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.close -> {
-                    interactor.exitView()
-                    true
+        with(view.toolbar) {
+            setNavigationIcon(R.drawable.mozac_ic_back)
+            setNavigationContentDescription(R.string.abc_action_bar_up_description)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.close -> {
+                        interactor.exitView()
+                        true
+                    }
+                    R.id.delete -> {
+                        historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
+                        historyViewModel.viewMode = ViewMode.Normal
+                        true
+                    }
+                    else -> throw IllegalArgumentException("Invalid menu item")
                 }
-                R.id.delete -> {
-                    historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
-                    historyViewModel.viewMode = ViewMode.Normal
-                    true
-                }
-                else -> throw IllegalArgumentException("Invalid menu item")
             }
-        }
-        view.toolbar.setNavigationOnClickListener {
-            interactor.exitEditingMode()
+            setNavigationOnClickListener {
+                interactor.exitEditingMode()
+            }
         }
     }
 
