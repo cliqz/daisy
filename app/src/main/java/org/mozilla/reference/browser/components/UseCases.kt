@@ -19,7 +19,7 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
-import org.mozilla.reference.browser.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 /**
  * Component group for all use cases. Use cases are provided by feature

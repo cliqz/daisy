@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.data
+package org.mozilla.reference.browser.library.history.data
 
 import androidx.paging.ItemKeyedDataSource
 import mozilla.components.concept.storage.VisitInfo
@@ -37,7 +37,7 @@ class HistoryDataSource(
     }
 
     companion object {
-        private const val INITIAL_OFFSET = 1L
+        private const val INITIAL_OFFSET = 0L
 
         fun List<VisitInfo>.convertToHistoryItems(offset: Int): List<HistoryItem> {
             return mapIndexed { index, visitInfo ->

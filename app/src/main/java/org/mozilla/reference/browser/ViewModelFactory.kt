@@ -2,7 +2,7 @@ package org.mozilla.reference.browser
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.mozilla.reference.browser.history.ui.HistoryViewModel
+import org.mozilla.reference.browser.library.history.ui.HistoryViewModel
 
 /**
  * @author Ravjit Uppal

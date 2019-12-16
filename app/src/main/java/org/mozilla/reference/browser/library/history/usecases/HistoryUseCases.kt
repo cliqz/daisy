@@ -1,13 +1,13 @@
-package org.mozilla.reference.browser.history.usecases
+package org.mozilla.reference.browser.library.history.usecases
 
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.concept.storage.VisitInfo
-import org.mozilla.reference.browser.history.data.HistoryDataSourceFactory
-import org.mozilla.reference.browser.history.data.HistoryItem
-import org.mozilla.reference.browser.history.data.PagedHistoryProvider
+import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
+import org.mozilla.reference.browser.library.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
 
 /**
  * @author Ravjit Uppal
@@ -19,7 +19,7 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
             val historyProvider = PagedHistoryProvider(historyStorage)
             val historyDataSourceFactory = HistoryDataSourceFactory(historyProvider)
             return LivePagedListBuilder(historyDataSourceFactory, PAGE_SIZE)
-                    .build()
+                .build()
         }
     }
 

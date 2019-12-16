@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.history.ui
+package org.mozilla.reference.browser.library.history.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,7 +18,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.application
-import org.mozilla.reference.browser.history.data.HistoryItem
+import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 /**
  * @author Ravjit Uppal
@@ -31,11 +30,6 @@ class HistoryFragment : Fragment(), BackHandler {
     private lateinit var historyView: HistoryView
     private lateinit var historyInteractor: HistoryInteractor
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -46,12 +40,12 @@ class HistoryFragment : Fragment(), BackHandler {
             historyViewModel,
             ::openHistoryItem,
             ::deleteAll,
-            ::invalidateOptionsMenu
+            ::onBackPressed
         )
 
-        historyViewModel.getHistoryItems().observe(this, Observer {
-            historyView.updateEmptyState(userHasHistory = it.isNotEmpty())
-            historyView.historyAdapter.submitList(it)
+        historyViewModel.getHistoryItems().observe(this, Observer { historyList ->
+            historyView.updateEmptyState(userHasHistory = historyList.isNotEmpty())
+            historyView.submitList(historyList)
         })
 
         historyViewModel.selectedItemsLiveData.observe(this, Observer {
@@ -70,12 +64,6 @@ class HistoryFragment : Fragment(), BackHandler {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
-        (activity as AppCompatActivity).apply {
-            setSupportActionBar(view.findViewById(R.id.toolbar))
-            title = activity?.getString(R.string.history_screen_title)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.show()
-        }
         historyView = HistoryView(view.history_layout, historyViewModel, historyInteractor)
         return view
     }
@@ -127,10 +115,6 @@ class HistoryFragment : Fragment(), BackHandler {
 
     private fun deleteAll() {
         showClearAllHistoryDialog()
-    }
-
-    private fun invalidateOptionsMenu() {
-        activity?.invalidateOptionsMenu()
     }
 
     override fun onBackPressed(): Boolean {
