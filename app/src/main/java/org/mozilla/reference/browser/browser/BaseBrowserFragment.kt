@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
 import mozilla.components.feature.downloads.DownloadsFeature
@@ -91,6 +92,7 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             feature = ToolbarIntegration(
                 requireContext(),
                 toolbar,
+                lifecycleScope,
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,

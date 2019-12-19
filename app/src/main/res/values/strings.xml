@@ -156,12 +156,13 @@
 
     <!-- 3 dots menu items -->
     <string name="menu_item_history">History</string>
+    <string name="menu_item_clear_data">Clear Data</string>
 
     <!-- History -->
     <string name="history_title_untitled">Untitled</string>
     <string name="history_clear_all">Clear Browsing History</string>
     <string name="history_clear_all_dialog_msg">Are you sure you want to clear history?</string>
-    <string name="history_clear_all_dialog_postive_btn">Clear</string>
+    <string name="history_clear_all_dialog_positive_btn">Clear</string>
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
     <string name="no_history_available">No history to show</string>
     <string name="history_screen_title">History</string>
@@ -170,10 +171,25 @@
     <string name="history_menu_close_button">Close</string>
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
+
     <!-- News -->
     <string name="news_label">News</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>
     <string name="search_widget_text_short">Search </string>
+
+    <!-- Delete Browsing Data -->
+    <string name="preferences_delete_browsing_data_browsing_data_open_tabs_title">Open Tabs</string>
+    <string name="preferences_delete_browsing_data_browsing_data_history_title">History</string>
+    <string name="preferences_delete_browsing_data_browsing_data_cookies_title">Cookies &amp; Active logins</string>
+    <string name="preferences_delete_browsing_data_browsing_data_cache_title">Cache</string>
+    <string name="preferences_delete_browsing_data_browsing_data_site_settings_title">Site settings</string>
+    <string name="delete_browsing_data_dialog_title">Clear Private Data</string>
+    <string name="delete_browsing_data_dialog_positive_btn">Clear Now</string>
+    <string name="delete_browsing_data_dialog_negative_btn">Cancel</string>
+    <string name="delete_browsing_data_deleted_msg">Browsing data deleted</string>
+
+    <!--suppress CheckTagEmptyBody-->
+    <string name="empty_string" translatable="false"></string>
 </resources>

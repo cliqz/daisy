@@ -113,7 +113,10 @@ class HistoryAdapter(
         }
     }
 
-    private val differ = AsyncPagedListDiffer<HistoryItem>(historyUpdateCallback, AsyncDifferConfig.Builder<HistoryItem>(historyDiffItemCallback).build())
+    private val differ = AsyncPagedListDiffer<HistoryItem>(
+        historyUpdateCallback,
+        AsyncDifferConfig.Builder<HistoryItem>(historyDiffItemCallback).build()
+    )
 
     companion object {
         private const val TYPE_DELETE_ALL = 0

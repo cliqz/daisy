@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.cliqz.browser.freshtab.isFreshTab
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -32,10 +33,12 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.library.history.ui.HistoryFragment
 import org.mozilla.reference.browser.settings.SettingsActivity
+import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
+    coroutineScope: LifecycleCoroutineScope,
     private val historyStorage: HistoryStorage,
     sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
@@ -122,6 +125,10 @@ class ToolbarIntegration(
 
             SimpleBrowserMenuItem(context.getString(R.string.menu_item_history)) {
                 openHistoryFragment()
+            },
+
+            SimpleBrowserMenuItem(context.getString(R.string.menu_item_clear_data)) {
+                DeleteBrowsingData(context, coroutineScope, tabsUseCases, sessionManager).askToDelete()
             }
         )
     }
