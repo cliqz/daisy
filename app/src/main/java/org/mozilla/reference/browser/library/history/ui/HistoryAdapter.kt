@@ -1,8 +1,11 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.library.history.ui
 
+import android.text.format.DateUtils
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.paging.AsyncPagedListDiffer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.AdapterListUpdateCallback
@@ -15,12 +18,9 @@ import org.mozilla.reference.browser.ext.inflate
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.ui.viewholders.DeleteAllViewHolder
 import org.mozilla.reference.browser.library.history.ui.viewholders.HistoryItemViewHolder
-import org.mozilla.reference.browser.library.LibraryItemView
 import org.mozilla.reference.browser.library.SelectionHolder
+import org.mozilla.reference.browser.library.history.ui.viewholders.HistoryItemTimeGroup
 
-/**
- * @author Ravjit Uppal
- */
 class HistoryAdapter(
     private val historyInteractor: HistoryInteractor,
     private val historyViewModel: HistoryViewModel
@@ -36,10 +36,7 @@ class HistoryAdapter(
         return if (viewType == TYPE_DELETE_ALL) {
             DeleteAllViewHolder(parent.inflate(R.layout.clear_all_history), historyInteractor::onDeleteAll)
         } else {
-            val view = LibraryItemView(parent.context).apply {
-                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            }
-            HistoryItemViewHolder(view, historyInteractor, this)
+            HistoryItemViewHolder(parent.inflate(R.layout.history_list_item), historyInteractor, this)
         }
     }
 
@@ -47,9 +44,19 @@ class HistoryAdapter(
         if (holder.itemViewType == TYPE_DELETE_ALL) {
             (holder as DeleteAllViewHolder).bind(disableDeleteAll = viewMode == ViewMode.Editing)
         } else {
-            getItem(position)?.let {
-                (holder as HistoryItemViewHolder).bind(it, it in selectedItems, viewMode)
-            }
+            val previous = if (position == 1) null else getItem(position - 1)
+            val current = getItem(position) ?: return
+
+            val previousHeader = previous?.let(::timeGroupForHistoryItem)
+            val currentHeader = timeGroupForHistoryItem(current)
+            val timeGroup = if (currentHeader != previousHeader) currentHeader else null
+
+            (holder as HistoryItemViewHolder).bind(
+                historyItem = current,
+                timeGroup = timeGroup,
+                isSelected = current in selectedItems,
+                viewMode = viewMode
+            )
         }
     }
 
@@ -111,5 +118,17 @@ class HistoryAdapter(
     companion object {
         private const val TYPE_DELETE_ALL = 0
         private const val TYPE_ITEM = 1
+
+        private fun isYesterday(time: Long): Boolean {
+            return DateUtils.isToday(time + DateUtils.DAY_IN_MILLIS)
+        }
+
+        private fun timeGroupForHistoryItem(item: HistoryItem): HistoryItemTimeGroup {
+            return when {
+                DateUtils.isToday(item.visitTime) -> HistoryItemTimeGroup.Today
+                isYesterday(item.visitTime) -> HistoryItemTimeGroup.Yesterday
+                else -> HistoryItemTimeGroup.Older
+            }
+        }
     }
 }

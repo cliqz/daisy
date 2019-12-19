@@ -168,6 +168,8 @@
     <string name="history_multiple_selected">%1$d selected</string>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
     <!-- News -->
     <string name="news_label">News</string>
 
