@@ -100,7 +100,7 @@ class HistoryFragment : Fragment(), BackHandler {
         context?.let {
             AlertDialog.Builder(it).apply {
                 setMessage(R.string.history_clear_all_dialog_msg)
-                setPositiveButton(R.string.history_clear_all_dialog_postive_btn) { dialog, _ ->
+                setPositiveButton(R.string.history_clear_all_dialog_positive_btn) { dialog, _ ->
                     historyViewModel.clearAllHistory()
                     dialog.dismiss()
                 }

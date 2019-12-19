@@ -78,8 +78,10 @@ class SearchWidgetProvider : AppWidgetProvider() {
     }
 
     private fun getLayoutSize(@Dimension(unit = DP) dp: Int, context: Context) = when {
-        dp >= context.resources.getDimension(R.dimen.search_widget_four_rows_width).toDp(context.resources.displayMetrics) -> LARGE
-        dp >= context.resources.getDimension(R.dimen.search_widget_three_rows_width).toDp(context.resources.displayMetrics) -> MEDIUM
+        dp >= context.resources.getDimension(R.dimen.search_widget_four_rows_width)
+            .toDp(context.resources.displayMetrics) -> LARGE
+        dp >= context.resources.getDimension(R.dimen.search_widget_three_rows_width)
+            .toDp(context.resources.displayMetrics) -> MEDIUM
         else -> SMALL
     }
 
