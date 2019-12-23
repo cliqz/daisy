@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -98,7 +99,7 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
 
     private fun showClearAllHistoryDialog() {
         context?.let {
-            AlertDialog.Builder(it).apply {
+            val alertDialog = AlertDialog.Builder(it).run {
                 setMessage(R.string.history_clear_all_dialog_msg)
                 setPositiveButton(R.string.history_clear_all_dialog_positive_btn) { dialog, _ ->
                     historyViewModel.clearAllHistory()
@@ -110,6 +111,10 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
                 create()
                 show()
             }
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(it, android.R.color.white))
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(it, android.R.color.white))
         }
     }
 
