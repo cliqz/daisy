@@ -36,6 +36,7 @@ class ThreeDotMenuRobot {
     fun verifyRequestDesktopSiteToggleDoesntExist() = assertRequestDesktopSiteToggleDoesntExist()
     fun verifyFindInPageButtonDoesntExist() = assertFindInPageButtonDoesntExist()
     fun verifyClearDataButtonExist() = assertClearDataButtonExist()
+    fun verifyNewForgetTabButtonExists() = assertNewForgetTabButton()
 
     class Transition {
 
@@ -107,6 +108,12 @@ class ThreeDotMenuRobot {
             ClearDataDialogRobot().interact()
             return ClearDataDialogRobot.Transition()
         }
+
+        fun openNewForgetTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+            newForgetTabButton().click()
+            NavigationToolbarRobot().interact()
+            return NavigationToolbarRobot.Transition()
+        }
     }
 }
 
@@ -126,11 +133,14 @@ private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun historyButton() = onView(ViewMatchers.withText("History"))
 private fun newTabButton() = onView(ViewMatchers.withText("New Tab"))
 private fun clearDataButton() = onView(ViewMatchers.withText("Clear Data"))
+private fun newForgetTabButton() = onView(ViewMatchers.withText("New Forget Tab"))
+
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
-
+private fun assertNewForgetTabButton() = newForgetTabButton()
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertForwardButton() = forwardButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRefreshButton() = refreshButton()

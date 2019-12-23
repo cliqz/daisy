@@ -158,6 +158,7 @@
     <string name="toast_copied">Copied!</string>
 
     <!-- 3 dots menu items -->
+    <string name="menu_item_forget_tab">New Forget Tab</string>
     <string name="menu_item_history">History</string>
     <string name="menu_item_clear_data">Clear Data</string>
 
