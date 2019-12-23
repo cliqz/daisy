@@ -1,7 +1,6 @@
 package org.mozilla.reference.browser.ui
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
+import android.net.Uri
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
@@ -10,14 +9,11 @@ import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.externalIntents
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
-/**
- * @author Ravjit Uppal
- */
-class HistoryTest {
+class ExternalIntentsTest {
 
-    private val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     private lateinit var mockWebServer: MockWebServer
 
     @get:Rule
@@ -37,17 +33,27 @@ class HistoryTest {
     }
 
     @Test
-    fun addToHistoryTest() {
+    fun openExternalLink() {
+        val url = "https://cliqz.com"
+        externalIntents {
+        }.openUrlByImplicitIntent(Uri.parse(url)) {
+            verifyCustomUrl(url)
+        }
+    }
+
+    @Test
+    fun browseAndOpenExternalLink() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
-        }.openNavigationToolbar {
-        }.openThreeDotMenu {
-            verifyThreeDotMenuExists()
-        }.openHistory {
-            verifyHistoryExists(defaultWebPage.url.toString())
-        }.openHistoryUrl(defaultWebPage.url.toString()) {
-            verifyCustomUrl(defaultWebPage.url.toString())
+        }
+        val url = "https://cliqz.com"
+        externalIntents {
+        }.openUrlByImplicitIntent(Uri.parse(url)) {
+            verifyCustomUrl(url)
+        }
+        navigationToolbar {
+            verifyUrlBarNotFocused()
         }
     }
 }
