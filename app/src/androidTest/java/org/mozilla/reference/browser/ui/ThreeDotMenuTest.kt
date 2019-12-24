@@ -77,6 +77,7 @@ class ThreeDotMenuTest {
             verifyFindInPageButtonExists()
             verifyReportIssueExists()
             verifyOpenSettingsExists()
+            verifyClearDataButtonExist()
         }
     }
 
@@ -208,6 +209,15 @@ class ThreeDotMenuTest {
             verifyNewTabAddressView()
             // The number of tabs in Daisy is never 0
             checkNumberOfTabsTabCounter("2")
+        }
+    }
+
+    @Test
+    fun openClearDataDialogTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.clearData {
+            verifyClearDataTitle()
         }
     }
 }
