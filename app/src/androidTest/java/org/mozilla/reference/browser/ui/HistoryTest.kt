@@ -138,4 +138,17 @@ class HistoryTest {
             verifyEmptyHistoryView()
         }
     }
+
+    @Test
+    fun historyTimeGroupTodayTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+        }.openHistory {
+            verifyHistoryItemExists(defaultWebPage.url.toString())
+        }
+    }
 }

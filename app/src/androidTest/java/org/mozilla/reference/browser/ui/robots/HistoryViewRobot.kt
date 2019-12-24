@@ -51,6 +51,8 @@ class HistoryViewRobot {
 
     fun verifyDeleteConfirmationMessage() = assertDeleteConfirmationMessage()
 
+    fun verifyTimeGroupTodayExists() = assertTimeGroupTodayTest()
+
     fun clickDeleteHistoryButton() {
         historyDeleteButton().click()
     }
@@ -89,10 +91,12 @@ private fun historyItemDeleteButton() = onView(withId(R.id.meta_btn))
 
 private fun assertHistoryViewExists() {
     onView(withText("History"))
+        .check(matches(isDisplayed()))
 }
 
 private fun assertDeleteHistoryButtonExists() {
     onView(withText("Clear Browsing History"))
+        .check(matches(isDisplayed()))
 }
 
 private fun assertEmptyHistoryView() =
@@ -111,4 +115,8 @@ private fun assertHistoryItem(url: String) =
 private fun assertDeleteConfirmationMessage() =
     onView(withText("Are you sure you want to clear history?"))
         .inRoot(isDialog())
+        .check(matches(isDisplayed()))
+
+private fun assertTimeGroupTodayTest() =
+    onView(withText("Today"))
         .check(matches(isDisplayed()))
