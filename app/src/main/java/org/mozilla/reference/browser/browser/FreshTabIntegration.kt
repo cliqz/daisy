@@ -27,11 +27,10 @@ class FreshTabIntegration(
 
     private var newsFeature: NewsFeature? = null
 
-    init {
-        FreshTabFeature(awesomeBar, toolbar, freshTab, engineView, sessionManager)
-    }
+    private var freshTabFeature = FreshTabFeature(awesomeBar, toolbar, freshTab, engineView, sessionManager)
 
     override fun start() {
+        freshTabFeature.start()
         if (context.preferences().shouldShowNewsView) {
             newsFeature?.start()
         } else {
@@ -40,6 +39,7 @@ class FreshTabIntegration(
     }
 
     override fun stop() {
+        freshTabFeature.stop()
         newsFeature?.stop()
     }
 

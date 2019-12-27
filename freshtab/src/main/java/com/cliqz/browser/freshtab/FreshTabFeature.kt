@@ -9,6 +9,7 @@ import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.toolbar.Toolbar
+import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class FreshTabFeature(
     private val awesomeBar: AwesomeBar,
@@ -16,11 +17,15 @@ class FreshTabFeature(
     private val freshTab: FreshTab,
     private val engineView: EngineView,
     private val sessionManager: SessionManager
-) : SessionManager.Observer, Session.Observer, Toolbar.OnEditListener {
+) : SessionManager.Observer, Session.Observer, Toolbar.OnEditListener, LifecycleAwareFeature {
 
     @VisibleForTesting
     val currentUrl: String?
         get() = sessionManager.selectedSession?.url
+
+    private var toolbarText: String = ""
+
+    private var inputStarted = false
 
     init {
         toolbar.setOnEditListener(this)
@@ -29,9 +34,20 @@ class FreshTabFeature(
         updateVisibility()
     }
 
-    private var inputStarted = false
+    override fun start() {
+        // no-op
+    }
+
+    override fun stop() {
+        // Show display mode if there's no change in url
+        if (sessionManager.selectedSession != null &&
+                sessionManager.selectedSession!!.url == toolbarText) {
+            toolbar.displayMode()
+        }
+    }
 
     override fun onTextChanged(text: String) {
+        toolbarText = text
         if (inputStarted) {
             if (text.isNotBlank()) {
                 freshTab.visibility = View.GONE
