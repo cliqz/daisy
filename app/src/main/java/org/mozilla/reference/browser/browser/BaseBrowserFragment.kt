@@ -101,10 +101,12 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,
+                requireComponents.useCases.searchUseCases,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
-                activity?.supportFragmentManager, toolbarEditMode = openToSearch),
+                activity?.supportFragmentManager,
+                toolbarEditMode = openToSearch),
             owner = this,
             view = view)
 
