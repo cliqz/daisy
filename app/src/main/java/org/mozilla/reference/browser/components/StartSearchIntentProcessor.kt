@@ -1,11 +1,11 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Intent
-import com.cliqz.browser.freshtab.isFreshTab
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.BrowserActivity
+import org.mozilla.reference.browser.browser.isFreshTab
 
 class StartSearchIntentProcessor(
     private val tabsUseCases: TabsUseCases,
