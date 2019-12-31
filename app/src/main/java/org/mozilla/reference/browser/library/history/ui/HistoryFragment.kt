@@ -126,10 +126,14 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
         if (historyView.onBackPressed()) {
             return true
         }
+        showFreshTab()
+        return true
+    }
+
+    private fun showFreshTab() {
         activity?.supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.container, BrowserFragment.create())
             commit()
         }
-        return true
     }
 }

@@ -59,7 +59,8 @@ class ToolbarIntegration(
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
     private val fragmentManager: FragmentManager?,
-    toolbarEditMode: Boolean = false
+    toolbarEditMode: Boolean = false,
+    showFreshTab: () -> Unit
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
@@ -101,6 +102,7 @@ class ToolbarIntegration(
             menuToolbar,
             SimpleBrowserMenuItem("New Tab") {
                 tabsUseCases.addTab.invoke("")
+                showFreshTab.invoke()
             },
             SimpleBrowserMenuItem(context.getString(R.string.menu_item_forget_tab)) {
                 tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
@@ -153,7 +155,13 @@ class ToolbarIntegration(
             },
 
             SimpleBrowserMenuItem(context.getString(R.string.menu_item_clear_data)) {
-                DeleteBrowsingData(context, coroutineScope, tabsUseCases, sessionManager).askToDelete()
+                val deleteBrowsingData = DeleteBrowsingData(
+                    context,
+                    coroutineScope,
+                    tabsUseCases,
+                    sessionManager,
+                    showFreshTab)
+                deleteBrowsingData.askToDelete()
             }
         )
     }
