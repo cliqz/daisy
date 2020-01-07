@@ -14,7 +14,8 @@
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/search_widget_text"
@@ -39,6 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:src="@drawable/mozac_ic_search"
-        android:tint="#9D9E9F" />
+        android:tint="#9D9E9F"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>

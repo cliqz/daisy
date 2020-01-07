@@ -4,7 +4,6 @@
     <item
         android:id="@+id/delete"
         android:icon="@drawable/mozac_ic_delete"
-        android:iconTint="@color/accent"
         android:title="@string/history_menu_delete_button"
         app:showAsAction="ifRoom" />
 </menu>

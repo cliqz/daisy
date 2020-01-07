@@ -12,8 +12,10 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
+import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
 import mozilla.components.feature.findinpage.view.FindInPageView
@@ -21,10 +23,10 @@ import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
 import mozilla.components.feature.session.SessionFeature
 import mozilla.components.feature.session.SwipeRefreshFeature
-import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.feature.sitepermissions.SitePermissionsFeature
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.feature.tabs.WindowFeature
 import mozilla.components.support.base.feature.PermissionsFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.ktx.android.view.enterToImmersiveMode
 import mozilla.components.support.ktx.android.view.exitImmersiveModeIfNeeded
@@ -32,8 +34,8 @@ import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_APP_PERMISS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PERMISSIONS
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.UserInteractionHandler
 import org.mozilla.reference.browser.downloads.DownloadService
+import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 
@@ -43,11 +45,12 @@ import org.mozilla.reference.browser.pip.PictureInPictureIntegration
  * UI code specific to the app or to custom tabs can be found in the subclasses.
  */
 @Suppress("TooManyFunctions")
-abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHandler {
+abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     private val sessionFeature = ViewBoundFeatureWrapper<SessionFeature>()
     private val toolbarIntegration = ViewBoundFeatureWrapper<ToolbarIntegration>()
     private val contextMenuIntegration = ViewBoundFeatureWrapper<ContextMenuIntegration>()
     private val downloadsFeature = ViewBoundFeatureWrapper<DownloadsFeature>()
+    private val appLinksFeature = ViewBoundFeatureWrapper<AppLinksFeature>()
     private val promptsFeature = ViewBoundFeatureWrapper<PromptFeature>()
     private val fullScreenFeature = ViewBoundFeatureWrapper<FullScreenFeature>()
     private val findInPageIntegration = ViewBoundFeatureWrapper<FindInPageIntegration>()
@@ -79,6 +82,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
         sessionFeature.set(
             feature = SessionFeature(
                 requireComponents.core.sessionManager,
@@ -131,6 +136,20 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
             owner = this,
             view = view)
 
+        appLinksFeature.set(
+            feature = AppLinksFeature(
+                requireContext(),
+                sessionManager = requireComponents.core.sessionManager,
+                sessionId = sessionId,
+                fragmentManager = requireFragmentManager(),
+                launchInApp = {
+                    prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
+                }
+            ),
+            owner = this,
+            view = view
+        )
+
         promptsFeature.set(
             feature = PromptFeature(
                 fragment = this,
@@ -145,8 +164,8 @@ abstract class BaseBrowserFragment : Fragment(), BackHandler, UserInteractionHan
 
         windowFeature.set(
             feature = WindowFeature(
-                requireComponents.core.store,
-                requireComponents.useCases.tabsUseCases),
+                    requireComponents.core.store,
+                    requireComponents.useCases.tabsUseCases),
             owner = this,
             view = view
         )

@@ -19,12 +19,18 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
+import mozilla.components.feature.addons.AddonManager
+import mozilla.components.feature.addons.amo.AddonCollectionProvider
+import mozilla.components.feature.addons.update.AddonUpdater
+import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
 import mozilla.components.feature.media.state.MediaStateMachine
 import mozilla.components.feature.session.HistoryDelegate
+import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
+import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.EngineProvider
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
@@ -32,6 +38,8 @@ import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_norma
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import java.util.concurrent.TimeUnit
+
+private const val DAY_IN_MINUTES = 24 * 60L
 
 /**
  * Component group for all core browser functionality.
@@ -102,6 +110,9 @@ class Core(private val context: Context) {
             // Enable media features like showing an ongoing notification with media controls when
             // media in web content is playing.
             MediaFeature(context).enable()
+
+            WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
+                BrowserActivity::class.java)
         }
     }
 
@@ -120,6 +131,20 @@ class Core(private val context: Context) {
      * Icons component for loading, caching and processing website icons.
      */
     val icons by lazy { BrowserIcons(context, client) }
+
+    // Addons
+    val addonManager by lazy {
+        val addonUpdater = DefaultAddonUpdater(context, AddonUpdater.Frequency(1, TimeUnit.DAYS))
+        AddonManager(store, engine, addonCollectionProvider, addonUpdater)
+    }
+
+    val addonCollectionProvider by lazy {
+        AddonCollectionProvider(
+            context = context,
+            client = client,
+            maxCacheAgeInMinutes = DAY_IN_MINUTES
+        )
+    }
 
     /**
      * Constructs a [TrackingProtectionPolicy] based on current preferences.

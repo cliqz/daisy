@@ -15,12 +15,17 @@ class DeleteAllViewHolder(
         containerView.clear_history.run {
             if (disableDeleteAll) {
                 isEnabled = false
-                alpha = 0.4f
+                alpha = disabledAlpha
             } else {
                 isEnabled = true
-                alpha = 1f
+                alpha = enabledAlpha
             }
         }
         containerView.clear_history.setOnClickListener { deleteAll() }
+    }
+
+    companion object {
+        const val disabledAlpha = 0.4f
+        const val enabledAlpha = 1f
     }
 }

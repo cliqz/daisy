@@ -16,7 +16,8 @@
         android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/delete" />
 
     <ImageSwitcher
         android:id="@+id/icon_view"
@@ -31,14 +32,16 @@
             android:id="@+id/favicon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@tools:sample/avatars"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/checkmark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_done"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"
+            tools:ignore="ContentDescription" />
     </ImageSwitcher>
 
     <TextView

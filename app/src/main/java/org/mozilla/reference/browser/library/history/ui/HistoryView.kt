@@ -7,11 +7,12 @@ import androidx.core.view.isVisible
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.component_history.view.*
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.distinct
-import org.mozilla.reference.browser.library.history.data.HistoryItem
+import org.mozilla.reference.browser.ext.getQuantityString
 import org.mozilla.reference.browser.library.LibraryPageView
+import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 /**
  * Borrowed from the Fenix project
@@ -20,7 +21,7 @@ class HistoryView(
     containerView: ViewGroup,
     private val historyViewModel: HistoryViewModel,
     private val interactor: HistoryInteractor
-) : LibraryPageView(containerView), BackHandler {
+) : LibraryPageView(containerView), UserInteractionHandler {
 
     private var viewMode = ViewMode.Normal
     private var selectedItems = setOf<HistoryItem>()
@@ -103,7 +104,7 @@ class HistoryView(
             setUiForNormalMode(context.getString(R.string.history_screen_title), view.history_list, view.toolbar)
         } else {
             setUiForEditingMode(
-                context.getString(R.string.history_multiple_selected, historyAdapter.selectedItems.size),
+                context.getQuantityString(R.plurals.history_items_selected, historyAdapter.selectedItems.size),
                 view.history_list,
                 view.toolbar
             )

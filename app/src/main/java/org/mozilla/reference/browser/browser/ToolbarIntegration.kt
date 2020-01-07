@@ -26,9 +26,10 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
-import mozilla.components.support.base.feature.BackHandler
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.library.history.ui.HistoryFragment
@@ -47,7 +48,8 @@ class ToolbarIntegration(
     sessionId: String? = null,
     private val fragmentManager: FragmentManager?,
     toolbarEditMode: Boolean = false
-) : LifecycleAwareFeature, BackHandler {
+) : LifecycleAwareFeature, UserInteractionHandler {
+
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }
@@ -79,6 +81,10 @@ class ToolbarIntegration(
     }
 
     private val menuItems: List<BrowserMenuItem> by lazy {
+        val hasSessionAndUrl = {
+            sessionManager.selectedSession != null &&
+                    !sessionManager.selectedSession!!.url.isFreshTab()
+        }
         listOf(
             menuToolbar,
             SimpleBrowserMenuItem("New Tab") {
@@ -88,30 +94,34 @@ class ToolbarIntegration(
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
             }.apply {
-                visible = { sessionManager.selectedSession != null }
+                visible = hasSessionAndUrl
             },
             BrowserMenuSwitch("Request desktop site", {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             }.apply {
-                visible = { sessionManager.selectedSession != null }
+                visible = hasSessionAndUrl
             },
 
             SimpleBrowserMenuItem("Add to homescreen") {
                 MainScope().launch { webAppUseCases.addToHomescreen() }
             }.apply {
                 visible = {
-                    webAppUseCases.isPinningSupported() &&
-                        (sessionManager.selectedSession != null &&
-                            !sessionManager.selectedSession!!.url.isFreshTab())
+                    webAppUseCases.isPinningSupported() && hasSessionAndUrl()
                 }
             },
 
             SimpleBrowserMenuItem("Find in Page") {
                 FindInPageIntegration.launch?.invoke()
             }.apply {
-                visible = { sessionManager.selectedSession != null }
+                visible = hasSessionAndUrl
+            },
+
+            SimpleBrowserMenuItem("Add-ons") {
+                val intent = Intent(context, AddonsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
             },
 
             SimpleBrowserMenuItem("Report issue") {

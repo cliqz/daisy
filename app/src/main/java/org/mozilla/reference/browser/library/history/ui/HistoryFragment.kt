@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_history.view.*
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.browser.BrowserFragment
@@ -23,7 +23,7 @@ import org.mozilla.reference.browser.library.history.data.HistoryItem
 /**
  * @author Ravjit Uppal
  */
-class HistoryFragment : Fragment(), BackHandler {
+class HistoryFragment : Fragment(), UserInteractionHandler {
 
     private lateinit var historyViewModel: HistoryViewModel
 

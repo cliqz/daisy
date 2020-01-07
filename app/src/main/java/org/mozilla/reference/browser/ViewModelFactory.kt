@@ -11,6 +11,7 @@ import org.mozilla.reference.browser.library.history.ui.HistoryViewModel
  */
 class ViewModelFactory(private val applicationContext: BrowserApplication) : ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass == HistoryViewModel::class.java) {
             return HistoryViewModel(

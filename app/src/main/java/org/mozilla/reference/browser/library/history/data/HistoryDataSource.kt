@@ -41,7 +41,6 @@ class HistoryDataSource(
 
         fun List<VisitInfo>.convertToHistoryItems(offset: Int): List<HistoryItem> {
             return mapIndexed { index, visitInfo ->
-                // TODO: Provide a title when there is none.
                 HistoryItem(
                     offset + index,
                     visitInfo.title ?: "",

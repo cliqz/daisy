@@ -47,5 +47,5 @@ class Components(private val context: Context) {
             useCases.tabsUseCases
         )
     }
-    val services by lazy { Services(backgroundServices.accountManager, useCases.tabsUseCases) }
+    val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
 }

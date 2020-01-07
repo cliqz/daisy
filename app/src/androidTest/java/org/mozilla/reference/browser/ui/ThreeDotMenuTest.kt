@@ -206,7 +206,8 @@ class ThreeDotMenuTest {
         }.openThreeDotMenu {
         }.openNewTab {
             verifyNewTabAddressView()
-            checkNumberOfTabsTabCounter("1")
+            // The number of tabs in Daisy is never 0
+            checkNumberOfTabsTabCounter("2")
         }
     }
 }

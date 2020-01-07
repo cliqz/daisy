@@ -7,7 +7,6 @@
 package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -17,11 +16,14 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import org.junit.Assert.assertNull
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTimeShort
 import org.mozilla.reference.browser.helpers.assertIsChecked
 import org.mozilla.reference.browser.helpers.click
+import org.mozilla.reference.browser.helpers.last
 
 /**
  * Implementation of Robot Pattern for the tab tray menu.
@@ -52,8 +54,9 @@ class TabTrayMenuRobot {
     }
 
     fun openPrivateBrowsing() {
-        mDevice.wait(Until.findObject(By.res("button_private_tabs")), waitingTime)
-        privateBrowsingButton().click()
+        mDevice.waitAndInteract(Until.findObject(By.desc("Private tabs"))) {
+            click()
+        }
     }
 
     class Transition {
@@ -76,10 +79,10 @@ class TabTrayMenuRobot {
             return NavigationToolbarRobot()
         }
 
-        fun closeTabXButton(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+        fun closeTabXButton(interact: TabTrayMoreOptionsMenuRobot.() -> Unit): Transition {
             closeTabButtonTabTray().click()
-            NavigationToolbarRobot().interact()
-            return NavigationToolbarRobot.Transition()
+            TabTrayMoreOptionsMenuRobot().interact()
+            return Transition()
         }
     }
 }
@@ -89,8 +92,9 @@ private fun privateBrowsingButton() = onView(withId(R.id.button_private_tabs))
 private fun goBackButton() = onView(ViewMatchers.withContentDescription("back"))
 private fun newTabButton() = onView(ViewMatchers.withContentDescription("Add New Tab"))
 private fun menuButton() = onView(ViewMatchers.withContentDescription("More options"))
-private fun closeTabButtonTabTray() = onView(withId(R.id.mozac_browser_tabstray_close))
-private fun privateTabs() = onView(ViewMatchers.withText("Private Browsing"))
+private fun closeTabButtonTabTray() = onView(last(withId(R.id.mozac_browser_tabstray_close)))
+
+// In Daisy, "about:blank" never appear in the url bar
 private fun regularTabs() = onView((ViewMatchers.withText("about:blank")))
 
 private fun assertRegularBrowsingButton() = regularBrowsingButton()
@@ -107,8 +111,10 @@ private fun assertPrivateTabs() {
     mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTime)
 }
 private fun assertThereAreNoPrivateTabsOpen() {
-    mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTimeShort)
-    privateTabs().check(doesNotExist())
+    val obj = mDevice.wait(Until.findObject(By.text("Private Browsing")), waitingTimeShort)
+    try {
+        assertNull(obj)
+    } finally {
+        obj?.recycle()
+    }
 }
-private fun assertRegularTabs() = regularTabs()
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

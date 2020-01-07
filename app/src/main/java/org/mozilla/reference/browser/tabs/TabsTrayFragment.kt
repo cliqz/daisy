@@ -5,16 +5,15 @@
 package org.mozilla.reference.browser.tabs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsPanel
-import kotlinx.android.synthetic.main.fragment_tabstray.tabsTray
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_tabstray.*
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.tabs.tabstray.TabsFeature
-import mozilla.components.support.base.feature.BackHandler
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.requireComponents
@@ -22,7 +21,7 @@ import org.mozilla.reference.browser.ext.requireComponents
 /**
  * A fragment for displaying the tabs tray.
  */
-class TabsTrayFragment : Fragment(), BackHandler, SessionManager.Observer {
+class TabsTrayFragment : Fragment(), UserInteractionHandler, SessionManager.Observer {
     private var tabsFeature: TabsFeature? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

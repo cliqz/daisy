@@ -13,6 +13,7 @@ import android.content.Intent.EXTRA_SUBJECT
 import android.content.Intent.EXTRA_TEXT
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.ContextThemeWrapper
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import mozilla.components.support.base.log.Log.Priority.WARN
 import mozilla.components.support.base.log.Log
@@ -68,3 +69,13 @@ fun Context.share(text: String, subject: String = ""): Boolean {
 }
 
 fun Context.preferences() = PreferenceHelper.getInstance(this)
+
+/**
+ * Shortcut to get quantity aware strings from the context.
+ *
+ * @param pluralId the plural id
+ * @param quantity the quantity you want the string for
+ * @see android.content.res.Resources.getQuantityString
+ */
+fun Context.getQuantityString(@PluralsRes pluralId: Int, quantity: Int) =
+        resources.getQuantityString(pluralId, quantity)

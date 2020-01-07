@@ -80,6 +80,9 @@
     <!-- Preference category for sync settings -->
     <string name="sync_category">Choose what to sync</string>
 
+    <!-- Preference for open links in apps -->
+    <string name="open_links_in_apps">Open links in apps</string>
+
     <!-- Preference category for developer tools -->
     <string name="developer_tools_category">Developer tools</string>
 
@@ -166,14 +169,14 @@
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
     <string name="no_history_available">No history to show</string>
     <string name="history_screen_title">History</string>
-    <string name="history_multiple_selected">%1$d selected</string>
+    <plurals name="history_items_selected">
+        <item quantity="one">%1$d item selected</item>
+        <item quantity="many">%1$d items selected</item>
+    </plurals>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
-
-    <!-- News -->
-    <string name="news_label">News</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>
@@ -192,4 +195,18 @@
 
     <!--suppress CheckTagEmptyBody-->
     <string name="empty_string" translatable="false"></string>
+    <!-- Send Tab -->
+    <!-- Name of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
+    <string name="fxa_received_tab_channel_name">Received tabs</string>
+    <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
+    <string name="fxa_received_tab_channel_description">Notifications for tabs received from other Firefox devices.</string>
+    <!--  The body for these is the URL of the tab received  -->
+    <string name="fxa_tab_received_notification_name">Tab Received</string>
+    <!-- %s is the device name -->
+    <string name="fxa_tab_received_from_notification_name">Tab from %s</string>
+
+    <!-- Addons -->
+    <string name="addon_permissions_dialog_add">Add</string>
+    <string name="addon_permissions_dialog_cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -9,4 +9,7 @@
         the functions are not available on Android. -->
         <ignore path="**/sentry*.jar" />
     </issue>
+    <issue id="UnusedResources">
+        <ignore path="src/main/res/values/dimens.xml" />
+    </issue>
 </lint>

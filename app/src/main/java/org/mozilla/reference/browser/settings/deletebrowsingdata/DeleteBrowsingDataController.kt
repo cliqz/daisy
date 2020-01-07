@@ -61,6 +61,5 @@ class DefaultDeleteBrowsingDataController(
                 Engine.BrowsingData.select(Engine.BrowsingData.ALL_SITE_SETTINGS)
             )
         }
-        // TODO: Delete site permissions.
     }
 }

@@ -73,13 +73,13 @@ class TabTrayMenuTest {
         navigationToolbar {
         }.openTabTrayMenu {
         }.openNewTab {
+            checkNumberOfTabsTabCounter("2")
         }.openTabTrayMenu {
-            verifyThereIsOneTabOpen()
         }.openMoreOptionsMenu {
             verifyCloseAllTabsButton()
         }.closeAllTabs {
-            verifyNewTabAddressView()
-            checkNumberOfTabsTabCounter("0")
+            verifyNoTabAddressView()
+            checkNumberOfTabsTabCounter("1")
         }
     }
 
@@ -108,10 +108,12 @@ class TabTrayMenuTest {
         navigationToolbar {
         }.openTabTrayMenu {
         }.openNewTab {
-            checkNumberOfTabsTabCounter("1")
+            // In Daisy is impossible to have 0 tabs
+            checkNumberOfTabsTabCounter("2")
         }.openTabTrayMenu {
         }.closeTabXButton {
-            checkNumberOfTabsTabCounter("0")
+        }.goBackFromTabTray {
+            checkNumberOfTabsTabCounter("1")
         }
     }
 
@@ -137,7 +139,8 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
         }.openNewTab {
             verifyNewTabAddressView()
-            checkNumberOfTabsTabCounter("1")
+            // In Daisy is impossible to have 0 tabs
+            checkNumberOfTabsTabCounter("2")
         }
     }
 
@@ -148,7 +151,7 @@ class TabTrayMenuTest {
         }.openTabTrayMenu {
         }.goBackFromTabTray {
             // For now checking new tab is valid, this will change when browsing to/from different places
-            verifyNewTabAddressView()
+            verifyNoTabAddressView()
         }
     }
 }

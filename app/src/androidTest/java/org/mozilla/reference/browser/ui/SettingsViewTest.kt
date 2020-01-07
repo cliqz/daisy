@@ -31,6 +31,7 @@ class SettingsViewTest {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openSettings {
+            verifyShowNewsViewCheckBox()
             verifySettingsViewExists()
             verifyNavigateUp()
             verifySyncSigninButton()
@@ -39,13 +40,13 @@ class SettingsViewTest {
             verifySyncQrSummary()
             verifyPrivacyButton()
             verifyPrivacySummary()
+            verifyOpenLinksInApps()
             verifyMakeDefaultBrowserButton()
             verifyDeveloperToolsHeading()
-            verifyRemoteDebuggingText()
-            verifyRemoteDebuggingToggle()
+            scrollDown()
+            verifyRemoteDebugging()
             verifyMozillaHeading()
             verifyAboutReferenceBrowserButton()
-            verifyShowNewsViewCheckBox()
         }
     }
 
