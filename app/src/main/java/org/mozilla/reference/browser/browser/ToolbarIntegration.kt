@@ -90,6 +90,9 @@ class ToolbarIntegration(
             SimpleBrowserMenuItem("New Tab") {
                 tabsUseCases.addTab.invoke("")
             },
+            SimpleBrowserMenuItem(context.getString(R.string.menu_item_forget_tab)) {
+                tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
+            },
             SimpleBrowserMenuItem("Share") {
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
