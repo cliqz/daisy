@@ -220,4 +220,13 @@ class ThreeDotMenuTest {
             verifyClearDataTitle()
         }
     }
+
+    @Test
+    fun openNewForgetTab() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openNewForgetTab {
+            verifyNewForgetTabPage()
+        }
+    }
 }

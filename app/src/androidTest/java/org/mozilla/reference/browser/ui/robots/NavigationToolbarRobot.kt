@@ -18,6 +18,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
+import org.mozilla.reference.browser.helpers.TestAssetHelper
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -28,6 +29,7 @@ class NavigationToolbarRobot {
     fun verifyNoTabAddressView() = assertNoTabAddressText()
     fun verifyNewTabAddressView() = assertNewTabAddressText()
 
+    fun verifyNewForgetTabPage() = assertNewForgetTabPageText()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
 
     class Transition {
@@ -77,4 +79,8 @@ private fun assertNoTabAddressText() {
 private fun assertNewTabAddressText() {
     // In Daisy this is the same text as for assertNoTabAddressText
     mDevice.waitAndInteract(Until.findObject(By.text("Search or enter address"))) {}
+}
+
+private fun assertNewForgetTabPageText() {
+    mDevice.wait(Until.findObject(By.text("Private Browsing")), TestAssetHelper.waitingTime)
 }
