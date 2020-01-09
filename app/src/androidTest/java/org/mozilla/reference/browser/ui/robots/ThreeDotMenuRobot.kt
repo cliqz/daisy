@@ -35,6 +35,7 @@ class ThreeDotMenuRobot {
     fun verifyShareButtonDoesntExist() = assertShareButtonDoesntExist()
     fun verifyRequestDesktopSiteToggleDoesntExist() = assertRequestDesktopSiteToggleDoesntExist()
     fun verifyFindInPageButtonDoesntExist() = assertFindInPageButtonDoesntExist()
+    fun verifyClearDataButtonExist() = assertClearDataButtonExist()
 
     class Transition {
 
@@ -100,6 +101,12 @@ class ThreeDotMenuRobot {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
+
+        fun clearData(interact: ClearDataDialogRobot.() -> Unit): ClearDataDialogRobot.Transition {
+            clearDataButton().click()
+            ClearDataDialogRobot().interact()
+            return ClearDataDialogRobot.Transition()
+        }
     }
 }
 
@@ -118,6 +125,7 @@ private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun historyButton() = onView(ViewMatchers.withText("History"))
 private fun newTabButton() = onView(ViewMatchers.withText("New Tab"))
+private fun clearDataButton() = onView(ViewMatchers.withText("Clear Data"))
 private fun assertShareButtonDoesntExist() = shareButton().check(ViewAssertions.doesNotExist())
 private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
@@ -138,4 +146,6 @@ private fun assertFindInPageButton() = findInPageButton()
 private fun assertReportIssueButton() = reportIssueButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertSettingsButton() = settingsButton()
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertClearDataButtonExist() = clearDataButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

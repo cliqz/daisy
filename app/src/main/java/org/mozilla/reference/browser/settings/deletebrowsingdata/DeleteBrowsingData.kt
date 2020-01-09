@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.settings.deletebrowsingdata
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.layout_delete_browsing_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,11 +42,13 @@ class DeleteBrowsingData(
                 dialog.cancel()
             }
             .show()
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, android.R.color.white))
     }
 
     private fun deleteSelected(alertDialog: AlertDialog) {
-        getCheckBoxes(alertDialog).mapIndexed { index, deleteBrowsingDataItem ->
-            coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(Dispatchers.IO) {
+            getCheckBoxes(alertDialog).mapIndexed { index, deleteBrowsingDataItem ->
                 if (deleteBrowsingDataItem.isChecked) {
                     when (index) {
                         OPEN_TABS_INDEX -> controller.deleteTabs()
@@ -55,10 +58,9 @@ class DeleteBrowsingData(
                         SITE_SETTINGS_INDEX -> controller.deleteSiteSettings()
                     }
                 }
-
-                launch(Dispatchers.Main) {
-                    finishDeletion()
-                }
+            }
+            launch(Dispatchers.Main) {
+                finishDeletion()
             }
         }
     }
