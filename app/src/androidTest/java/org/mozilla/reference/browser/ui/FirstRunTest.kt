@@ -54,6 +54,7 @@ class FirstRunTest {
             verifyForwardButtonExists()
             verifyReloadButtonExists()
             verifyStopButtonExists()
+            verifyClearDataButtonExist()
 
             // first run: these should not exist
             verifyShareButtonDoesntExist()
