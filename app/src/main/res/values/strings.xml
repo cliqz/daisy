@@ -191,7 +191,7 @@
     <string name="delete_browsing_data_dialog_title">Clear Private Data</string>
     <string name="delete_browsing_data_dialog_positive_btn">Clear Now</string>
     <string name="delete_browsing_data_dialog_negative_btn">Cancel</string>
-    <string name="delete_browsing_data_deleted_msg">Browsing data deleted</string>
+    <string name="delete_browsing_data_deleted_msg">Private data deleted</string>
 
     <!--suppress CheckTagEmptyBody-->
     <string name="empty_string" translatable="false"></string>
