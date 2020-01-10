@@ -12,6 +12,7 @@ private object Versions {
     const val androidx_test_ext = "1.1.1"
 
     const val androidx_appcompat = "1.0.2"
+    const val androidx_recyclerview = "1.1.0-rc01"
     const val androidx_paging = "2.1.0"
     const val androidx_constraintlayout = "1.1.3"
     const val androidx_preference = "1.0.0"
@@ -119,6 +120,7 @@ object Deps {
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
+    const val androidx_recyclerview = "androidx.recyclerview:recyclerview:${Versions.androidx_recyclerview}"
     const val androidx_paging = "androidx.paging:paging-runtime-ktx:${Versions.androidx_paging}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"

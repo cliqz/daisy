@@ -15,7 +15,6 @@ import androidx.test.uiautomator.Until
 import org.hamcrest.CoreMatchers.containsString
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
-import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
 
 /**
  * Implementation of Robot Pattern for browser action.
@@ -48,8 +47,10 @@ class BrowserRobot {
     }
 
     fun verifyCustomUrl(url: String) {
-        val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        mDevice.wait(Until.findObject(By.res("mozac_browser_toolbar_url_view")), waitingTime)
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val device = UiDevice.getInstance(instrumentation)
+        val packageName = instrumentation.targetContext.packageName
+        device.waitAndInteract(Until.findObject(By.res(packageName,"mozac_browser_toolbar_url_view"))) {}
         onView(withId(R.id.mozac_browser_toolbar_url_view))
             .check(matches(withText(containsString(url))))
     }

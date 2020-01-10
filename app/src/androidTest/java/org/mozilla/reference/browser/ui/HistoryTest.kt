@@ -37,7 +37,6 @@ class HistoryTest {
         mockWebServer.shutdown()
     }
 
-    @Ignore("Not working due to weird RecyclerView exception, works in production")
     @Test
     fun addToHistoryTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
