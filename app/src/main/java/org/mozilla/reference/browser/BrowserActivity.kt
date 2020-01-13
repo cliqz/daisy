@@ -21,10 +21,13 @@ import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.utils.SafeIntent
+import org.mozilla.reference.browser.R.color.navigationBarColor
+import org.mozilla.reference.browser.R.color.statusBarColor
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.ext.setWindowTheme
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
 
 /**
@@ -46,6 +49,8 @@ open class BrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setWindowTheme(statusBarColor, navigationBarColor)
 
         if (savedInstanceState == null) {
             val openToSearch = components.utils.startSearchIntentProcessor.process(intent)

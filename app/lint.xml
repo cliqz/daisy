@@ -11,5 +11,12 @@
     </issue>
     <issue id="UnusedResources">
         <ignore path="src/main/res/values/dimens.xml" />
+        <ignore path="src/main/res/values/colors.xml" />
+        <ignore path="src/main/res/values-notnight/colors.xml" />
+        <ignore path="src/main/res/values-night/colors.xml" />
+    </issue>
+    <issue id="MissingDefaultResource">
+        <ignore path="src/main/res/values-notnight/colors.xml" />
+        <ignore path="src/main/res/values-night/colors.xml" />
     </issue>
 </lint>
