@@ -53,6 +53,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 awesomeBar,
                 toolbar,
                 freshTab,
+                fresh_tab_toolbar,
                 engineView,
                 requireComponents.core.sessionManager)
                 .addNewsFeature(

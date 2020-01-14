@@ -4,5 +4,6 @@
         <attr name="newsViewBackgroundColor" format="reference|color" />
         <attr name="newsViewTitleTextColor" format="reference|color" />
         <attr name="newsViewUrlTextColor" format="reference|color" />
+        <attr name="newsViewDescriptionTextColor" format="reference|color" />
     </declare-styleable>
 </resources>

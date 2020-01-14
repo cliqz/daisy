@@ -16,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.mozilla.reference.browser.helpers.click
 import org.junit.Before
+import org.junit.Ignore
 import org.mozilla.reference.browser.R
 
 /**
@@ -25,6 +26,7 @@ import org.mozilla.reference.browser.R
  * - Options/Buttons in this menu work as expected
  */
 
+@Ignore("Current fresh tab design does not have UI element to indicate tabs open")
 class TabTrayMenuTest {
 
     @get:Rule val activityTestRule = BrowserActivityTestRule()

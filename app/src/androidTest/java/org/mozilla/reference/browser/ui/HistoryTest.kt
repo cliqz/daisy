@@ -53,7 +53,7 @@ class HistoryTest {
     fun addToHistoryTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -68,7 +68,7 @@ class HistoryTest {
     fun deleteHistoryItemTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -82,7 +82,7 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -99,7 +99,7 @@ class HistoryTest {
     fun multiSelectionToolbarItemsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -121,7 +121,7 @@ class HistoryTest {
         val secondWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(firstWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(firstWebPage.url) {
         }
 
         navigationToolbar {
@@ -144,7 +144,7 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {

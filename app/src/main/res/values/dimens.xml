@@ -18,6 +18,9 @@
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="two_line_list_item_icon_size">40dp</dimen>
 
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+
     <!-- Search Widget -->
     <dimen name="search_widget_two_rows_width">110dp</dimen>
     <dimen name="search_widget_three_rows_width">180dp</dimen>

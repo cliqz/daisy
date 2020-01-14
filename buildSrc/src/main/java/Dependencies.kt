@@ -14,15 +14,17 @@ private object Versions {
     const val androidx_appcompat = "1.0.2"
     const val androidx_recyclerview = "1.1.0-rc01"
     const val androidx_paging = "2.1.0"
-    const val androidx_constraintlayout = "1.1.3"
+    const val androidx_constraintlayout = "2.0.0-beta3"
     const val androidx_preference = "1.0.0"
 
     const val workmanager = "2.0.0"
-    const val google_material = "1.1.0-beta02"
+    const val google_material = "1.2.0-alpha03"
 
     const val androidx_lifecycle = "2.2.0-rc02"
     const val android_gradle_plugin = "3.4.1"
     const val mozilla_android_components = "29.0.0"
+
+    const val glide = "4.11.0"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -117,6 +119,9 @@ object Deps {
 
     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
     const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
+
+    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
+    const val glide_compiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 

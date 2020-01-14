@@ -26,6 +26,8 @@ class FreshTabIntegrationTest {
         val freshTab: FreshTab = mockk()
         val engineView: EngineView = mockk()
 
+        every { freshTab.setOnTouchListener(any()) } returns Unit
+
         var freshTabVisibility: Int? = null
         every { freshTab.visibility = any() } answers {
             freshTabVisibility = args[0] as Int
@@ -41,6 +43,7 @@ class FreshTabIntegrationTest {
             mockk(relaxed = true),
             mockk(relaxed = true),
             freshTab,
+            mockk(relaxed = true),
             engineView,
             mockk(relaxed = true)
         )

@@ -9,6 +9,8 @@
         <item name="colorAccent">@color/mid_blue</item>
 
         <item name="android:textColorPrimary">@color/dark_grey_6</item>
+        <item name="android:textColorSecondary">@color/dark_grey_5</item>
+        <item name="android:textColorLink">@color/dark_grey_4</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 </resources>

@@ -9,6 +9,7 @@ import androidx.test.uiautomator.UiDevice
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
@@ -65,7 +66,7 @@ class ThreeDotMenuTest {
 
         // pull up URL to ensure this is not a first-user 3 dot menu
 
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -91,7 +92,7 @@ class ThreeDotMenuTest {
         // (for page forward test)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
             verifyPageContent(defaultWebPage.content)
         }.openNavigationToolbar {
         }.enterUrlAndEnterToBrowser(nextWebPage.url) {
@@ -121,7 +122,7 @@ class ThreeDotMenuTest {
         // load the default page, to be refreshed
         // (test assumes no cookies cached at test start)
 
-        }.enterUrlAndEnterToBrowser(refreshWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(refreshWebPage.url) {
             verifyPageContent("DEFAULT")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
@@ -138,7 +139,7 @@ class ThreeDotMenuTest {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openShare {
@@ -152,7 +153,7 @@ class ThreeDotMenuTest {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.findInPage {
@@ -184,7 +185,7 @@ class ThreeDotMenuTest {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(loremIpsumWebPage.url) {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
@@ -202,6 +203,7 @@ class ThreeDotMenuTest {
     }
 
     @Test
+    @Ignore("Current fresh tab design does not have UI element to indicate tabs open")
     fun openNewTabTest() {
         navigationToolbar {
         }.openThreeDotMenu {
