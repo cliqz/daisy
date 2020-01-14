@@ -258,6 +258,10 @@ dependencies {
 
     debugImplementation Deps.leakcanary
 
+    testImplementation Deps.testing_junit
+    testImplementation Deps.testing_mockk
+    testImplementation Deps.kotlin_coroutines_test
+
     androidTestImplementation Deps.uiautomator
 
     androidTestImplementation Deps.espresso_core, {
