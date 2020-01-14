@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
-import com.cliqz.browser.freshtab.isFreshTab
 import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.copy
 import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste
 import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste_and_go
