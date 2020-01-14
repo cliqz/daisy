@@ -31,7 +31,9 @@ class DefaultNewsPresenter(
 
     fun start() {
         newsView.presenter = this
-        val result = scope.async(Dispatchers.IO) { getNews() }
+        val result = scope.async(Dispatchers.IO) {
+            getNews()
+        }
         scope.launch {
             result.await().run {
                 if (this is Result.Success) {
