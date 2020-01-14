@@ -100,7 +100,7 @@ class LibraryItemView @JvmOverloads constructor(
     }
 
     companion object {
-        const val LAYOUT_ID = R.layout.two_line_list_item_layout
+        const val LAYOUT_ID = R.layout.two_line_list_item_with_action_layout
 
         private const val ICON_TYPE_FAVICON = 0
         private const val ICON_TYPE_CHECK_MARK = 1

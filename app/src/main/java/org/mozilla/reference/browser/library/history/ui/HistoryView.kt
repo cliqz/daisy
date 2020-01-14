@@ -4,16 +4,20 @@
 
 package org.mozilla.reference.browser.library.history.ui
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.component_history.view.*
+import kotlinx.android.synthetic.main.component_history.view.empty_view
+import kotlinx.android.synthetic.main.component_history.view.history_list
+import kotlinx.android.synthetic.main.component_history.view.history_search_list
+import kotlinx.android.synthetic.main.component_history.view.toolbar
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.distinct
 import org.mozilla.reference.browser.ext.getQuantityString
 import org.mozilla.reference.browser.library.LibraryPageView
@@ -35,9 +39,13 @@ class HistoryView(
         .inflate(R.layout.component_history, containerView, true)
 
     private val historyAdapter: HistoryAdapter = HistoryAdapter(interactor, historyViewModel)
+    private val historySearchAdapter: HistorySearchAdapter = HistorySearchAdapter(
+        containerView.context.components.core.icons)
+    private var searchItem: MenuItem? = null
 
     init {
         view.history_list.adapter = historyAdapter
+        view.history_search_list.adapter = historySearchAdapter
         createToolbarMenu()
         setupToolbarListeners()
         update(ViewMode.Normal, emptySet())
@@ -52,29 +60,63 @@ class HistoryView(
         view.toolbar.inflateMenu(layout)
     }
 
-    @SuppressLint("PrivateResource")
+    @Suppress("PrivateResource", "ComplexMethod")
     private fun setupToolbarListeners() {
-        with(view.toolbar) {
-            setNavigationIcon(R.drawable.mozac_ic_back)
-            setNavigationContentDescription(R.string.abc_action_bar_up_description)
-            setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.close -> {
+        view.toolbar.setNavigationIcon(R.drawable.mozac_ic_back)
+        view.toolbar.setNavigationContentDescription(R.string.abc_action_bar_up_description)
+        view.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.close -> {
+                    if (view.history_search_list.visibility == View.VISIBLE) {
+                        view.history_search_list.visibility = View.GONE
+                        searchItem?.collapseActionView()
+                    } else {
                         interactor.exitView()
-                        true
                     }
-                    R.id.delete -> {
-                        historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
-                        historyViewModel.viewMode = ViewMode.Normal
-                        true
-                    }
-                    else -> throw IllegalArgumentException("Invalid menu item")
+                    true
                 }
-            }
-            setNavigationOnClickListener {
-                interactor.exitEditingMode()
+                R.id.delete -> {
+                    historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
+                    historyViewModel.viewMode = ViewMode.Normal
+                    true
+                }
+                R.id.history_search -> {
+                    false
+                }
+                else -> throw IllegalArgumentException("Invalid menu item")
             }
         }
+        view.toolbar.setNavigationOnClickListener {
+            interactor.exitEditingMode()
+        }
+        searchItem = view.toolbar.menu.findItem(R.id.history_search)
+        val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
+        searchView.setOnCloseListener {
+            view.history_search_list.visibility = View.GONE
+            true
+        }
+        searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                view.history_search_list.visibility = View.GONE
+                return true
+            }
+        })
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query.isNullOrBlank()) return true
+                view.history_search_list.visibility = View.VISIBLE
+                historySearchAdapter.setData(historyViewModel.searchHistory(query))
+                return true
+            }
+        })
     }
 
     private fun onModeSwitched() {
@@ -127,7 +169,13 @@ class HistoryView(
     }
 
     override fun onBackPressed(): Boolean {
-        return interactor.onBackPressed()
+        if (view.history_search_list.visibility == View.VISIBLE) {
+            view.history_search_list.visibility = View.GONE
+            searchItem?.collapseActionView()
+            return true
+        } else {
+            return interactor.onBackPressed()
+        }
     }
 
     fun updateEmptyState(userHasHistory: Boolean) {
