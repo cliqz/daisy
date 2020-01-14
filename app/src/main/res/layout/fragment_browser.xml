@@ -30,8 +30,8 @@
         android:layout_marginTop="@dimen/toolbar_height"
         android:padding="4dp"
         android:visibility="gone"
-        mozac:awesomeBarTitleTextColor="#ffffff"
-        mozac:awesomeBarDescriptionTextColor="#dddddd"
+        mozac:awesomeBarTitleTextColor="?android:attr/textColorPrimary"
+        mozac:awesomeBarDescriptionTextColor="?android:attr/textColorSecondary"
         mozac:awesomeBarChipTextColor="#ffffff"
         mozac:awesomeBarChipBackgroundColor="#444444" />
 
@@ -56,8 +56,8 @@
             android:orientation="vertical"
             android:visibility="gone"
             cliqz:newsViewBackgroundColor="@color/newsview_default_background_color"
-            cliqz:newsViewTitleTextColor="@color/newsview_default_title_text_color"
-            cliqz:newsViewUrlTextColor="@color/newsview_default_url_text_color" />
+            cliqz:newsViewTitleTextColor="?android:attr/textColorPrimary"
+            cliqz:newsViewUrlTextColor="?android:attr/textColorSecondary" />
 
     </com.cliqz.browser.freshtab.FreshTab>
 

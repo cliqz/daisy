@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -174,6 +175,14 @@ class ToolbarIntegration(
         if (toolbarEditMode) {
             toolbar.editMode()
         }
+
+        val iconColor = ContextCompat.getColor(context, R.color.icons)
+        toolbar.display.colors = toolbar.display.colors.copy(
+            menu = iconColor,
+            securityIconSecure = iconColor,
+            securityIconInsecure = iconColor
+        )
+
         toolbar.display.hint = context.getString(R.string.toolbar_hint)
         toolbar.edit.hint = context.getString(R.string.toolbar_hint)
 

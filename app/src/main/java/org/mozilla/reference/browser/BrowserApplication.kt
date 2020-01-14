@@ -5,6 +5,8 @@
 package org.mozilla.reference.browser
 
 import android.app.Application
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.browser.session.Session
 import mozilla.components.support.base.log.Log
@@ -60,12 +62,22 @@ open class BrowserApplication : Application() {
         components.backgroundServices.pushFeature?.let {
             PushProcessor.install(it)
         }
+
+        setupDayNightTheme()
     }
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         runOnlyInMainProcess {
             components.core.sessionManager.onLowMemory()
+        }
+    }
+
+    private fun setupDayNightTheme() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
 

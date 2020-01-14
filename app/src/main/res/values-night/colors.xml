@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="toolbarUrlBoxColor">@color/dark_grey_6</color>
+    <color name="toolbarBackgroundColor">@color/black</color>
+    <color name="toolbarSuggestionForeground">?android:attr/colorPrimaryDark</color>
+    <color name="toolbarSuggestionBackground">?android:attr/colorAccent</color>
+
+    <color name="mozac_ui_icons_fill">@color/white</color>
+    <color name="icons">@color/white</color>
+
+    <color name="statusBarColor">@color/black</color>
+    <color name="navigationBarColor">@color/black</color>
+</resources>
