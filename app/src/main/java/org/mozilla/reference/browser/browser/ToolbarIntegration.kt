@@ -6,9 +6,18 @@ package org.mozilla.reference.browser.browser
 
 import android.content.Context
 import android.content.Intent
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.cliqz.browser.freshtab.isFreshTab
+import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.copy
+import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste
+import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste_and_go
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -22,12 +31,14 @@ import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.pwa.WebAppUseCases
+import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.feature.toolbar.ToolbarAutocompleteFeature
 import mozilla.components.feature.toolbar.ToolbarFeature
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
+import mozilla.components.support.ktx.kotlin.isUrl
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
@@ -43,6 +54,7 @@ class ToolbarIntegration(
     private val historyStorage: HistoryStorage,
     sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
+    searchUseCases: SearchUseCases,
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
@@ -164,6 +176,64 @@ class ToolbarIntegration(
         }
 
         toolbar.display.setUrlBackground(context.resources.getDrawable(R.drawable.url_background, context.theme))
+
+        toolbar.display.setOnUrlLongClickListener {
+            val clipboard = context.components.clipboardHandler
+            val customView = LayoutInflater.from(context)
+                .inflate(R.layout.browser_toolbar_popup_window, null)
+            val popupWindow = PopupWindow(
+                customView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                context.resources.getDimensionPixelSize(R.dimen.context_menu_height),
+                true
+            )
+
+            val selectedSession = sessionManager.selectedSession
+
+            popupWindow.elevation =
+                context.resources.getDimension(R.dimen.mozac_browser_menu_elevation)
+
+            customView.copy.isVisible = selectedSession != null && !selectedSession.url.isFreshTab()
+            customView.paste.isVisible = !clipboard.text.isNullOrEmpty()
+            customView.paste_and_go.isVisible = !clipboard.text.isNullOrEmpty()
+
+            customView.copy.setOnClickListener {
+                popupWindow.dismiss()
+                clipboard.text = selectedSession?.url
+
+                Toast.makeText(
+                    context,
+                    R.string.browser_toolbar_url_copied_to_clipboard_toast,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            customView.paste.setOnClickListener {
+                popupWindow.dismiss()
+                toolbar.url = clipboard.text!!
+                toolbar.editMode()
+            }
+
+            customView.paste_and_go.setOnClickListener {
+                popupWindow.dismiss()
+                clipboard.text?.let {
+                    toolbar.url = it
+                    if (it.isUrl()) {
+                        sessionUseCases.loadUrl.invoke(it)
+                    } else {
+                        searchUseCases.defaultSearch.invoke(it)
+                    }
+                }
+            }
+
+            popupWindow.showAsDropDown(
+                toolbar,
+                toolbar.context.resources.getDimensionPixelSize(R.dimen.context_menu_x_offset),
+                0,
+                Gravity.START
+            )
+            true
+        }
     }
 
     private val toolbarFeature: ToolbarFeature = ToolbarFeature(

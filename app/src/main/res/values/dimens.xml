@@ -23,4 +23,9 @@
     <dimen name="search_widget_three_rows_width">180dp</dimen>
     <dimen name="search_widget_four_rows_width">250dp</dimen>
     <dimen name="search_widget_height">40dp</dimen>
+
+    <dimen name="tab_corner_radius">8dp</dimen>
+
+    <dimen name="context_menu_height">48dp</dimen>
+    <dimen name="context_menu_x_offset">8dp</dimen>
 </resources>
