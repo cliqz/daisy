@@ -29,7 +29,8 @@ import org.mozilla.reference.browser.helpers.last
  * Implementation of Robot Pattern for the tab tray menu.
  */
 
-val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+val instrumentation = InstrumentationRegistry.getInstrumentation()
+val mDevice = UiDevice.getInstance(instrumentation)
 
 class TabTrayMenuRobot {
     val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

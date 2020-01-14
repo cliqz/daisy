@@ -10,12 +10,14 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import org.hamcrest.CoreMatchers.not
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.TestAssetHelper
@@ -31,6 +33,7 @@ class NavigationToolbarRobot {
 
     fun verifyNewForgetTabPage() = assertNewForgetTabPageText()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
+    fun verifyUrlBarNotFocused() = assertUrlBarNotFocused()
 
     class Transition {
 
@@ -83,4 +86,8 @@ private fun assertNewTabAddressText() {
 
 private fun assertNewForgetTabPageText() {
     mDevice.wait(Until.findObject(By.text("Private Browsing")), TestAssetHelper.waitingTime)
+}
+
+private fun assertUrlBarNotFocused() {
+    urlBar().check(matches(not(ViewMatchers.hasFocus())))
 }
