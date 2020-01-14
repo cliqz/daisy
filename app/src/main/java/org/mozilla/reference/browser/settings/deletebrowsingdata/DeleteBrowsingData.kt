@@ -42,8 +42,10 @@ class DeleteBrowsingData(
                 dialog.cancel()
             }
             .show()
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, android.R.color.white))
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(ContextCompat.getColor(context, android.R.color.white))
     }
 
     private fun deleteSelected(alertDialog: AlertDialog) {
