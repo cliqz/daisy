@@ -6,9 +6,14 @@ package org.mozilla.reference.browser.ui.robots
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import org.mozilla.reference.browser.R
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import org.hamcrest.Matchers.allOf
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
 
 /*
@@ -29,7 +34,7 @@ class LibraryMultipleSelectionToolbarRobot {
             HistoryViewRobot().interact()
             return HistoryViewRobot.Transition()
         }
-        fun clickMultiSelectionDelete(interact: HistoryViewRobot.() -> Unit) : HistoryViewRobot.Transition {
+        fun clickMultiSelectionDelete(interact: HistoryViewRobot.() -> Unit): HistoryViewRobot.Transition {
             multiSelectionDeleteButton().click()
 
             HistoryViewRobot().interact()
@@ -54,7 +59,7 @@ private fun assertMultiSelectionCheckmark() =
         .check(matches(isDisplayed()))
 
 private fun assertMultiSelectionCounter() =
-    onView(withText("1 selected"))
+    onView(withText("1 item selected"))
         .check(matches(isDisplayed()))
 
 private fun assertCloseToolbarButton() =
