@@ -9,11 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import mozilla.components.support.base.feature.UserInteractionHandler
+import org.mozilla.reference.browser.R.color.navigationBarColor
+import org.mozilla.reference.browser.R.color.statusBarColor
+import org.mozilla.reference.browser.ext.setWindowTheme
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setWindowTheme(statusBarColor, navigationBarColor)
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {

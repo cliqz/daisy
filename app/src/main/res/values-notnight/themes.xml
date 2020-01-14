@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/azure</item>
+        <item name="colorPrimaryDark">@color/azure_two</item>
+        <item name="colorAccent">@color/mid_blue</item>
+
+        <item name="android:textColorPrimary">@color/dark_grey_6</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+</resources>
