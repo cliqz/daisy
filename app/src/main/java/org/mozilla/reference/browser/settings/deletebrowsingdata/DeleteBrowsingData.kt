@@ -20,7 +20,8 @@ class DeleteBrowsingData(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
     private val tabsUseCases: TabsUseCases,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val showFreshTab: () -> Unit
 ) {
 
     private val controller = DefaultDeleteBrowsingDataController(
@@ -71,6 +72,7 @@ class DeleteBrowsingData(
         if (sessionManager.sessions.isEmpty()) {
             tabsUseCases.addTab.invoke("")
         }
+        showFreshTab.invoke()
         Toast.makeText(context, R.string.delete_browsing_data_deleted_msg, Toast.LENGTH_LONG).show()
     }
 

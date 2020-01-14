@@ -106,7 +106,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
                 activity?.supportFragmentManager,
-                toolbarEditMode = openToSearch),
+                toolbarEditMode = openToSearch,
+                showFreshTab = ::showFreshTab),
             owner = this,
             view = view)
 
@@ -282,5 +283,12 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
 
     final override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         promptsFeature.withFeature { it.onActivityResult(requestCode, resultCode, data) }
+    }
+
+    private fun showFreshTab() {
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.container, BrowserFragment.create())
+            commit()
+        }
     }
 }
