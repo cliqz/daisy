@@ -194,6 +194,16 @@
     <string name="delete_browsing_data_dialog_negative_btn">Cancel</string>
     <string name="delete_browsing_data_deleted_msg">Private data deleted</string>
 
+    <!-- Browser long press popup menu -->
+    <!-- Copy the current url -->
+    <string name="browser_toolbar_long_press_popup_copy">Copy</string>
+    <!-- Paste & go the text in the clipboard. '&amp;' is replaced with the ampersand symbol: & -->
+    <string name="browser_toolbar_long_press_popup_paste_and_go">Paste &amp; Go</string>
+    <!-- Paste the text in the clipboard -->
+    <string name="browser_toolbar_long_press_popup_paste">Paste</string>
+    <!-- Toast message shown after an URL has been copied to clipboard. -->
+    <string name="browser_toolbar_url_copied_to_clipboard_toast">URL copied to clipboard</string>
+
     <!--suppress CheckTagEmptyBody-->
     <string name="empty_string" translatable="false"></string>
     <!-- Send Tab -->

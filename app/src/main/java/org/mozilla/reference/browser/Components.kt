@@ -13,6 +13,7 @@ import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.Search
 import org.mozilla.reference.browser.components.Utilities
 import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.utils.ClipboardHandler
 
 /**
  * Provides access to all components.
@@ -47,5 +48,8 @@ class Components(private val context: Context) {
             useCases.tabsUseCases
         )
     }
+
     val services by lazy { Services(context, backgroundServices.accountManager, useCases.tabsUseCases) }
+
+    val clipboardHandler by lazy { ClipboardHandler(context) }
 }
