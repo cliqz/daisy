@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/close"
-        android:icon="@drawable/ic_clear"
-        android:iconTint="?colorAccent"
+        android:icon="@drawable/mozac_ic_close"
         android:title="@string/history_menu_close_button"
         app:showAsAction="ifRoom"
         tools:targetApi="o" />

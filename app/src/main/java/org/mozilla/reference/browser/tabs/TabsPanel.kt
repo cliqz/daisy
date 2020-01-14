@@ -15,7 +15,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import mozilla.components.feature.tabs.tabstray.TabsFeature
-import mozilla.components.ui.colors.R.color.photonPurple50
+import org.mozilla.reference.browser.R.color.mid_blue
+import org.mozilla.reference.browser.R.color.icons
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.view.ToggleImageButton
@@ -33,6 +34,7 @@ class TabsPanel @JvmOverloads constructor(
     init {
         navigationContentDescription = "back"
         setNavigationIcon(R.drawable.mozac_ic_back)
+        overflowIcon = ContextCompat.getDrawable(context, R.drawable.mozac_ic_menu)
         setNavigationOnClickListener {
             closeTabsTray?.invoke()
         }
@@ -81,8 +83,8 @@ class TabsPanel @JvmOverloads constructor(
 
     private fun updateToggleStates(ours: ToggleImageButton, theirs: ToggleImageButton, isPrivate: Boolean) {
         // Tint our button
-        ours.drawable.colorTint(photonPurple50)
-
+        ours.drawable.colorTint(mid_blue)
+        theirs.drawable.colorTint(icons)
         // Uncheck their button and remove tint
         theirs.isChecked = false
         theirs.drawable.colorFilter = null
