@@ -1,3 +1,6 @@
+variables:
+  BUILD_OUTPUT_DIR: app/build/outputs/apk
+
 trigger:
 - master
 
@@ -44,6 +47,7 @@ jobs:
         jdkVersionOption: '1.8'
         gradleOptions: '-Xmx3072m'
         sonarQubeRunAnalysis: false
+
   - job: build
     timeoutInMinutes: 15
     pool:
@@ -58,3 +62,26 @@ jobs:
         jdkVersionOption: '1.8'
         gradleOptions: '-Xmx3072m'
         sonarQubeRunAnalysis: false
+
+    - publish: $(System.DefaultWorkingDirectory)/$(BUILD_OUTPUT_DIR)/debug/
+      artifact: DebugBuilds
+
+  - job: build release
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    timeoutInMinutes: 15
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: Gradle@2
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        tasks: 'assembleNightly'
+        publishJUnitResults: false
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        gradleOptions: '-Xmx3072m'
+        sonarQubeRunAnalysis: false
+        options: '-PversionName=1.0.$(Build.BuildNumber)'
+
+    - publish: $(System.DefaultWorkingDirectory)/$(BUILD_OUTPUT_DIR)/nightly/
+      artifact: ReleaseBuilds
