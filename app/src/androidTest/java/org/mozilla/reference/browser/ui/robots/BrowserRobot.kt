@@ -50,7 +50,7 @@ class BrowserRobot {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val device = UiDevice.getInstance(instrumentation)
         val packageName = instrumentation.targetContext.packageName
-        device.waitAndInteract(Until.findObject(By.res(packageName,"mozac_browser_toolbar_url_view"))) {}
+        device.waitAndInteract(Until.findObject(By.res(packageName, "mozac_browser_toolbar_url_view"))) {}
         onView(withId(R.id.mozac_browser_toolbar_url_view))
             .check(matches(withText(containsString(url))))
     }
