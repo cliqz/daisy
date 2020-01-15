@@ -188,7 +188,7 @@ class ThreeDotMenuTest {
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.reportIssue {
-            verifyGithubUrl()
+            verifySupportUrl()
         }
     }
 

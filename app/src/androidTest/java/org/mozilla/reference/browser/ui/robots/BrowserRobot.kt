@@ -32,8 +32,8 @@ class BrowserRobot {
         verifyUrl("https://accounts.firefox.com")
     }
 
-    fun verifyGithubUrl() {
-        verifyUrl("https://github.com/login")
+    fun verifySupportUrl() {
+        verifyUrl("https://cliqz.com/en/support")
     }
 
     private fun verifyUrl(expectedUrl: String) {
