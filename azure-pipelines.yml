@@ -67,6 +67,7 @@ jobs:
       artifact: DebugBuilds
 
   - job: build_release
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     timeoutInMinutes: 15
     pool:
       vmImage: 'ubuntu-18.04'
