@@ -3,9 +3,12 @@ package org.mozilla.reference.browser.ui.robots
 import android.content.Intent
 import android.net.Uri
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
-import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import mozilla.components.support.ktx.android.content.appName
+import org.mozilla.reference.browser.ext.waitAndInteract
+import java.util.regex.Pattern
+
+private val appName = instrumentation.targetContext.appName
 
 class ExternalIntentsRobot {
 
@@ -19,16 +22,16 @@ class ExternalIntentsRobot {
 
             mDevice.waitForIdle()
 
-            intentChooser().swipe(Direction.UP, 0.5f)
-
-            val mostRecentBrowser = intentChooserMostRecentBrowser()
-            if (mostRecentBrowser != null) {
-                intentChooserJustOnceButton().click()
-            } else {
-                val intentChooserDaisy = intentChooserDaisy()
-                intentChooserDaisy.click()
-                intentChooserJustOnceButton().click()
+            val justOnce = mDevice.findObject(By.text(Pattern.compile("just once", Pattern.CASE_INSENSITIVE)))
+            val openWith = mDevice.findObject(By.textStartsWith("Open with"))
+            if (!justOnce.isEnabled) {
+                mDevice.waitAndInteract(Until.findObject(By.text(appName))) {
+                    click()
+                }
+            } else if (!openWith.text.contains(appName)) {
+                mDevice.findObject(By.text(appName)).click()
             }
+            justOnce.click()
 
             mDevice.waitForIdle()
 
@@ -42,15 +45,3 @@ fun externalIntents(interact: ExternalIntentsRobot.() -> Unit): ExternalIntentsR
     ExternalIntentsRobot().interact()
     return ExternalIntentsRobot.Transition()
 }
-
-private fun intentChooserDaisy() = mDevice
-    .wait(Until.findObject(By.textContains("Daisy")), waitingTime)
-
-private fun intentChooserMostRecentBrowser() = mDevice
-    .wait(Until.findObject(By.textContains("Open with Daisy")), waitingTime)
-
-private fun intentChooser() = mDevice
-    .wait(Until.findObject(By.textContains("Open with")), waitingTime).parent.parent.parent
-
-private fun intentChooserJustOnceButton() = mDevice
-    .findObject(By.text("JUST ONCE"))
