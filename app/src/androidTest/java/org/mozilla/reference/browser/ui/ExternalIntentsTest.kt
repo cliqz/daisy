@@ -1,8 +1,10 @@
 package org.mozilla.reference.browser.ui
 
 import android.net.Uri
+import android.os.Build
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,6 +36,9 @@ class ExternalIntentsTest {
 
     @Test
     fun openExternalLink() {
+        Assume.assumeTrue(
+                "Can only run on API > 22",
+                Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
         val url = "https://cliqz.com"
         externalIntents {
         }.openUrlByImplicitIntent(Uri.parse(url)) {
@@ -43,6 +48,9 @@ class ExternalIntentsTest {
 
     @Test
     fun browseAndOpenExternalLink() {
+        Assume.assumeTrue(
+                "Can only run on API > 22",
+                Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
