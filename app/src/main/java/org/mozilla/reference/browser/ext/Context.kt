@@ -78,4 +78,21 @@ fun Context.preferences() = PreferenceHelper.getInstance(this)
  * @see android.content.res.Resources.getQuantityString
  */
 fun Context.getQuantityString(@PluralsRes pluralId: Int, quantity: Int) =
-        resources.getQuantityString(pluralId, quantity)
+    resources.getQuantityString(pluralId, quantity)
+
+/**
+ * Shortcut to get quantity aware strings from the context.
+ *
+ * @param pluralId the plural id
+ * @param quantity the quantity you want the string for
+ * @param formatArgs the arguments used for substitution
+ * @see android.content.res.Resources.getQuantityString
+ */
+@Suppress("SpreadOperator")
+fun Context.getQuantityString(
+    @PluralsRes pluralId: Int,
+    quantity: Int,
+    vararg formatArgs: Any
+): String {
+    return resources.getQuantityString(pluralId, quantity, *formatArgs)
+}

@@ -229,4 +229,13 @@ class ThreeDotMenuTest {
             verifyNewForgetTabPage()
         }
     }
+
+    @Test
+    fun openHistoryTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openHistory {
+            verifyHistoryViewExists()
+        }
+    }
 }

@@ -172,7 +172,7 @@
     <string name="history_screen_title">History</string>
     <plurals name="history_items_selected">
         <item quantity="one">%1$d item selected</item>
-        <item quantity="many">%1$d items selected</item>
+        <item quantity="other">%1$d items selected</item>
     </plurals>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
