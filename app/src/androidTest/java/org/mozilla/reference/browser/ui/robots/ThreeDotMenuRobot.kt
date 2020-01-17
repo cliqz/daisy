@@ -24,6 +24,7 @@ class ThreeDotMenuRobot {
 
     fun verifyThreeDotMenuExists() = threeDotMenuRecyclerViewExists()
 
+    fun verifyHistoryButton() = assertHistoryButton()
     fun verifyForwardButtonExists() = assertForwardButton()
     fun verifyReloadButtonExists() = assertRefreshButton()
     fun verifyStopButtonExists() = assertStopButton()
@@ -140,6 +141,8 @@ private fun assertRequestDesktopSiteToggleDoesntExist() =
         requestDesktopSiteToggle().check(ViewAssertions.doesNotExist())
 private fun assertFindInPageButtonDoesntExist() = findInPageButton().check(ViewAssertions.doesNotExist())
 private fun assertNewForgetTabButton() = newForgetTabButton()
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertHistoryButton() = historyButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertForwardButton() = forwardButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
