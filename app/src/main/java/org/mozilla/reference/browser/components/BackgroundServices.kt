@@ -9,7 +9,6 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
 import mozilla.components.feature.accounts.push.FxaPushSupportFeature
@@ -21,7 +20,6 @@ import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
-import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.NotificationManager
@@ -31,18 +29,18 @@ import org.mozilla.reference.browser.NotificationManager
  * within a background worker.
  */
 class BackgroundServices(
-    context: Context,
-    placesHistoryStorage: PlacesHistoryStorage
+    context: Context
 ) {
     companion object {
         const val CLIENT_ID = "3c49430b43dfba77"
         const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/$CLIENT_ID"
     }
 
-    init {
-        // Make the "history" store accessible to workers spawned by the sync manager.
-        GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
-    }
+// Leaving out this since we don't use PlacesHistoryStorage(needed for sync manager to work)
+//    init {
+//        // Make the "history" store accessible to workers spawned by the sync manager.
+//        GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
+//    }
 
     private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
     private val deviceConfig = DeviceConfig(

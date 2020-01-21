@@ -5,14 +5,14 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
-import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
+import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.News
-import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.Search
-import org.mozilla.reference.browser.components.Utilities
+import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.Utilities
 
 /**
  * Provides access to all components.
@@ -35,7 +35,7 @@ class Components(private val context: Context) {
     }
 
     // Background services are initiated eagerly; they kick off periodic tasks and setup an accounts system.
-    val backgroundServices by lazy { BackgroundServices(context, core.historyStorage) }
+    val backgroundServices by lazy { BackgroundServices(context) }
 
     val analytics by lazy { Analytics(context) }
     val utils by lazy {
