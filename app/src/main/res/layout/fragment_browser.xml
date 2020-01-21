@@ -50,6 +50,11 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <org.mozilla.reference.browser.topsites.ui.TopSitesView
+            android:id="@+id/topSitesView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <com.cliqz.browser.news.ui.NewsView
             android:id="@+id/newsView"
             android:layout_width="match_parent"
