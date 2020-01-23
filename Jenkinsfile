@@ -35,11 +35,7 @@ node('master'){
                 sh'''#!/bin/bash -l
                     set -x
                     set -e
-                    rm -f app/cliqz-config.json
-                    rm -f app/google-services.json
-                    rm -rf app/build || true
-                    rm -rf jsengine/* || true
-                    rm -rf gradle_home/ || true
+                    rm -rf build/ app/build freshtab/build|| true
                 '''
             }
         }

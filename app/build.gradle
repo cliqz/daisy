@@ -22,7 +22,7 @@ android {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
-        versionName Config.generateDebugVersionName()
+        versionName Config.generateDebugVersionName(project)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
