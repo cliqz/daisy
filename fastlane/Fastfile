@@ -1,0 +1,46 @@
+default_platform(:android)
+
+platform :android do
+#   desc "Runs all the tests"
+#   lane :test do
+#     gradle(task: "test")
+#   end
+# 
+#   desc "Submit a new Beta Build to Crashlytics Beta"
+#   lane :beta do
+#     gradle(task: "clean assembleRelease")
+#     crashlytics
+#   
+#     # sh "your_script.sh"
+#     # You can also use other beta testing services here
+#   end
+# 
+#   desc "Deploy a new version to the Google Play"
+#   lane :deploy do
+#     gradle(task: "clean assembleRelease")
+#     upload_to_play_store
+#   end
+    desc "Build Daisy"
+    lane :build do
+        version = File.readlines('../version.txt').first.chomp
+        gradle(task: "clean")
+        gradle(
+            task: "assemble",
+            build_type: "Release",
+            print_command: true,
+            properties: {
+                "versionName" => version,
+                "android.injected.signing.store.file" => ENV["ANDROID_STORE_FILE"] || "",
+                "android.injected.signing.store.password" => ENV["ANDROID_STORE_PWD"] || "",
+                "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"] || "",
+                "android.injected.signing.key.password" => ENV["ANDROID_KEY_PWD"] || "",
+            }
+        )
+        upload_to_play_store(
+            apk_paths: Dir["../app/build/**/app-*-release.apk"],
+            track: "internal",
+            version_name: version,
+            skip_upload_changelogs: true,
+        )
+    end
+end

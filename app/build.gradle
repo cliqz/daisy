@@ -22,7 +22,7 @@ android {
         minSdkVersion Config.minSdkVersion
         targetSdkVersion Config.targetSdkVersion
         versionCode 1
-        versionName Config.generateDebugVersionName()
+        versionName Config.generateDebugVersionName(project)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -44,19 +44,10 @@ android {
         debug {
             applicationIdSuffix ".debug"
         }
-        raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
-            applicationIdSuffix ".raptor"
-            manifestPlaceholders.isRaptorEnabled = "true"
-            matchingFallbacks = ['release']
-        }
-        nightly releaseTemplate >> {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "IS_RELEASED", "true"
-        }
-    }
-
-    variantFilter { // There's a "release" build type that exists by default that we don't use (it's replaced by "nightly" and "beta")
-        if (buildType.name == 'release') {
-            setIgnore true
         }
     }
 
@@ -173,7 +164,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
                     throw new RuntimeException("Release builds require the 'versionName' property to be set.\n" +
                             "If you're using an IDE, set your build variant to be a \"debug\" type.\n" +
                             "If you're using the command-line, either build a debug variant instead ('./gradlew assembleDebug')\n" +
-                            "\tor continue building the release build and set the \"versionName\" property ('./gradlew -PversionName=<...> assembleNightly').")
+                            "\tor continue building the release build and set the \"versionName\" property ('./gradlew -PversionName=<...> assembleRelease').")
                     // TODO when Android Studio 3.5.0 is prevalent, we can set the "debug" build type as the default
                     // https://issuetracker.google.com/issues/36988145#comment59
                 }

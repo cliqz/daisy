@@ -1,0 +1,2 @@
+json_key_file(ENV["PLAY_STORE_CERT"] || "")
+package_name("com.cliqz.browser.daisy")
