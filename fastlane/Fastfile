@@ -37,7 +37,7 @@ platform :android do
             }
         )
         upload_to_play_store(
-            apk_paths: Dir["../app/build/**/app-*-release.apk"],
+            apk_paths: lane_context[SharedValues::GRADLE_ALL_APK_OUTPUT_PATHS],
             track: "internal",
             version_name: version,
             skip_upload_changelogs: true,
