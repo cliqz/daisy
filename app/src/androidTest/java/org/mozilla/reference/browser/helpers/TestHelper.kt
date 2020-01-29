@@ -10,15 +10,16 @@ import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
-import org.mozilla.reference.browser.helpers.ext.waitNotNull
+import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.ui.robots.mDevice
 
 object TestHelper {
+
+    /**
+     * Blocks the test till it finds the view and then performs long click on it.
+     */
     fun longTapSelectItem(url: Uri) {
-        mDevice.waitNotNull(
-            Until.findObject(By.text(url.toString())),
-            TestAssetHelper.waitingTime
-        )
+        mDevice.waitAndInteract(Until.findObject(By.text(url.toString()))) {}
         onView(withText(url.toString())).perform(longClick())
     }
 }

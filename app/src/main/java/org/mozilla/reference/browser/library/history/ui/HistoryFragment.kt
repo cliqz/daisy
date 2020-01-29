@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.library.history.ui
 
 import android.content.Context
@@ -9,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,9 +24,6 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.ext.application
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 
-/**
- * @author Ravjit Uppal
- */
 class HistoryFragment : Fragment(), UserInteractionHandler {
 
     private lateinit var historyViewModel: HistoryViewModel
@@ -99,22 +99,17 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
 
     private fun showClearAllHistoryDialog() {
         context?.let {
-            val alertDialog = AlertDialog.Builder(it).run {
-                setMessage(R.string.history_clear_all_dialog_msg)
-                setPositiveButton(R.string.history_clear_all_dialog_positive_btn) { dialog, _ ->
+            AlertDialog.Builder(it)
+                .setMessage(R.string.history_clear_all_dialog_msg)
+                .setPositiveButton(R.string.history_clear_all_dialog_positive_btn) { dialog, _ ->
                     historyViewModel.clearAllHistory()
                     dialog.dismiss()
                 }
-                setNegativeButton(R.string.history_clear_all_dialog_negative_btn) { dialog, _ ->
+                .setNegativeButton(R.string.history_clear_all_dialog_negative_btn) { dialog, _ ->
                     dialog.cancel()
                 }
-                create()
-                show()
-            }
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                .setTextColor(ContextCompat.getColor(it, android.R.color.white))
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                .setTextColor(ContextCompat.getColor(it, android.R.color.white))
+                .create()
+                .show()
         }
     }
 

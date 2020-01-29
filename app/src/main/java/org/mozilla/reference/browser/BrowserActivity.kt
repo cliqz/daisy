@@ -27,7 +27,7 @@ import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
-import org.mozilla.reference.browser.ext.setWindowTheme
+import org.mozilla.reference.browser.ext.setSystemBarsTheme
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
 
 /**
@@ -50,7 +50,7 @@ open class BrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setWindowTheme(statusBarColor, navigationBarColor)
+        setSystemBarsTheme(statusBarColor, navigationBarColor)
 
         if (savedInstanceState == null) {
             val openToSearch = components.utils.startSearchIntentProcessor.process(intent)

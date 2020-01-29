@@ -18,12 +18,13 @@ private const val MIME_TYPE_TEXT_HTML = "text/html"
 class ClipboardHandler(context: Context) {
     private val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
+    /**
+     * Holds the clipboard text
+     */
     var text: String?
         get() {
-            if (!clipboard.isPrimaryClipEmpty() &&
-                    (clipboard.isPrimaryClipPlainText() ||
-                            clipboard.isPrimaryClipHtmlText())
-            ) {
+            if (!clipboard.isPrimaryClipEmpty() && (clipboard.isPrimaryClipPlainText() ||
+                clipboard.isPrimaryClipHtmlText())) {
                 return clipboard.firstPrimaryClipItem?.text.toString()
             }
             return null
@@ -32,6 +33,9 @@ class ClipboardHandler(context: Context) {
             clipboard.primaryClip = ClipData.newPlainText("Text", value)
         }
 
+    /**
+     * Holds the clipboard text as url
+     */
     val url: String?
         get() {
             return text?.let {

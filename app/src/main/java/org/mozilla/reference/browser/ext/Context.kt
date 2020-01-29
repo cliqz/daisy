@@ -93,6 +93,4 @@ fun Context.getQuantityString(
     @PluralsRes pluralId: Int,
     quantity: Int,
     vararg formatArgs: Any
-): String {
-    return resources.getQuantityString(pluralId, quantity, *formatArgs)
-}
+) = resources.getQuantityString(pluralId, quantity, *formatArgs)
