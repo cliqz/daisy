@@ -16,13 +16,9 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import org.hamcrest.Matchers.allOf
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.helpers.TestAssetHelper.waitingTime
+import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.click
-import org.mozilla.reference.browser.helpers.ext.waitNotNull
 
-/**
- * @author Ravjit Uppal
- */
 class HistoryViewRobot {
 
     fun verifyHistoryViewExists() = assertHistoryViewExists()
@@ -30,22 +26,12 @@ class HistoryViewRobot {
     fun verifyDeleteHistoryButtonExists() = assertDeleteHistoryButtonExists()
 
     fun verifyHistoryItemExists(url: String) {
-        mDevice.waitNotNull(
-            Until.findObject(
-                By.text(url)
-            ),
-            waitingTime
-        )
+        mDevice.waitAndInteract(Until.findObject(By.text(url))) {}
         assertHistoryItem(url)
     }
 
     fun verifyEmptyHistoryView() {
-        mDevice.waitNotNull(
-            Until.findObject(
-                By.text("No history to show")
-            ),
-            waitingTime
-        )
+        mDevice.waitAndInteract(Until.findObject(By.text("No history to show"))) {}
         assertEmptyHistoryView()
     }
 
@@ -58,12 +44,8 @@ class HistoryViewRobot {
     }
 
     fun clickHistoryItemDelete() {
-        mDevice.waitNotNull(
-            Until.findObject(
-                By.res("com.cliqz.browser.daisy.debug:id/meta_btn")
-            ),
-            waitingTime
-        )
+        mDevice.waitAndInteract(
+            Until.findObject(By.res("com.cliqz.browser.daisy.debug:id/meta_btn"))) {}
         historyItemDeleteButton().click()
     }
 

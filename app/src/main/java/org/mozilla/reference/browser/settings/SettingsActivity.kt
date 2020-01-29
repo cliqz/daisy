@@ -11,14 +11,14 @@ import android.view.MenuItem
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R.color.navigationBarColor
 import org.mozilla.reference.browser.R.color.statusBarColor
-import org.mozilla.reference.browser.ext.setWindowTheme
+import org.mozilla.reference.browser.ext.setSystemBarsTheme
 
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setWindowTheme(statusBarColor, navigationBarColor)
+        setSystemBarsTheme(statusBarColor, navigationBarColor)
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {

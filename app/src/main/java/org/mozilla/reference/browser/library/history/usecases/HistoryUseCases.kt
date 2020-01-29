@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.library.history.usecases
 
 import androidx.lifecycle.LiveData
@@ -9,9 +13,6 @@ import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFacto
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
 
-/**
- * @author Ravjit Uppal
- */
 class HistoryUseCases(historyStorage: HistoryStorage) {
 
     class GetPagedHistoryUseCase(private val historyStorage: HistoryStorage) {
