@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import mozilla.components.feature.addons.Addon
+import mozilla.components.feature.addons.ui.translate
+import mozilla.components.feature.addons.ui.translatedName
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 
@@ -50,37 +52,39 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
         switch.setState(addon.isEnabled())
         switch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                this.components.core.addonManager.disableAddon(
+                this.components.core.addonManager.enableAddon(
                     addon,
                     onSuccess = {
+                        switch.setState(true)
                         Toast.makeText(
                             this,
-                            "Successfully disabled ${addon.translatableName.translate()}",
+                            getString(R.string.mozac_feature_addons_successfully_enabled, addon.translatedName),
                             Toast.LENGTH_SHORT
                         ).show()
                     },
                     onError = {
                         Toast.makeText(
                             this,
-                            "Failed to disable ${addon.translatableName.translate()}",
+                            getString(R.string.mozac_feature_addons_failed_to_enable, addon.translatedName),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 )
             } else {
-                this.components.core.addonManager.enableAddon(
+                this.components.core.addonManager.disableAddon(
                     addon,
                     onSuccess = {
+                        switch.setState(false)
                         Toast.makeText(
                             this,
-                            "Successfully enabled ${addon.translatableName.translate()}",
+                            getString(R.string.mozac_feature_addons_successfully_disabled, addon.translatedName),
                             Toast.LENGTH_SHORT
                         ).show()
                     },
                     onError = {
                         Toast.makeText(
                             this,
-                            "Failed to enable ${addon.translatableName.translate()}",
+                            getString(R.string.mozac_feature_addons_failed_to_disable, addon.translatedName),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -122,7 +126,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                 onSuccess = {
                     Toast.makeText(
                         this,
-                        "Successfully uninstalled ${addon.translatableName.translate()}",
+                        getString(R.string.mozac_feature_addons_successfully_uninstalled, addon.translatedName),
                         Toast.LENGTH_SHORT
                     ).show()
                     finish()
@@ -130,7 +134,7 @@ class InstalledAddonDetailsActivity : AppCompatActivity() {
                 onError = { _, _ ->
                     Toast.makeText(
                         this,
-                        "Failed to uninstall ${addon.translatableName.translate()}",
+                        getString(R.string.mozac_feature_addons_failed_to_uninstall, addon.translatedName),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

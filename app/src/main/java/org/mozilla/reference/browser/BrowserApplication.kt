@@ -7,14 +7,15 @@ package org.mozilla.reference.browser
 import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import mozilla.components.concept.push.PushProcessor
 import mozilla.components.browser.session.Session
+import mozilla.components.concept.push.PushProcessor
+import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
 import mozilla.components.support.base.log.Log
 import mozilla.components.support.base.log.sink.AndroidLogSink
 import mozilla.components.support.ktx.android.content.isMainProcess
 import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
-import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.rusthttp.RustHttpConfig
+import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
@@ -38,7 +39,10 @@ open class BrowserApplication : Application() {
         }
 
         components.core.engine.warmUp()
-
+        GlobalAddonDependencyProvider.initialize(
+                components.core.addonManager,
+                components.core.addonUpdater
+        )
         WebExtensionSupport.initialize(
             engine = components.core.engine,
             store = components.core.store,
@@ -53,7 +57,8 @@ open class BrowserApplication : Application() {
             onSelectTabOverride = { _, sessionId ->
                 val selected = components.core.sessionManager.findSessionById(sessionId)
                 selected?.let { components.useCases.tabsUseCases.selectTab(it) }
-            }
+            },
+            onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )
 
         components.analytics.initializeGlean()
@@ -61,6 +66,8 @@ open class BrowserApplication : Application() {
 
         components.backgroundServices.pushFeature?.let {
             PushProcessor.install(it)
+
+            it.initialize()
         }
 
         setupDayNightTheme()

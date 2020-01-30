@@ -22,7 +22,7 @@ private object Versions {
 
     const val androidx_lifecycle = "2.2.0-rc02"
     const val android_gradle_plugin = "3.4.1"
-    const val mozilla_android_components = "27.0.4"
+    const val mozilla_android_components = "29.0.0"
 
     const val thirdparty_sentry = "1.7.10"
 
@@ -97,6 +97,7 @@ object Deps {
     const val mozilla_feature_pwa = "org.mozilla.components:feature-pwa:${Versions.mozilla_android_components}"
     const val mozilla_feature_qr = "org.mozilla.components:feature-qr:${Versions.mozilla_android_components}"
     const val mozilla_feature_readerview = "org.mozilla.components:feature-readerview:${Versions.mozilla_android_components}"
+    const val mozilla_feature_syncedtabs = "org.mozilla.components:feature-syncedtabs:${Versions.mozilla_android_components}"
     const val mozilla_feature_webcompat= "org.mozilla.components:feature-webcompat:${Versions.mozilla_android_components}"
     const val mozilla_feature_webnotifications = "org.mozilla.components:feature-webnotifications:${Versions.mozilla_android_components}"
 

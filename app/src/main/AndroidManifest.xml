@@ -85,6 +85,11 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
 
+        <activity
+            android:name=".addons.WebExtensionActionPopupActivity"
+            android:label="@string/mozac_feature_addons_addons"
+            android:theme="@style/Theme.AppCompat.Light"/>
+
         <activity android:name=".IntentReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -144,6 +149,13 @@
           android:label="@string/settings"
           android:theme="@style/AppTheme"
           android:parentActivityName=".BrowserActivity" />
+
+        <activity
+            android:name=".tabs.SyncedTabsActivity"
+            android:exported="false"
+            android:label="@string/synced_tabs"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".BrowserActivity" />
 
         <service
             android:name=".push.FirebasePush"

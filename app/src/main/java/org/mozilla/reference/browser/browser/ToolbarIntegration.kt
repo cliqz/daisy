@@ -45,6 +45,7 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.library.history.ui.HistoryFragment
 import org.mozilla.reference.browser.settings.SettingsActivity
+import org.mozilla.reference.browser.tabs.SyncedTabsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
 class ToolbarIntegration(
@@ -139,6 +140,10 @@ class ToolbarIntegration(
                 val intent = Intent(context, AddonsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
+            },
+
+            SimpleBrowserMenuItem("Synced Tabs") {
+                openSyncedTabsActivity(context)
             },
 
             SimpleBrowserMenuItem("Report issue") {
@@ -270,6 +275,11 @@ class ToolbarIntegration(
 
     override fun onBackPressed(): Boolean {
         return toolbarFeature.onBackPressed()
+    }
+
+    private fun openSyncedTabsActivity(context: Context) {
+        val intent = Intent(context, SyncedTabsActivity::class.java)
+        context.startActivity(intent)
     }
 
     private fun openSettingsActivity(context: Context) {
