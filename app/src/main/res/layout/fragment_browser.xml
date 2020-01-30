@@ -42,6 +42,11 @@
         android:layout_marginTop="56dp"
         android:visibility="gone">
 
+        <org.mozilla.reference.browser.topsites.ui.TopSitesView
+            android:id="@+id/topSitesView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <com.cliqz.browser.news.ui.NewsView
             android:id="@+id/newsView"
             android:layout_width="match_parent"

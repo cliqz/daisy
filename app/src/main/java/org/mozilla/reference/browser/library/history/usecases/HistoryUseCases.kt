@@ -5,6 +5,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.concept.storage.VisitInfo
+import org.mozilla.reference.browser.database.HistoryDatabase
+import org.mozilla.reference.browser.database.Topsite
 import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
@@ -29,6 +31,12 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
+    class GetTopSitesUseCase(private val historyStorage: HistoryStorage) {
+        operator fun invoke(): List<Topsite> {
+            return (historyStorage as HistoryDatabase).getTopSites(5)
+        }
+    }
+
     class DeleteMultipleHistoryUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(historyItemList: Set<HistoryItem>) {
             historyItemList.forEach { historyItem ->
@@ -50,6 +58,7 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
     }
 
     val getHistory by lazy { GetHistoryUseCase(historyStorage) }
+    val getTopSites: GetTopSitesUseCase by lazy {GetTopSitesUseCase(historyStorage)}
     val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
     val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
     val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }
