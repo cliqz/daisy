@@ -13,8 +13,11 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.helpers.click
 
 /**
@@ -75,6 +78,7 @@ class ThreeDotMenuRobot {
         }
 
         fun findInPage(interact: FindInPagePanelRobot.() -> Unit): FindInPagePanelRobot.Transition {
+            mDevice.waitAndInteract(Until.findObject(By.textContains("Find in Page"))) {}
             findInPageButton().click()
             FindInPagePanelRobot().interact()
             return FindInPagePanelRobot.Transition()

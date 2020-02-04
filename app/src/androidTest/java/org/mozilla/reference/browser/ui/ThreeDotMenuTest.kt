@@ -67,6 +67,7 @@ class ThreeDotMenuTest {
         // pull up URL to ensure this is not a first-user 3 dot menu
 
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -148,6 +149,7 @@ class ThreeDotMenuTest {
     }
 
     @Test
+    @Ignore("Temp disable broken test - see: https://github.com/mozilla-mobile/fenix/issues/5534")
     // finds specific text snippets in a lorem ipsum sample page
     fun findInPageTest() {
         val loremIpsumWebPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)

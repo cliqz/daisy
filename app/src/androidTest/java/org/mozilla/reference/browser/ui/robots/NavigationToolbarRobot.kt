@@ -43,8 +43,10 @@ class NavigationToolbarRobot {
             mDevice.waitForIdle()
             freshTabUrlBar().perform(click())
 
-            awesomeBar().perform(replaceText(url.toString()),
-                    pressImeActionButton())
+            mDevice.waitForIdle()
+            awesomeBar().perform(replaceText(url.toString()))
+            mDevice.waitForIdle()
+            awesomeBar().perform(pressImeActionButton())
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -53,8 +55,11 @@ class NavigationToolbarRobot {
         fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.waitForIdle()
             urlBar().perform(click())
-            awesomeBar().perform(replaceText(url.toString()),
-                    pressImeActionButton())
+
+            mDevice.waitForIdle()
+            awesomeBar().perform(replaceText(url.toString()))
+            mDevice.waitForIdle()
+            awesomeBar().perform(pressImeActionButton())
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()

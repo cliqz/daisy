@@ -54,6 +54,7 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -69,6 +70,7 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -83,6 +85,7 @@ class HistoryTest {
 
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -100,6 +103,7 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -122,10 +126,12 @@ class HistoryTest {
 
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(firstWebPage.url) {
+            verifyPageContent("Page content: 1")
         }
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(secondWebPage.url) {
+            verifyPageContent("Page content: 2")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -145,6 +151,7 @@ class HistoryTest {
 
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
