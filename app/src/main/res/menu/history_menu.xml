@@ -7,7 +7,7 @@
         android:icon="@drawable/mozac_ic_search"
         android:title="@string/search_widget_text_short"
         app:showAsAction="always|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        app:actionViewClass="android.widget.SearchView"/>
     <item
         android:id="@+id/close"
         android:icon="@drawable/mozac_ic_close"
