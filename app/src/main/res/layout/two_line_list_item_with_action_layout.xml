@@ -13,7 +13,6 @@
         android:layout_height="48dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/mozac_ic_close"
-        android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,8 +38,7 @@
             android:id="@+id/checkmark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/mozac_ic_close"
-            android:tint="@android:color/white"
+            android:src="@drawable/mozac_ic_check"
             tools:ignore="ContentDescription" />
     </ImageSwitcher>
 

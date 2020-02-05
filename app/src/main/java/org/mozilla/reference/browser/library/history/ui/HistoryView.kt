@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,38 +91,41 @@ class HistoryView(
             interactor.exitEditingMode()
         }
         searchItem = view.toolbar.menu.findItem(R.id.history_search)
-        val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
-        searchView.setOnCloseListener {
-            view.history_search_list.visibility = View.GONE
-            true
-        }
-        searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+        searchItem?.let {
+            val searchView = it.actionView as SearchView
+            searchView.setOnCloseListener {
                 view.history_search_list.visibility = View.GONE
-                return true
+                true
             }
-        })
-        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
+            searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    return true
+                }
 
-            override fun onQueryTextChange(query: String?): Boolean {
-                if (query.isNullOrBlank()) return true
-                view.history_search_list.visibility = View.VISIBLE
-                historySearchAdapter.setData(historyViewModel.searchHistory(query))
-                return true
-            }
-        })
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    view.history_search_list.visibility = View.GONE
+                    return true
+                }
+            })
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(query: String?): Boolean {
+                    if (query.isNullOrBlank()) return true
+                    view.history_search_list.visibility = View.VISIBLE
+                    historySearchAdapter.setData(historyViewModel.searchHistory(query))
+                    return true
+                }
+            })
+        }
     }
 
     private fun onModeSwitched() {
         view.toolbar.invalidate()
         createToolbarMenu()
+        setupToolbarListeners()
     }
 
     fun submitList(pagedList: PagedList<HistoryItem>?) {
