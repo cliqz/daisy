@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import mozilla.components.concept.storage.HistoryStorage
+import mozilla.components.concept.storage.SearchResult
 import mozilla.components.concept.storage.VisitInfo
 import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
 import org.mozilla.reference.browser.library.history.data.HistoryItem
@@ -50,11 +51,18 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
+    class SearchHistoryUseCase(private val historyStorage: HistoryStorage) {
+        operator fun invoke(query: String): List<SearchResult> {
+            return historyStorage.getSuggestions(query, Int.MAX_VALUE)
+        }
+    }
+
     val getHistory by lazy { GetHistoryUseCase(historyStorage) }
     val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
     val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
     val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }
     val clearAllHistory by lazy { ClearAllHistoryUseCase(historyStorage) }
+    val searchHistory by lazy { SearchHistoryUseCase(historyStorage) }
 
     companion object {
         private const val PAGE_SIZE = 25

@@ -12,10 +12,12 @@ import androidx.paging.PagedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mozilla.components.concept.storage.SearchResult
 import mozilla.components.feature.session.SessionUseCases
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
+@Suppress("TooManyFunctions")
 class HistoryViewModel(
     private val historyUseCases: HistoryUseCases,
     private val sessionUseCases: SessionUseCases
@@ -77,6 +79,10 @@ class HistoryViewModel(
             historyUseCases.clearAllHistory()
             invalidate()
         }
+    }
+
+    fun searchHistory(query: String?): List<SearchResult> {
+        return historyUseCases.searchHistory(query ?: "")
     }
 
     private fun invalidate() {

@@ -19,11 +19,26 @@
         android:text="@string/no_history_available"
         android:layout_below="@id/toolbar"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/history_list"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/two_line_list_item_layout" />
+        android:layout_below="@id/toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/two_line_list_item_with_action_layout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_search_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/two_line_list_item_with_action_layout"
+            android:background="?android:attr/windowBackground"
+            android:visibility="gone" />
+    </FrameLayout>
+
 </merge>
