@@ -9,7 +9,6 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mozilla.components.browser.storage.sync.PlacesHistoryStorage
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
@@ -36,7 +35,6 @@ import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
  */
 class BackgroundServices(
     context: Context,
-    placesHistoryStorage: PlacesHistoryStorage,
     private val remoteTabsStorage: RemoteTabsStorage = RemoteTabsStorage()
 ) {
     companion object {
@@ -45,8 +43,9 @@ class BackgroundServices(
     }
 
     init {
-        // Make the sync stores accessible to workers spawned by the sync manager.
-        GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
+        // Make the "history" store accessible to workers spawned by the sync manager.
+        // Leaving out this since we don't use PlacesHistoryStorage(needed for sync manager to work)
+        // GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
         GlobalSyncableStoreProvider.configureStore(SyncEngine.Tabs to remoteTabsStorage)
     }
 
