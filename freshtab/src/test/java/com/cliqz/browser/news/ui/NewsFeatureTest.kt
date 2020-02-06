@@ -24,10 +24,9 @@ class NewsFeatureTest {
 
     @Before
     fun setup() {
-        presenter = spyk(DefaultNewsPresenter(mockk(), newsView, mockk(), coroutineScope, mockk(), mockk()))
-        feature = NewsFeature(mockk(), newsView, mockk(), coroutineScope, mockk(), mockk())
+        presenter = spyk(DefaultNewsPresenter(newsView, mockk(), coroutineScope, mockk(), mockk()))
+        feature = NewsFeature(newsView, mockk(), coroutineScope, mockk(), mockk())
         feature.presenter = presenter
-        coEvery { presenter.isNewsViewExpanded } returns true
     }
 
     @After
@@ -57,6 +56,6 @@ class NewsFeatureTest {
         val emptyResult: Success<List<NewsItem>> = Success(listOf())
         coEvery { presenter.getNews() } returns emptyResult
         feature.start()
-        verify { newsView.displayNews(emptyResult.data, any(), any()) }
+        verify { newsView.displayNews(emptyResult.data, any()) }
     }
 }

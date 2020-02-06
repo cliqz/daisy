@@ -1,7 +1,9 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package com.cliqz.browser.news.ui
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.cliqz.browser.news.data.NewsItem
 import com.cliqz.browser.news.data.Result
 import com.cliqz.browser.news.domain.GetNewsUseCase
@@ -14,7 +16,6 @@ import mozilla.components.concept.toolbar.Toolbar
 import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 
 class DefaultNewsPresenter(
-    private val context: Context,
     private val newsView: NewsView,
     private val toolbar: Toolbar,
     private val scope: CoroutineScope,
@@ -22,12 +23,6 @@ class DefaultNewsPresenter(
     private val getNewsUseCase: GetNewsUseCase,
     private val icons: BrowserIcons? = null
 ) : NewsPresenter {
-
-    override var isNewsViewExpanded: Boolean
-        get() = isNewsViewExpanded(context)
-        set(value) {
-            setNewsViewExpanded(context, value)
-        }
 
     fun start() {
         newsView.presenter = this
@@ -37,7 +32,7 @@ class DefaultNewsPresenter(
         scope.launch {
             result.await().run {
                 if (this is Result.Success) {
-                    newsView.displayNews(data, isNewsViewExpanded, icons)
+                    newsView.displayNews(data, icons)
                 } else {
                     newsView.hideNews()
                 }
@@ -53,49 +48,22 @@ class DefaultNewsPresenter(
         return getNewsUseCase.invoke()
     }
 
-    override fun toggleNewsViewClicked() {
-        isNewsViewExpanded = !isNewsViewExpanded
-        newsView.toggleNewsView(isNewsViewExpanded)
-    }
-
     override fun onOpenInNormalTab(item: NewsItem) {
         loadUrlUseCase.invoke(item.url)
         toolbar.displayMode()
-    }
-
-    private fun isNewsViewExpanded(context: Context): Boolean {
-        return preferences(context).getBoolean(PREF_NEWS_EXPANDED, false)
-    }
-
-    private fun setNewsViewExpanded(context: Context, value: Boolean) {
-        preferences(context).edit().putBoolean(PREF_NEWS_EXPANDED, value).apply()
-    }
-
-    private fun preferences(context: Context): SharedPreferences =
-        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-
-    companion object {
-        internal const val PREFERENCE_NAME = "news_feature"
-        internal const val PREF_NEWS_EXPANDED = "news_expanded"
     }
 }
 
 interface NewsPresenter {
 
-    var isNewsViewExpanded: Boolean
-
     suspend fun getNews(): Result<List<NewsItem>>
 
     fun onOpenInNormalTab(item: NewsItem)
 
-    fun toggleNewsViewClicked()
-
     interface View {
 
-        fun displayNews(newsList: List<NewsItem>, isNewsViewExpanded: Boolean, icons: BrowserIcons?)
+        fun displayNews(newsList: List<NewsItem>, icons: BrowserIcons?)
 
         fun hideNews()
-
-        fun toggleNewsView(isNewsViewExpanded: Boolean)
     }
 }

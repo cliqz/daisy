@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package com.cliqz.browser.news.ui
 
 import android.graphics.Color
@@ -9,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cliqz.browser.freshtab.R
 import com.cliqz.browser.news.data.NewsItem
 
@@ -31,6 +36,12 @@ class NewsItemViewHolder(
         setTextColor(newsView.styling.urlTextColor)
     }
 
+    private val descriptionView: TextView = itemView.findViewById<TextView>(R.id.description_view).apply {
+        setTextColor(newsView.styling.descriptionColor)
+    }
+
+    private val posterView: ImageView = itemView.findViewById(R.id.poster_view)
+
     private var newsItem: NewsItem? = null
 
     fun bind(
@@ -41,6 +52,10 @@ class NewsItemViewHolder(
         this.newsItem = newsItem
         titleView.text = buildTitleSpannable(newsItem)
         urlView.text = newsItem.domain
+        descriptionView.text = newsItem.description
+        Glide.with(itemView)
+            .load(newsItem.media)
+            .into(posterView)
         icons?.loadIntoView(iconView, IconRequest(newsItem.url))
         itemView.setOnClickListener { clickListener(newsItem) }
     }

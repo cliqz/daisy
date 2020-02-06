@@ -53,7 +53,8 @@ class HistoryTest {
     fun addToHistoryTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
             verifyThreeDotMenuExists()
@@ -68,7 +69,8 @@ class HistoryTest {
     fun deleteHistoryItemTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -82,7 +84,8 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -99,7 +102,8 @@ class HistoryTest {
     fun multiSelectionToolbarItemsTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -121,11 +125,13 @@ class HistoryTest {
         val secondWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 2)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(firstWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(firstWebPage.url) {
+            verifyPageContent("Page content: 1")
         }
 
         navigationToolbar {
         }.enterUrlAndEnterToBrowser(secondWebPage.url) {
+            verifyPageContent("Page content: 2")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {
@@ -144,7 +150,8 @@ class HistoryTest {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent("Page content: 1")
         }.openNavigationToolbar {
         }.openThreeDotMenu {
         }.openHistory {

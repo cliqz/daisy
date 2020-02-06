@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+    android:maxHeight="@dimen/news_list_item_height"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0.8dp"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="true">
+
+        <ImageView
+            android:id="@+id/poster_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/news_list_item_poster_height"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/title_view"
+            style="@style/NewsViewTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:ellipsize="end"
+            android:maxLines="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/poster_view"
+            tools:text="@tools:sample/lorem/random"
+            tools:textColor="?android:textColorPrimary" />
+
+        <ImageView
+            android:id="@+id/icon_view"
+            android:layout_width="@dimen/margin_padding_size_medium"
+            android:layout_height="@dimen/margin_padding_size_medium"
+            app:layout_constraintBottom_toBottomOf="@id/url_view"
+            app:layout_constraintStart_toStartOf="@+id/title_view"
+            app:layout_constraintTop_toTopOf="@id/url_view"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/url_view"
+            style="@style/NewsViewUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_xsmall"
+            android:layout_marginTop="@dimen/margin_padding_size_xsmall"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="@id/title_view"
+            app:layout_constraintStart_toEndOf="@+id/icon_view"
+            app:layout_constraintTop_toBottomOf="@id/title_view"
+            tools:text="@tools:sample/lorem/random"
+            tools:textColor="?android:textColorSecondary" />
+
+        <TextView
+            android:id="@+id/description_view"
+            style="@style/NewsViewDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_size_xsmall"
+            android:layout_marginBottom="@dimen/margin_padding_size_medium"
+            android:ellipsize="end"
+            android:maxLines="3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/title_view"
+            app:layout_constraintStart_toStartOf="@+id/title_view"
+            app:layout_constraintTop_toBottomOf="@id/url_view"
+            tools:text="@tools:sample/lorem/random"
+            tools:textColor="?android:textColorSecondary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

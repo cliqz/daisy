@@ -8,9 +8,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
+import java.util.regex.Pattern
 import mozilla.components.support.ktx.android.content.appName
 import org.mozilla.reference.browser.ext.waitAndInteract
-import java.util.regex.Pattern
 
 private val appName = instrumentation.targetContext.appName
 

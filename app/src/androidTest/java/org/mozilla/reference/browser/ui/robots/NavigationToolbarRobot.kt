@@ -39,11 +39,27 @@ class NavigationToolbarRobot {
 
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
+        fun freshTabEnterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            mDevice.waitForIdle()
+            freshTabUrlBar().perform(click())
+
+            mDevice.waitForIdle()
+            awesomeBar().perform(replaceText(url.toString()))
+            mDevice.waitForIdle()
+            awesomeBar().perform(pressImeActionButton())
+
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
+        }
+
         fun enterUrlAndEnterToBrowser(url: Uri, interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
             mDevice.waitForIdle()
             urlBar().perform(click())
-            awesomeBar().perform(replaceText(url.toString()),
-                    pressImeActionButton())
+
+            mDevice.waitForIdle()
+            awesomeBar().perform(replaceText(url.toString()))
+            mDevice.waitForIdle()
+            awesomeBar().perform(pressImeActionButton())
 
             BrowserRobot().interact()
             return BrowserRobot.Transition()
@@ -73,6 +89,7 @@ fun navigationToolbar(interact: NavigationToolbarRobot.() -> Unit): NavigationTo
 private fun openTabTray() = onView(withId(R.id.counter_box))
 private var numberOfOpenTabsTabCounter = onView(withId(R.id.counter_text))
 private fun urlBar() = onView(withId(R.id.mozac_browser_toolbar_url_view))
+private fun freshTabUrlBar() = onView(withId(R.id.url_bar_view))
 private fun awesomeBar() = onView(withId(R.id.mozac_browser_toolbar_edit_url_view))
 
 private fun assertNoTabAddressText() {

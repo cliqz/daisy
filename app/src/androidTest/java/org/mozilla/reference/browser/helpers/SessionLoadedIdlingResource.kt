@@ -31,8 +31,12 @@ class SessionLoadedIdlingResource : IdlingResource {
         return if (session?.loading == true) {
             false
         } else {
-            invokeCallback()
-            true
+            if (session?.progress == 100) {
+                invokeCallback()
+                true
+            } else {
+                false
+            }
         }
     }
 

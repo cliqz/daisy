@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="?android:attr/windowBackground"
+    tools:parentTag="com.google.android.material.appbar.AppBarLayout">
+
+    <org.mozilla.reference.browser.utils.CollapsibleToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/toolbar_height"
+        android:orientation="vertical"
+        app:layoutDescription="@xml/scene_fresh_tab"
+        app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap|exitUntilCollapsed">
+
+        <LinearLayout
+            android:id="@+id/top_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:gravity="end"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <org.mozilla.reference.browser.freshtab.MenuButton
+                android:id="@+id/fresh_tab_toolbar_menu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/logo_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_padding_size_xlarge"
+            android:paddingBottom="@dimen/margin_padding_size_xlarge"
+            android:src="@drawable/ic_cliqz_logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_toolbar"
+            tools:ignore="ContentDescription" />
+
+        <include
+            android:id="@+id/url_bar_view"
+            layout="@layout/url_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_large"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_large"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo_view" />
+
+    </org.mozilla.reference.browser.utils.CollapsibleToolbar>
+</merge>

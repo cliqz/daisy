@@ -1,6 +1,9 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package com.cliqz.browser.news.ui
 
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.cliqz.browser.news.domain.GetNewsUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -10,7 +13,6 @@ import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 
 class NewsFeature(
-    context: Context,
     private val newsView: NewsView,
     toolbar: Toolbar,
     scope: CoroutineScope,
@@ -21,7 +23,6 @@ class NewsFeature(
 
     @VisibleForTesting
     internal var presenter = DefaultNewsPresenter(
-        context,
         newsView,
         toolbar,
         scope,

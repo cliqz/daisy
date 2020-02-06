@@ -43,6 +43,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.addons.AddonsActivity
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.share
+import org.mozilla.reference.browser.freshtab.FreshTabToolbar
 import org.mozilla.reference.browser.library.history.ui.HistoryFragment
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.tabs.SyncedTabsActivity
@@ -51,6 +52,7 @@ import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingD
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
+    freshTabToolbar: FreshTabToolbar,
     coroutineScope: LifecycleCoroutineScope,
     private val historyStorage: HistoryStorage,
     sessionManager: SessionManager,
@@ -180,6 +182,8 @@ class ToolbarIntegration(
         if (toolbarEditMode) {
             toolbar.editMode()
         }
+
+        freshTabToolbar.setMenuBuilder(menuBuilder)
 
         val iconColor = ContextCompat.getColor(context, R.color.icons)
         toolbar.display.colors = toolbar.display.colors.copy(

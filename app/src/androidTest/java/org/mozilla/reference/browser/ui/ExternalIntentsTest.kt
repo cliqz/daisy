@@ -57,7 +57,7 @@ class ExternalIntentsTest {
                 Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         navigationToolbar {
-        }.enterUrlAndEnterToBrowser(defaultWebPage.url) {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }
         val url = "https://cliqz.com"
         externalIntents {

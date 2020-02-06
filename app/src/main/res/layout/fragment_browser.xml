@@ -35,29 +35,33 @@
         mozac:awesomeBarChipTextColor="#ffffff"
         mozac:awesomeBarChipBackgroundColor="#444444" />
 
+    <org.mozilla.reference.browser.freshtab.FreshTabToolbar
+        android:id="@+id/fresh_tab_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground" />
+
     <com.cliqz.browser.freshtab.FreshTab
         android:id="@+id/freshTab"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="56dp"
-        android:visibility="gone">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.cliqz.browser.news.ui.NewsView
             android:id="@+id/newsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginBottom="20dp"
-            android:elevation="3dp"
+            android:layout_marginStart="@dimen/margin_padding_size_large"
+            android:layout_marginLeft="@dimen/margin_padding_size_large"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_large"
+            android:layout_marginRight="@dimen/margin_padding_size_large"
+            android:layout_marginBottom="@dimen/margin_padding_size_large"
             android:orientation="vertical"
-            android:visibility="gone"
-            cliqz:newsViewBackgroundColor="@color/newsview_default_background_color"
+            cliqz:newsViewBackgroundColor="?android:attr/windowBackground"
+            cliqz:newsViewDescriptionTextColor="?android:attr/textColorSecondary"
             cliqz:newsViewTitleTextColor="?android:attr/textColorPrimary"
-            cliqz:newsViewUrlTextColor="?android:attr/textColorSecondary" />
+            cliqz:newsViewUrlTextColor="?android:attr/textColorLink" />
 
     </com.cliqz.browser.freshtab.FreshTab>
 
@@ -80,6 +84,7 @@
         android:layout_height="@dimen/toolbar_height"
         android:layout_gravity="top"
         android:background="@color/toolbarBackgroundColor"
+        android:elevation="@dimen/toolbar_elevation"
         app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
         mozac:browserToolbarTrackingProtectionAndSecurityIndicatorSeparatorColor="@color/photonWhite"
         mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
