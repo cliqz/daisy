@@ -70,7 +70,38 @@ class FreshTabIntegration(
             }, FRESH_TAB_TOOLBAR_EXPAND_INTERACTION_DELAY)
         })
 
-        toolbar.setOnEditListener(this)
+        toolbar.setOnEditListener(object : Toolbar.OnEditListener {
+            override fun onTextChanged(text: String) {
+                toolbarText = text
+                if (inputStarted) {
+                    if (text.isNotBlank()) {
+                        freshTab.visibility = View.GONE
+                        awesomeBar.asView().visibility = View.VISIBLE
+                    } else {
+                        freshTab.visibility = View.VISIBLE
+                        awesomeBar.asView().visibility = View.GONE
+                    }
+                    awesomeBar.onInputChanged(text)
+                }
+            }
+
+            override fun onStartEditing() {
+                inputStarted = true
+                awesomeBar.onInputStarted()
+                engineView.asView().visibility = View.GONE
+            }
+
+            override fun onStopEditing() {
+                inputStarted = false
+                awesomeBar.onInputCancelled()
+                awesomeBar.asView().visibility = View.GONE
+                updateVisibility()
+            }
+
+            override fun onCancelEditing(): Boolean {
+                return true
+            }
+        })
         sessionManager.register(object : SessionManager.Observer {
             override fun onSessionAdded(session: Session) {
                 topSitesFeature?.updateTopSites()
@@ -201,7 +232,7 @@ class FreshTabIntegration(
         loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
         getTopSitesUseCase: HistoryUseCases.GetTopSitesUseCase,
         browserIcons: BrowserIcons
-    ) : FreshTabIntegration {
+    ): FreshTabIntegration {
         topSitesFeature = TopSitesFeature(
             topSitesView,
             loadUrlUseCase,

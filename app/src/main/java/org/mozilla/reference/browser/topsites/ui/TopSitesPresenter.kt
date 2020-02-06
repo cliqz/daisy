@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.topsites.ui
 
 import kotlinx.coroutines.Dispatchers
@@ -5,12 +9,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
-import org.mozilla.reference.browser.database.Topsite
+import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
-/**
- * @author Ravjit Uppal
- */
 class TopSitesPresenter(
     private val view: View,
     private val loadUrlUseCase: LoadUrlUseCase,
@@ -18,7 +19,7 @@ class TopSitesPresenter(
 ) {
 
     interface View {
-        fun updateTopSitesData(topSites: List<Topsite>)
+        fun updateTopSitesData(topSites: List<TopSite>)
     }
 
     init {

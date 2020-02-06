@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package org.mozilla.reference.browser.topsites.ui
 
 import mozilla.components.browser.icons.BrowserIcons
@@ -5,9 +9,6 @@ import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
-/**
- * @author Ravjit Uppal
- */
 class TopSitesFeature(
     private val topSitesView: TopSitesView,
     private val loadUrlUseCase: LoadUrlUseCase,
@@ -16,7 +17,7 @@ class TopSitesFeature(
 ) : LifecycleAwareFeature {
 
     override fun start() {
-        topSitesView.init(loadUrlUseCase, getTopSitesUseCase,  browserIcons)
+        topSitesView.init(loadUrlUseCase, getTopSitesUseCase, browserIcons)
     }
 
     override fun stop() {
@@ -25,5 +26,4 @@ class TopSitesFeature(
     fun updateTopSites() {
         topSitesView.updateTopSites()
     }
-
 }
