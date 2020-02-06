@@ -72,13 +72,20 @@ class FreshTabIntegration(
 
         toolbar.setOnEditListener(object : Toolbar.OnEditListener {
             override fun onTextChanged(text: String) {
+                if (toolbarText == text) return
                 toolbarText = text
                 if (inputStarted) {
                     if (text.isNotBlank()) {
                         freshTab.visibility = View.GONE
+                        freshTabToolbar.visibility = View.GONE
                         awesomeBar.asView().visibility = View.VISIBLE
+                        engineView.asView().visibility = View.GONE
                     } else {
-                        freshTab.visibility = View.VISIBLE
+                        if (currentUrl.isFreshTab()) {
+                            freshTab.visibility = View.VISIBLE
+                        } else {
+                            engineView.asView().visibility = View.VISIBLE
+                        }
                         awesomeBar.asView().visibility = View.GONE
                     }
                     awesomeBar.onInputChanged(text)
@@ -88,17 +95,16 @@ class FreshTabIntegration(
             override fun onStartEditing() {
                 inputStarted = true
                 awesomeBar.onInputStarted()
-                engineView.asView().visibility = View.GONE
             }
 
             override fun onStopEditing() {
                 inputStarted = false
                 awesomeBar.onInputCancelled()
                 awesomeBar.asView().visibility = View.GONE
-                updateVisibility()
             }
 
             override fun onCancelEditing(): Boolean {
+                updateVisibility()
                 return true
             }
         })
@@ -162,43 +168,6 @@ class FreshTabIntegration(
             icons
         )
         return this
-    }
-
-    override fun onTextChanged(text: String) {
-        if (toolbarText == text) return
-        toolbarText = text
-        if (inputStarted) {
-            if (text.isNotBlank()) {
-                freshTab.visibility = View.GONE
-                freshTabToolbar.visibility = View.GONE
-                awesomeBar.asView().visibility = View.VISIBLE
-                engineView.asView().visibility = View.GONE
-            } else {
-                if (currentUrl.isFreshTab()) {
-                    freshTab.visibility = View.VISIBLE
-                } else {
-                    engineView.asView().visibility = View.VISIBLE
-                }
-                awesomeBar.asView().visibility = View.GONE
-            }
-            awesomeBar.onInputChanged(text)
-        }
-    }
-
-    override fun onStartEditing() {
-        inputStarted = true
-        awesomeBar.onInputStarted()
-    }
-
-    override fun onStopEditing() {
-        inputStarted = false
-        awesomeBar.onInputCancelled()
-        awesomeBar.asView().visibility = View.GONE
-    }
-
-    override fun onCancelEditing(): Boolean {
-        updateVisibility()
-        return true
     }
 
     private fun addSession(session: Session) {

@@ -35,7 +35,6 @@ class SettingsViewTest {
             verifySettingsViewExists()
             verifyNavigateUp()
             verifySyncSigninButton()
-            verifySyncHistorySummary()
             verifySyncQrCodeButton()
             verifySyncQrSummary()
             verifyPrivacyButton()

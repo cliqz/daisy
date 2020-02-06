@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_browser.awesomeBar
 import kotlinx.android.synthetic.main.fragment_browser.engineView
 import kotlinx.android.synthetic.main.fragment_browser.freshTab
+import kotlinx.android.synthetic.main.fragment_browser.fresh_tab_toolbar
 import kotlinx.android.synthetic.main.fragment_browser.newsView
 import kotlinx.android.synthetic.main.fragment_browser.toolbar
 import kotlinx.android.synthetic.main.fragment_browser.topSitesView
