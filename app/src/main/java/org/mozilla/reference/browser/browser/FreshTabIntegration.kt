@@ -48,7 +48,7 @@ class FreshTabIntegration(
 
     init {
         toolbar.edit.setOnEditFocusChangeListener { hasFocus: Boolean ->
-            if (hasFocus) toolbar.editMode() else toolbar.displayMode()
+            if (!hasFocus) toolbar.displayMode()
         }
         freshTab.setOnTouchListener { _, _ ->
             if (toolbar.hasFocus()) {
@@ -171,6 +171,7 @@ class FreshTabIntegration(
 
     override fun onUrlChanged(session: Session, url: String) {
         updateVisibility()
+        toolbarText = url
     }
 
     @VisibleForTesting
