@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar_height">
+
         <mozilla.components.concept.engine.EngineView
             android:id="@+id/engineView"
             android:layout_width="match_parent"
@@ -39,12 +40,14 @@
         android:id="@+id/fresh_tab_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground" />
+        android:background="?android:attr/windowBackground"
+        android:visibility="gone" />
 
     <com.cliqz.browser.freshtab.FreshTab
         android:id="@+id/freshTab"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.cliqz.browser.news.ui.NewsView
