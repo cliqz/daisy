@@ -27,6 +27,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.database.model.TopSite
 import java.net.URI
 import java.util.Locale
 
@@ -376,19 +377,19 @@ class HistoryDatabase(context: Context)
      * Query the history db to fetch the top most visited websites.
      *
      * @param limit the number of items to return
-     * @return a list of [Topsite]. The time stamp of these elements is always -1.
+     * @return a list of [TopSite]. The time stamp of these elements is always -1.
      */
     @Suppress("NestedBlockDepth")
     @Synchronized
-    fun getTopSites(limit: Int): List<Topsite> {
+    fun getTopSites(limit: Int): List<TopSite> {
         var limit = limit
-        val db = dbHandler.database ?: return listOf<Topsite>()
+        val db = dbHandler.database ?: return listOf()
         if (limit < 1) {
             limit = 1
         } else if (limit > MAX_TOP_SITE_LIMIT) {
             limit = MAX_TOP_SITE_LIMIT
         }
-        val topsites = ArrayList<Topsite>(limit)
+        val topSites = ArrayList<TopSite>(limit)
         val cursor = db.rawQuery(res.getString(R.string.get_top_sites_v6), null)
         var counter = 0
         if (cursor.moveToFirst()) {
@@ -409,12 +410,13 @@ class HistoryDatabase(context: Context)
                         }
                     }
                 }
-                topsites.add(Topsite(id, url, domain ?: "", cursor.getString(titleIndex)))
+                topSites.add(TopSite(id, url, domain
+                        ?: "", cursor.getString(titleIndex)))
                 counter++
             } while (cursor.moveToNext() && counter < limit)
         }
         cursor.close()
-        return topsites
+        return topSites
     }
 
     @Deprecated("")

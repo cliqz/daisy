@@ -24,9 +24,9 @@ import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import mozilla.components.support.base.log.logger.Logger
-import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.push.FirebasePush
 import org.mozilla.reference.browser.tabs.SyncedTabsIntegration
 
 /**

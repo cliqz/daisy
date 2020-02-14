@@ -10,9 +10,9 @@ import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.cliqz.browser.freshtab.FreshTab
+import com.cliqz.browser.news.domain.GetNewsUseCase
 import com.cliqz.browser.news.ui.NewsFeature
 import com.cliqz.browser.news.ui.NewsView
-import com.cliqz.browser.news.domain.GetNewsUseCase
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -25,6 +25,9 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.ext.preferences
 import org.mozilla.reference.browser.freshtab.FreshTabToolbar
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases.GetTopSitesUseCase
+import org.mozilla.reference.browser.topsites.ui.TopSitesFeature
+import org.mozilla.reference.browser.topsites.ui.TopSitesView
 
 class FreshTabIntegration(
     private val context: Context,
@@ -43,8 +46,8 @@ class FreshTabIntegration(
     private var toolbarText: String = ""
 
     private var inputStarted = false
-
     private var newsFeature: NewsFeature? = null
+    private var topSitesFeature: TopSitesFeature? = null
 
     init {
         toolbar.edit.setOnEditFocusChangeListener { hasFocus: Boolean ->
@@ -67,9 +70,47 @@ class FreshTabIntegration(
             }, FRESH_TAB_TOOLBAR_EXPAND_INTERACTION_DELAY)
         })
 
-        toolbar.setOnEditListener(this)
+        toolbar.setOnEditListener(object : Toolbar.OnEditListener {
+            override fun onTextChanged(text: String) {
+                if (toolbarText == text) return
+                toolbarText = text
+                if (inputStarted) {
+                    if (text.isNotBlank()) {
+                        freshTab.visibility = View.GONE
+                        freshTabToolbar.visibility = View.GONE
+                        awesomeBar.asView().visibility = View.VISIBLE
+                        engineView.asView().visibility = View.GONE
+                    } else {
+                        if (currentUrl.isFreshTab()) {
+                            freshTab.visibility = View.VISIBLE
+                        } else {
+                            engineView.asView().visibility = View.VISIBLE
+                        }
+                        awesomeBar.asView().visibility = View.GONE
+                    }
+                    awesomeBar.onInputChanged(text)
+                }
+            }
+
+            override fun onStartEditing() {
+                inputStarted = true
+                awesomeBar.onInputStarted()
+            }
+
+            override fun onStopEditing() {
+                inputStarted = false
+                awesomeBar.onInputCancelled()
+                awesomeBar.asView().visibility = View.GONE
+            }
+
+            override fun onCancelEditing(): Boolean {
+                updateVisibility()
+                return true
+            }
+        })
         sessionManager.register(object : SessionManager.Observer {
             override fun onSessionAdded(session: Session) {
+                topSitesFeature?.updateTopSites()
                 updateVisibility()
                 addSession(session)
             }
@@ -97,6 +138,7 @@ class FreshTabIntegration(
     override fun start() {
         if (context.preferences().shouldShowNewsView) {
             newsFeature?.start()
+            topSitesFeature?.start()
         } else {
             newsFeature?.hideNews()
         }
@@ -128,43 +170,6 @@ class FreshTabIntegration(
         return this
     }
 
-    override fun onTextChanged(text: String) {
-        if (toolbarText == text) return
-        toolbarText = text
-        if (inputStarted) {
-            if (text.isNotBlank()) {
-                freshTab.visibility = View.GONE
-                freshTabToolbar.visibility = View.GONE
-                awesomeBar.asView().visibility = View.VISIBLE
-                engineView.asView().visibility = View.GONE
-            } else {
-                if (currentUrl.isFreshTab()) {
-                    freshTab.visibility = View.VISIBLE
-                } else {
-                    engineView.asView().visibility = View.VISIBLE
-                }
-                awesomeBar.asView().visibility = View.GONE
-            }
-            awesomeBar.onInputChanged(text)
-        }
-    }
-
-    override fun onStartEditing() {
-        inputStarted = true
-        awesomeBar.onInputStarted()
-    }
-
-    override fun onStopEditing() {
-        inputStarted = false
-        awesomeBar.onInputCancelled()
-        awesomeBar.asView().visibility = View.GONE
-    }
-
-    override fun onCancelEditing(): Boolean {
-        updateVisibility()
-        return true
-    }
-
     private fun addSession(session: Session) {
         session.register(this, freshTab)
     }
@@ -189,6 +194,20 @@ class FreshTabIntegration(
             toolbar.display.indicators = listOf(DisplayToolbar.Indicators.SECURITY)
             toolbar.visibility = View.VISIBLE
         }
+    }
+
+    fun addTopSitesFeature(
+        topSitesView: TopSitesView,
+        loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
+        getTopSitesUseCase: GetTopSitesUseCase,
+        browserIcons: BrowserIcons
+    ): FreshTabIntegration {
+        topSitesFeature = TopSitesFeature(
+            topSitesView,
+            loadUrlUseCase,
+            getTopSitesUseCase,
+            browserIcons)
+        return this
     }
 
     companion object {

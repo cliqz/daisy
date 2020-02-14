@@ -7,8 +7,16 @@ package org.mozilla.reference.browser.browser
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import kotlinx.android.synthetic.main.fragment_browser.*
-import kotlinx.android.synthetic.main.fragment_browser.view.*
+import kotlinx.android.synthetic.main.fragment_browser.awesomeBar
+import kotlinx.android.synthetic.main.fragment_browser.engineView
+import kotlinx.android.synthetic.main.fragment_browser.freshTab
+import kotlinx.android.synthetic.main.fragment_browser.fresh_tab_toolbar
+import kotlinx.android.synthetic.main.fragment_browser.newsView
+import kotlinx.android.synthetic.main.fragment_browser.toolbar
+import kotlinx.android.synthetic.main.fragment_browser.topSitesView
+import kotlinx.android.synthetic.main.fragment_browser.view.readerViewAppearanceButton
+import kotlinx.android.synthetic.main.fragment_browser.view.readerViewBar
+import kotlinx.android.synthetic.main.fragment_browser.view.toolbar
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider
@@ -61,6 +69,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                     lifecycleScope,
                     requireComponents.useCases.sessionUseCases.loadUrl,
                     requireComponents.useCases.getNewsUseCase,
+                    requireComponents.core.icons
+                ).addTopSitesFeature(
+                    topSitesView,
+                    requireComponents.useCases.sessionUseCases.loadUrl,
+                    requireComponents.useCases.historyUseCases.getTopSites,
                     requireComponents.core.icons
                 ),
                 owner = this,

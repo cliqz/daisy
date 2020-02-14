@@ -4,17 +4,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.mozilla.reference.browser.database
+package org.mozilla.reference.browser.database.model
 
 /**
- * This class catches basic informations about a "topsite"
+ * This class holds basic information about a "topSite"
  *
- * @param id the urls database id for this topsite
- * @param url the topsite url
+ * @param id the urls database id for this topSite
+ * @param url the topSite url
  * @param domain the pre-extracted domain (from url)
  * @param title the title of the page
  */
-class Topsite(
+class TopSite(
     val id: Long,
     val url: String,
     val domain: String,
