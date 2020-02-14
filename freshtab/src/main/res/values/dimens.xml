@@ -15,5 +15,5 @@
 
     <dimen name="news_list_item_poster_height">196dp</dimen>
     <dimen name="news_list_item_height">352dp</dimen>
-    <dimen name="freshtab_icons_size">50dp</dimen>
+    <dimen name="freshtab_icons_size">48dp</dimen>
 </resources>

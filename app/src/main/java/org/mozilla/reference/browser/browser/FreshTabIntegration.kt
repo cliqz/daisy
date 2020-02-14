@@ -25,7 +25,7 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.ext.preferences
 import org.mozilla.reference.browser.freshtab.FreshTabToolbar
-import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases.GetTopSitesUseCase
 import org.mozilla.reference.browser.topsites.ui.TopSitesFeature
 import org.mozilla.reference.browser.topsites.ui.TopSitesView
 
@@ -199,7 +199,7 @@ class FreshTabIntegration(
     fun addTopSitesFeature(
         topSitesView: TopSitesView,
         loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
-        getTopSitesUseCase: HistoryUseCases.GetTopSitesUseCase,
+        getTopSitesUseCase: GetTopSitesUseCase,
         browserIcons: BrowserIcons
     ): FreshTabIntegration {
         topSitesFeature = TopSitesFeature(

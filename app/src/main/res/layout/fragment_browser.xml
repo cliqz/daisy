@@ -53,7 +53,13 @@
         <org.mozilla.reference.browser.topsites.ui.TopSitesView
             android:id="@+id/topSitesView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_padding_size_large"
+            android:layout_marginLeft="@dimen/margin_padding_size_large"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="@dimen/margin_padding_size_large"
+            android:layout_marginRight="@dimen/margin_padding_size_large" />
 
         <com.cliqz.browser.news.ui.NewsView
             android:id="@+id/newsView"
@@ -61,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_large"
             android:layout_marginLeft="@dimen/margin_padding_size_large"
-            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginTop="48dp"
             android:layout_marginEnd="@dimen/margin_padding_size_large"
             android:layout_marginRight="@dimen/margin_padding_size_large"
             android:layout_marginBottom="@dimen/margin_padding_size_large"

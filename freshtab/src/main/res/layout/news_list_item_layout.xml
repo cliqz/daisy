@@ -8,9 +8,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_padding_size_medium"
+    android:elevation="1dp"
     android:maxHeight="@dimen/news_list_item_height"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="0.8dp"
+    app:cardCornerRadius="5dp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,14 +5,14 @@
 package org.mozilla.reference.browser.topsites.ui
 
 import android.content.Context
+
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.GridView
-import android.widget.LinearLayout
+import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.feature.session.SessionUseCases
+import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
@@ -20,27 +20,29 @@ class TopSitesView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : GridView(context, attrs, defStyleAttr), TopSitesPresenter.View {
+) : RecyclerView(context, attrs, defStyleAttr), TopSitesPresenter.View {
 
     private lateinit var topSitesAdapter: TopSitesAdapter
     private lateinit var presenter: TopSitesPresenter
+
+    init {
+        isNestedScrollingEnabled = false
+        layoutManager = GridLayoutManager(context, NUM_COLUMNS)
+        addItemDecoration(GridSpacingDecoration(
+            context.resources.getDimension(R.dimen.margin_padding_size_large).toInt()
+        ))
+    }
 
     fun init(
         loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
         getTopSitesUseCase: HistoryUseCases.GetTopSitesUseCase,
         browserIcons: BrowserIcons
     ) {
-        layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        gravity = Gravity.CENTER
-        topSitesAdapter = TopSitesAdapter(browserIcons)
-        adapter = topSitesAdapter
-        numColumns = TOP_SITES_COUNT
         presenter = TopSitesPresenter(this, loadUrlUseCase, getTopSitesUseCase)
-        setOnItemClickListener { _, _, position, _ ->
-            if (topSitesAdapter.topSites.size >= position + 1) {
-                presenter.onTopSiteClicked(topSitesAdapter.topSites[position].url)
-            }
+        topSitesAdapter = TopSitesAdapter(browserIcons) {
+            presenter.onTopSiteClicked(it)
         }
+        adapter = topSitesAdapter
     }
 
     fun updateTopSites() {
@@ -48,10 +50,14 @@ class TopSitesView @JvmOverloads constructor(
     }
 
     override fun updateTopSitesData(topSites: List<TopSite>) {
-        topSitesAdapter.topSites = topSites
+        if (topSites.isNotEmpty()) {
+            topSitesAdapter.topSites = topSites
+        } else {
+            visibility = View.GONE
+        }
     }
 
     companion object {
-        private const val TOP_SITES_COUNT = 5
+        private const val NUM_COLUMNS = 4
     }
 }

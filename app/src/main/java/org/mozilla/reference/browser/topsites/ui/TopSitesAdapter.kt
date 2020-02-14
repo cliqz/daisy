@@ -4,59 +4,48 @@
 
 package org.mozilla.reference.browser.topsites.ui
 
+import android.graphics.Outline
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.icons.IconRequest
+import mozilla.components.support.ktx.android.util.dpToFloat
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.database.model.TopSite
 import kotlin.properties.Delegates
 
-class TopSitesAdapter(private val browserIcons: BrowserIcons) : BaseAdapter() {
+class TopSitesAdapter(
+    private val browserIcons: BrowserIcons,
+    private val itemClickListener: ((topSite: TopSite) -> Unit)
+) : RecyclerView.Adapter<TopSitesViewHolder>() {
 
     var topSites: List<TopSite> by Delegates.observable(emptyList()) { _, _, _ -> notifyDataSetChanged() }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val row: TopSitesViewHolder
-        val context = parent?.context
-        val inflater = LayoutInflater.from(context)
-        var tmpView = convertView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopSitesViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(TopSitesViewHolder.LAYOUT_ID, parent, false)
+        return TopSitesViewHolder(view, browserIcons)
+    }
 
-        if (getItemViewType(position) == TOP_SITE_TYPE) {
-            //  if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            tmpView = inflater.inflate(R.layout.topsites_layout, parent, false)
-            row = TopSitesViewHolder(tmpView)
-            tmpView.tag = row
-            // } else {
-            // row = convertView.tag as TopSitesViewHolder
-            // }
-            val topSite = topSites[position]
-            row.topSite = topSite
-            row.domainView.text = topSite.title
-            // row.iconView.setImageResource(R.drawable.mozac_menu_indicator)
-            browserIcons.loadIntoView(row.iconView, IconRequest(topSite.url))
-        } else {
-            tmpView = convertView
-                ?: inflater.inflate(R.layout.topsites_placeholder_layout, parent, false)
+    override fun onBindViewHolder(holder: TopSitesViewHolder, position: Int) {
+        val topSite = topSites[position]
+        holder.bind(topSite)
+        holder.itemView.setOnClickListener {
+            itemClickListener(topSite)
         }
-        return tmpView!!
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
-    override fun getItem(position: Int): Any {
-        return topSites.get(position)
-    }
-
-    override fun getCount(): Int {
-        return 5
+    override fun getItemCount(): Int {
+        return topSites.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -70,13 +59,39 @@ class TopSitesAdapter(private val browserIcons: BrowserIcons) : BaseAdapter() {
     }
 }
 
-internal class TopSitesViewHolder(convertView: View) {
-    @Volatile
-    @set:Synchronized
-    var topSite: TopSite? = null
-    val domainView: TextView = convertView.findViewById<View>(R.id.domain_view) as TextView
-    val iconView: ImageView = convertView.findViewById(R.id.icon_view) as ImageView
+class TopSitesViewHolder(
+    itemView: View,
+    private val browserIcons: BrowserIcons
+) : RecyclerView.ViewHolder(itemView) {
 
-    val url: String
-        @Synchronized get() = topSite!!.url
+    private lateinit var topSite: TopSite
+
+    private val domainView: TextView = itemView.findViewById(R.id.domain_view) as TextView
+    private val iconView: ImageView = itemView.findViewById(R.id.icon_view) as ImageView
+
+    init {
+        iconView.clipToOutline = true
+        iconView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View?, outline: Outline?) {
+                outline?.setRoundRect(
+                    0,
+                    0,
+                    view!!.width,
+                    view.height,
+                    favIconBorderRadiusInPx.dpToFloat(view.context.resources.displayMetrics)
+                )
+            }
+        }
+    }
+
+    fun bind(topSite: TopSite) {
+        this.topSite = topSite
+        this.domainView.text = topSite.domain
+        browserIcons.loadIntoView(iconView, IconRequest(topSite.url))
+    }
+
+    companion object {
+        const val LAYOUT_ID = R.layout.topsites_layout
+        const val favIconBorderRadiusInPx = 4
+    }
 }

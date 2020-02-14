@@ -7,12 +7,12 @@ package org.mozilla.reference.browser.topsites.ui
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 import mozilla.components.support.base.feature.LifecycleAwareFeature
-import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases.GetTopSitesUseCase
 
 class TopSitesFeature(
     private val topSitesView: TopSitesView,
     private val loadUrlUseCase: LoadUrlUseCase,
-    private val getTopSitesUseCase: HistoryUseCases.GetTopSitesUseCase,
+    private val getTopSitesUseCase: GetTopSitesUseCase,
     private val browserIcons: BrowserIcons
 ) : LifecycleAwareFeature {
 
@@ -21,6 +21,7 @@ class TopSitesFeature(
     }
 
     override fun stop() {
+        // no-op
     }
 
     fun updateTopSites() {

@@ -75,6 +75,6 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
 
     companion object {
         private const val PAGE_SIZE = 25
-        private const val TOP_SITES_COUNT = 5
+        private const val TOP_SITES_COUNT = 8
     }
 }

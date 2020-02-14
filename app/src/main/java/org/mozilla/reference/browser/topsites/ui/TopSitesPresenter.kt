@@ -27,13 +27,13 @@ class TopSitesPresenter(
     }
 
     fun fetchTopSites() = GlobalScope.launch(Dispatchers.Main) {
-        val historyInfo = withContext(Dispatchers.IO) { topSitesUseCase.invoke() }
+        val historyInfo = withContext(Dispatchers.IO) {
+            topSitesUseCase.invoke()
+        }
         view.updateTopSitesData(historyInfo)
     }
 
-    fun onTopSiteClicked(url: String?) {
-        if (url != null) {
-            loadUrlUseCase.invoke(url)
-        }
+    fun onTopSiteClicked(topSite: TopSite) {
+        loadUrlUseCase.invoke(topSite.url)
     }
 }
