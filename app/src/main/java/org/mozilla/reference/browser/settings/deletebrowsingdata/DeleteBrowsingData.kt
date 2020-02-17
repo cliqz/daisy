@@ -7,7 +7,6 @@ package org.mozilla.reference.browser.settings.deletebrowsingdata
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.layout_delete_browsing_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,7 @@ class DeleteBrowsingData(
         coroutineScope.coroutineContext
     )
 
-    lateinit var alertDialog: AlertDialog
+    private lateinit var alertDialog: AlertDialog
 
     fun askToDelete() {
         alertDialog = AlertDialog.Builder(context)
@@ -42,11 +41,8 @@ class DeleteBrowsingData(
             .setNegativeButton(R.string.delete_browsing_data_dialog_negative_btn) { dialog, _ ->
                 dialog.cancel()
             }
-            .show()
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(context, android.R.color.white))
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, android.R.color.white))
+            .create()
+        alertDialog.show()
     }
 
     private fun deleteSelected(alertDialog: AlertDialog) {
