@@ -24,6 +24,7 @@ node('master'){
                             export ANDROID_KEY_ALIAS=browser
                             export ANDROID_KEY_PWD="$ANDROID_STORE_PWD"
                             export FASTLANE_DISABLE_COLORS=1
+                            bundle install
                             bundle exec fastlane android build
                         '''
                     }
