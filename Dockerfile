@@ -24,9 +24,6 @@ RUN mkdir -p /tmp "$ANDROID_SDK_ROOT" && \
         "platform-tools" \
         "platforms;android-28" \
         "platforms;android-29"
-RUN curl -o /tmp/rubygems.tgz "https://rubygems.org/rubygems/rubygems-3.1.2.tgz" && \
-    (cd /sdk; tar xf /tmp/rubygems.tgz; cd rubygems-3.1.2; ruby setup.rb --no-document --no-format-executable) && \
-    rm /tmp/rubygems.tgz
 
 ARG UID=1000
 ARG GID=1000
