@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.feature.session.SessionUseCases
-import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
@@ -28,9 +27,6 @@ class TopSitesView @JvmOverloads constructor(
     init {
         isNestedScrollingEnabled = false
         layoutManager = GridLayoutManager(context, NUM_COLUMNS)
-        addItemDecoration(GridSpacingDecoration(
-            context.resources.getDimension(R.dimen.margin_padding_size_large).toInt()
-        ))
     }
 
     fun init(

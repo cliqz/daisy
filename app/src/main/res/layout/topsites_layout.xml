@@ -2,52 +2,58 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/top_site"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/freshtab_icons_size"
-        android:layout_height="@dimen/freshtab_icons_size"
-        android:layout_marginBottom="6dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/light_grey_2"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toTopOf="@id/domain_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/icon_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="0.75dp"
-            android:background="@android:color/white"
-            tools:background="@color/photonRed50"
-            tools:ignore="ContentDescription" />
-
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/domain_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center_horizontal"
-        android:lines="1"
-        android:maxLines="1"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="This is a top Site" />
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_padding_size_medium">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/freshtab_icons_size"
+            android:layout_height="@dimen/freshtab_icons_size"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/light_grey_2"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toTopOf="@id/domain_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/icon_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="0.75dp"
+                android:background="@android:color/white"
+                tools:background="@color/photonRed50"
+                tools:ignore="ContentDescription" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/domain_view"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="This is a top site" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
