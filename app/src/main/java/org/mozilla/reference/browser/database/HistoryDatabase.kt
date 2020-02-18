@@ -69,7 +69,24 @@ class HistoryDatabase(context: Context)
     }
 
     override fun getSuggestions(query: String, limit: Int): List<SearchResult> {
-        return listOf()
+        val db = dbHandler.database ?: return listOf()
+        val formattedSearch = String.format("%%%s%%", query)
+        val selectQuery = res.getString(R.string.seach_history_query_v5)
+        val cursor = db.rawQuery(selectQuery, arrayOf(formattedSearch, formattedSearch, limit.toString()))
+
+        val searchSuggestions = mutableListOf<SearchResult>()
+        val resultCount = 0
+        if (cursor.moveToFirst()) {
+            do {
+                val url = cursor.getString(cursor.getColumnIndex(UrlsTable.URL))
+                val title = cursor.getString(cursor.getColumnIndex(UrlsTable.TITLE))
+                // The search query we use right now does not return any 'score' attribute column
+                val searchSuggestion = SearchResult(url, url, 0, title)
+                searchSuggestions.add(searchSuggestion)
+            } while (cursor.moveToNext() && resultCount < limit)
+        }
+        cursor.close()
+        return searchSuggestions
     }
 
     override suspend fun getVisited(): List<String> {
@@ -297,7 +314,7 @@ class HistoryDatabase(context: Context)
                 urlsValues.put(UrlsTable.VISITS, visits)
                 urlsValues.put(UrlsTable.TIME, q.getLong(timeIndex))
                 db.update(UrlsTable.TABLE_NAME, urlsValues, UrlsTable.ID + " = ?",
-                    arrayOf(java.lang.Long.toString(urlId)))
+                    arrayOf(urlId.toString()))
             }
             q.close()
             db.setTransactionSuccessful()
