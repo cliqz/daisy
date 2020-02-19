@@ -3,40 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_padding_size_medium"
+    android:paddingTop="@dimen/margin_padding_size_medium"
+    android:paddingEnd="0dp">
 
     <org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingDataItem
         android:id="@+id/open_tabs_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         app:deleteBrowsingDataItemTitle="@string/preferences_delete_browsing_data_browsing_data_open_tabs_title" />
 
     <org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingDataItem
         android:id="@+id/history_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         app:deleteBrowsingDataItemTitle="@string/preferences_delete_browsing_data_browsing_data_history_title" />
 
     <org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingDataItem
         android:id="@+id/cookies_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         app:deleteBrowsingDataItemTitle="@string/preferences_delete_browsing_data_browsing_data_cookies_title" />
 
     <org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingDataItem
         android:id="@+id/cache_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         app:deleteBrowsingDataItemTitle="@string/preferences_delete_browsing_data_browsing_data_cache_title" />
 
     <org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingDataItem
         android:id="@+id/site_settings_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         app:deleteBrowsingDataItemTitle="@string/preferences_delete_browsing_data_browsing_data_site_settings_title" />
+
 </LinearLayout>

@@ -6,45 +6,38 @@ package org.mozilla.reference.browser.settings.deletebrowsingdata
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.util.TypedValue
 import androidx.core.content.withStyledAttributes
-import kotlinx.android.synthetic.main.delete_browsing_data_item.view.*
+import com.google.android.material.checkbox.MaterialCheckBox
 import org.mozilla.reference.browser.R
 
 class DeleteBrowsingDataItem @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
-
-    val titleView: TextView
-        get() = title
-
-    var isChecked: Boolean
-        get() = checkbox.isChecked
-        set(value) { checkbox.isChecked = value }
-
-    var onCheckListener: ((Boolean) -> Unit)? = null
+    defStyleAttr: Int = R.attr.checkboxStyle
+) : MaterialCheckBox(context, attrs, defStyleAttr) {
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.delete_browsing_data_item, this, true)
+        isChecked = true
 
-        setOnClickListener {
-            checkbox.isChecked = !checkbox.isChecked
+        TypedValue().apply {
+            context.theme.resolveAttribute(R.attr.selectableItemBackgroundBorderless, this, true)
+            setBackgroundResource(resourceId)
         }
 
-        checkbox.setOnCheckedChangeListener { _, isChecked ->
-            onCheckListener?.invoke(isChecked)
-        }
+        setPadding(
+            paddingLeft + resources.getDimensionPixelSize(R.dimen.margin_padding_size_medium),
+            paddingTop,
+            paddingRight,
+            paddingBottom
+        )
 
         context.withStyledAttributes(attrs, R.styleable.DeleteBrowsingDataItem, defStyleAttr, 0) {
             val titleId = getResourceId(
                 R.styleable.DeleteBrowsingDataItem_deleteBrowsingDataItemTitle,
                 R.string.empty_string
             )
-            title.text = resources.getString(titleId)
+            text = resources.getString(titleId)
         }
     }
 }
