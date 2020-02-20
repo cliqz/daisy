@@ -11,12 +11,12 @@ import kotlinx.android.synthetic.main.fragment_browser.awesomeBar
 import kotlinx.android.synthetic.main.fragment_browser.engineView
 import kotlinx.android.synthetic.main.fragment_browser.freshTab
 import kotlinx.android.synthetic.main.fragment_browser.fresh_tab_toolbar
-import kotlinx.android.synthetic.main.fragment_browser.newsView
 import kotlinx.android.synthetic.main.fragment_browser.toolbar
-import kotlinx.android.synthetic.main.fragment_browser.topSitesView
 import kotlinx.android.synthetic.main.fragment_browser.view.readerViewAppearanceButton
 import kotlinx.android.synthetic.main.fragment_browser.view.readerViewBar
 import kotlinx.android.synthetic.main.fragment_browser.view.toolbar
+import kotlinx.android.synthetic.main.news_layout.newsView
+import kotlinx.android.synthetic.main.top_sites_layout.topSitesView
 import mozilla.components.feature.awesomebar.AwesomeBarFeature
 import mozilla.components.feature.session.ThumbnailsFeature
 import mozilla.components.feature.syncedtabs.SyncedTabsStorageSuggestionProvider

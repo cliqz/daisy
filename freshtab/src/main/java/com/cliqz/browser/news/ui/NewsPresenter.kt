@@ -41,7 +41,7 @@ class DefaultNewsPresenter(
     }
 
     fun stop() {
-        newsView.presenter = null
+        // no-op
     }
 
     override suspend fun getNews(): Result<List<NewsItem>> {

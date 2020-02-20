@@ -7,20 +7,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_padding_size_medium"
     android:elevation="1dp"
-    app:cardCornerRadius="5dp"
-    app:cardUseCompatPadding="true">
+    android:layout_margin="10dp"
+    app:cardCornerRadius="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="true">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/poster_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/news_list_item_poster_height"
+            android:layout_height="140dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,6 +28,7 @@
         <TextView
             android:id="@+id/title_view"
             style="@style/NewsViewTitle"
+            android:lines="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -74,10 +73,10 @@
             style="@style/NewsViewDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:lines="5"
             android:layout_marginTop="@dimen/margin_padding_size_xsmall"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
             android:ellipsize="end"
-            android:maxLines="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/title_view"
             app:layout_constraintStart_toStartOf="@+id/title_view"
