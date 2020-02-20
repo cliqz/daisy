@@ -1,5 +1,6 @@
 package com.cliqz.browser.news.data.source
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.cliqz.browser.news.data.NewsItem
 import com.cliqz.browser.news.data.Result
@@ -30,7 +31,7 @@ class DefaultNewsRepository(
     private suspend fun fetchNewsFromRemoteOrLocal(): Result<List<NewsItem>> {
         when (val remoteNewsList = newsRemoteDataSource.getNews()) {
             is Error -> {
-                // TODO: Log that fetching from remote source failed
+                Log.e("DefaultNewsRepository", "Error loading news from remote source: ${remoteNewsList.message}")
             }
             is Success -> {
                 refreshLocalDataSource(remoteNewsList.data)

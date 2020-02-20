@@ -19,6 +19,7 @@ import org.json.JSONTokener
 
 class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
 
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun getNews(): Result<List<NewsItem>> {
         val url = getNewsUrl()
         val headers = MutableHeaders(
@@ -68,7 +69,7 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
         }
         sb.append("&edition=").append(newsEdition)
 
-        /* TODO: Get country based result.
+        /* Get country based result.
         val country: String?
         country = preferenceManager.getCountryChoice().countryCode
         if (country != null) {
@@ -76,7 +77,7 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
         } */
         sb.append("&count=").append(Int.MAX_VALUE)
         sb.append("&platform=1")
-        /* TODO: Get location based result.
+        /* Get location based result.
         if (locationCache.getLastLocation() != null) {
             sb.append("&loc=").append(locationCache.getLastLocation().getLatitude()).append(",")
                     .append(locationCache.getLastLocation().getLongitude())

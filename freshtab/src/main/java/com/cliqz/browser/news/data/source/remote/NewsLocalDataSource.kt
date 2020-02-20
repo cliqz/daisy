@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream
 
 class NewsLocalDataSource(private val context: Context) : NewsDataSource {
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "TooGenericExceptionCaught")
     override suspend fun getNews(): Result<List<NewsItem>> {
         return try {
             Success(readObjectFromFile() as? List<NewsItem> ?: emptyList())
