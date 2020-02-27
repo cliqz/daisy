@@ -36,6 +36,11 @@ class BrowserRobot {
         verifyUrl("https://cliqz.com/en/support")
     }
 
+    fun verifyFreshTabView() {
+        val packageName = instrumentation.targetContext.packageName
+        mDevice.waitAndInteract(Until.findObject(By.res(packageName, "url_bar_view"))) {}
+    }
+
     private fun verifyUrl(expectedUrl: String) {
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         mDevice.waitAndInteract(Until.findObject(By.textContains(expectedUrl))) {}

@@ -63,22 +63,25 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
                 freshTab,
                 fresh_tab_toolbar,
                 engineView,
-                requireComponents.core.sessionManager)
-                .addNewsFeature(
-                    newsView,
-                    lifecycleScope,
-                    requireComponents.useCases.sessionUseCases.loadUrl,
-                    requireComponents.useCases.getNewsUseCase,
-                    requireComponents.core.icons
-                ).addTopSitesFeature(
-                    topSitesView,
-                    requireComponents.useCases.sessionUseCases.loadUrl,
-                    requireComponents.useCases.historyUseCases.getTopSites,
-                    requireComponents.core.icons
-                ),
-                owner = this,
-                view = view
+                requireComponents.core.sessionManager,
+                sessionId)
+            .addNewsFeature(
+                newsView,
+                lifecycleScope,
+                requireComponents.useCases.sessionUseCases.loadUrl,
+                requireComponents.useCases.getNewsUseCase,
+                requireComponents.core.icons)
+            .addTopSitesFeature(
+                topSitesView,
+                requireComponents.useCases.sessionUseCases.loadUrl,
+                requireComponents.useCases.historyUseCases.getTopSites,
+                requireComponents.core.icons
+            ),
+            owner = this,
+            view = view
         )
+
+        backButtonHandler.add(freshTabIntegration)
 
         // We cannot really add a `addSyncedTabsProvider` to `AwesomeBarFeature` coz that would create
         // a dependency on feature-syncedtabs (which depends on Sync).

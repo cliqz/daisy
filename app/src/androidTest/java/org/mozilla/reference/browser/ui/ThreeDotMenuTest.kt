@@ -205,6 +205,18 @@ class ThreeDotMenuTest {
     }
 
     @Test
+    fun goBackToFreshTabTest() {
+        val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
+
+        navigationToolbar {
+        }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
+            verifyPageContent(defaultWebPage.content)
+            mDevice.pressBack()
+            verifyFreshTabView()
+        }
+    }
+
+    @Test
     @Ignore("Current fresh tab design does not have UI element to indicate tabs open")
     fun openNewTabTest() {
         navigationToolbar {

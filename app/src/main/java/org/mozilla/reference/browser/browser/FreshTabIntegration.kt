@@ -15,6 +15,7 @@ import com.cliqz.browser.news.ui.NewsFeature
 import com.cliqz.browser.news.ui.NewsView
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.Session
+import mozilla.components.browser.session.Session.Source
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
@@ -23,6 +24,7 @@ import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.toolbar.Toolbar
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.ext.preferences
 import org.mozilla.reference.browser.freshtab.FreshTabToolbar
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases.GetTopSitesUseCase
@@ -36,8 +38,9 @@ class FreshTabIntegration(
     private val freshTab: FreshTab,
     private val freshTabToolbar: FreshTabToolbar,
     private val engineView: EngineView,
-    private val sessionManager: SessionManager
-) : LifecycleAwareFeature, Session.Observer, Toolbar.OnEditListener {
+    private val sessionManager: SessionManager,
+    private val sessionId: String? = null
+) : LifecycleAwareFeature, Session.Observer, Toolbar.OnEditListener, UserInteractionHandler {
 
     @VisibleForTesting
     val currentUrl: String
@@ -170,6 +173,20 @@ class FreshTabIntegration(
         return this
     }
 
+    fun addTopSitesFeature(
+        topSitesView: TopSitesView,
+        loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
+        getTopSitesUseCase: GetTopSitesUseCase,
+        browserIcons: BrowserIcons
+    ): FreshTabIntegration {
+        topSitesFeature = TopSitesFeature(
+            topSitesView,
+            loadUrlUseCase,
+            getTopSitesUseCase,
+            browserIcons)
+        return this
+    }
+
     private fun addSession(session: Session) {
         session.register(this, freshTab)
     }
@@ -196,18 +213,24 @@ class FreshTabIntegration(
         }
     }
 
-    fun addTopSitesFeature(
-        topSitesView: TopSitesView,
-        loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
-        getTopSitesUseCase: GetTopSitesUseCase,
-        browserIcons: BrowserIcons
-    ): FreshTabIntegration {
-        topSitesFeature = TopSitesFeature(
-            topSitesView,
-            loadUrlUseCase,
-            getTopSitesUseCase,
-            browserIcons)
-        return this
+    override fun onBackPressed(): Boolean {
+        val session = sessionId?.let {
+            sessionManager.findSessionById(it)
+        } ?: sessionManager.selectedSession
+        session?.let { currentSession ->
+            // Take back to fresh tab only if the source of this session
+            // is a new tab session or a toolbar search user interaction
+            val shouldGoBack = listOf(Source.NEW_TAB, Source.USER_ENTERED, Source.NONE)
+                .any { source -> source == currentSession.source }
+            if (!currentSession.url.isFreshTab() && shouldGoBack) {
+                sessionManager.remove(currentSession)
+                val newSession = Session("")
+                sessionManager.add(newSession)
+                sessionManager.select(newSession)
+                return true
+            }
+        }
+        return false
     }
 
     companion object {

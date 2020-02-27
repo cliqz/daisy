@@ -59,7 +59,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
 
-    private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
+    val backButtonHandler: MutableList<ViewBoundFeatureWrapper<*>> = mutableListOf(
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
