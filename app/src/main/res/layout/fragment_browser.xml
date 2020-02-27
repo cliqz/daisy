@@ -50,32 +50,9 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <org.mozilla.reference.browser.topsites.ui.TopSitesView
-            android:id="@+id/topSitesView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/margin_padding_size_large"
-            android:layout_marginLeft="@dimen/margin_padding_size_large"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="@dimen/margin_padding_size_large"
-            android:layout_marginRight="@dimen/margin_padding_size_large" />
+        <include layout="@layout/top_sites_layout" />
 
-        <com.cliqz.browser.news.ui.NewsView
-            android:id="@+id/newsView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_large"
-            android:layout_marginLeft="@dimen/margin_padding_size_large"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="@dimen/margin_padding_size_large"
-            android:layout_marginRight="@dimen/margin_padding_size_large"
-            android:layout_marginBottom="@dimen/margin_padding_size_large"
-            android:orientation="vertical"
-            cliqz:newsViewBackgroundColor="?android:attr/windowBackground"
-            cliqz:newsViewDescriptionTextColor="?android:attr/textColorSecondary"
-            cliqz:newsViewTitleTextColor="?android:attr/textColorPrimary"
-            cliqz:newsViewUrlTextColor="?android:attr/textColorLink" />
+        <include layout="@layout/news_layout" />
 
     </com.cliqz.browser.freshtab.FreshTab>
 

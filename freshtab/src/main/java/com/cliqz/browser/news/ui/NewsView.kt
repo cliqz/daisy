@@ -6,10 +6,9 @@ package com.cliqz.browser.news.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.cliqz.browser.freshtab.R
 import com.cliqz.browser.news.data.NewsItem
 import mozilla.components.browser.icons.BrowserIcons
@@ -18,14 +17,14 @@ class NewsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr), NewsPresenter.View {
+) : RecyclerView(context, attrs, defStyleAttr), NewsPresenter.View {
 
-    internal val styling: NewsViewStyling
+    private val styling: NewsViewStyling
 
-    var presenter: NewsPresenter? = null
+    private lateinit var newsAdapter: NewsAdapter
+    lateinit var presenter: NewsPresenter
 
     init {
-        orientation = VERTICAL
         // region style view
         context.obtainStyledAttributes(attrs, R.styleable.NewsView, defStyleAttr, 0). apply {
             styling = NewsViewStyling(
@@ -44,21 +43,18 @@ class NewsView @JvmOverloads constructor(
         // endregion
     }
 
-    override fun displayNews(newsList: List<NewsItem>, icons: BrowserIcons?) {
-        visibility = View.GONE
+    override fun displayNews(
+        newsList: List<NewsItem>,
+        icons: BrowserIcons?
+    ) {
         if (newsList.isNullOrEmpty()) {
             return
         }
-        removeAllViews()
-        val inflater = LayoutInflater.from(context)
-        for (newsItem in newsList) {
-            val itemView = inflater.inflate(R.layout.news_list_item_layout, this, false)
-            NewsItemViewHolder(itemView, this).bind(newsItem, icons) {
-                presenter?.onOpenInNormalTab(it)
-            }
-            addView(itemView)
+        newsAdapter = NewsAdapter(icons, styling) {
+            presenter.onOpenInNormalTab(it)
         }
-        visibility = View.VISIBLE
+        adapter = newsAdapter
+        newsAdapter.newsList = newsList
     }
 
     override fun hideNews() {
@@ -66,7 +62,7 @@ class NewsView @JvmOverloads constructor(
     }
 }
 
-internal data class NewsViewStyling(
+data class NewsViewStyling(
     val titleTextColor: Int,
     val urlTextColor: Int,
     val descriptionColor: Int,

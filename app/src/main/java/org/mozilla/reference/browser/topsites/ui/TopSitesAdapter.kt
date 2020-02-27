@@ -91,7 +91,7 @@ class TopSitesViewHolder(
     }
 
     companion object {
-        const val LAYOUT_ID = R.layout.topsites_layout
+        const val LAYOUT_ID = R.layout.top_site_item_layout
         const val favIconBorderRadiusInPx = 4
     }
 }
