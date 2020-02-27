@@ -34,6 +34,7 @@ class NavigationToolbarRobot {
     fun verifyNewForgetTabPage() = assertNewForgetTabPageText()
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
     fun verifyUrlBarNotFocused() = assertUrlBarNotFocused()
+    fun verifyTopSite(title: String) = assertTopSiteText(title)
 
     class Transition {
 
@@ -107,4 +108,8 @@ private fun assertNewForgetTabPageText() {
 
 private fun assertUrlBarNotFocused() {
     urlBar().check(matches(not(ViewMatchers.hasFocus())))
+}
+
+private fun assertTopSiteText(url: String) {
+    mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
 }
