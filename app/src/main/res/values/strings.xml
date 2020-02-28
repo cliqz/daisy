@@ -200,6 +200,10 @@
     <string name="delete_browsing_data_dialog_negative_btn">Cancel</string>
     <string name="delete_browsing_data_deleted_msg">Private data deleted</string>
 
+    <!-- Top Site Context Menu -->
+    <string name="top_site_menu_open_in_new_tab">Open in New tab</string>
+    <string name="top_site_menu_open_in_private_tab">Open in Private tab</string>
+
     <!-- Browser long press popup menu -->
     <!-- Copy the current url -->
     <string name="browser_toolbar_long_press_popup_copy">Copy</string>

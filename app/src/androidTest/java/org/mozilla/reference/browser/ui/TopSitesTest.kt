@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.freshTab
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 class TopSitesTest {
@@ -36,13 +37,32 @@ class TopSitesTest {
     }
 
     @Test
-    fun topSiteVisibleTest() {
+    fun topSitesTest() {
         val defaultWebPage = TestAssetHelper.getGenericAsset(mockWebServer, 1)
         createTopSite(defaultWebPage.url, defaultWebPage.content)
+        val title = "localhost"
+
+        // Verify a top site was created.
         navigationToolbar {
         }.openThreeDotMenu {
         }.openNewTab {
-            verifyTopSite("localhost")
+            verifyTopSite(title)
+        }
+
+        // open the top site
+        freshTab {
+        }.openTopSite(title) {
+            verifyPageContent(defaultWebPage.content)
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+            verifyThreeDotMenuExists()
+        }.openNewTab {
+        }
+
+        // open the top site in a new tab
+        freshTab {
+        }.openTopSiteInNewTab(title) {
+            verifyPageContent(defaultWebPage.content)
         }
     }
 

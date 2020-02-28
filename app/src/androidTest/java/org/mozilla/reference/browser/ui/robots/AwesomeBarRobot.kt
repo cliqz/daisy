@@ -23,7 +23,7 @@ class AwesomeBarRobot {
     }
 }
 
-fun browser(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
+fun awesomeBar(interact: AwesomeBarRobot.() -> Unit): AwesomeBarRobot.Transition {
     AwesomeBarRobot().interact()
     return AwesomeBarRobot.Transition()
 }

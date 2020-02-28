@@ -21,7 +21,8 @@ import kotlin.properties.Delegates
 
 class TopSitesAdapter(
     private val browserIcons: BrowserIcons,
-    private val itemClickListener: ((topSite: TopSite) -> Unit)
+    private val itemClickListener: ((topSite: TopSite) -> Unit),
+    private val itemLongClickListener: (topSite: TopSite, itemView: View) -> Boolean
 ) : RecyclerView.Adapter<TopSitesViewHolder>() {
 
     var topSites: List<TopSite> by Delegates.observable(emptyList()) { _, _, _ -> notifyDataSetChanged() }
@@ -37,6 +38,9 @@ class TopSitesAdapter(
         holder.bind(topSite)
         holder.itemView.setOnClickListener {
             itemClickListener(topSite)
+        }
+        holder.itemView.setOnLongClickListener {
+            itemLongClickListener(topSite, holder.itemView)
         }
     }
 

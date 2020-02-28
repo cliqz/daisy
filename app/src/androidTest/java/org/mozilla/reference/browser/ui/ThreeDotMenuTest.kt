@@ -15,6 +15,7 @@ import org.junit.Test
 import org.mozilla.reference.browser.helpers.AndroidAssetDispatcher
 import org.mozilla.reference.browser.helpers.BrowserActivityTestRule
 import org.mozilla.reference.browser.helpers.TestAssetHelper
+import org.mozilla.reference.browser.ui.robots.browser
 import org.mozilla.reference.browser.ui.robots.navigationToolbar
 
 /**
@@ -217,14 +218,13 @@ class ThreeDotMenuTest {
     }
 
     @Test
-    @Ignore("Current fresh tab design does not have UI element to indicate tabs open")
     fun openNewTabTest() {
         navigationToolbar {
         }.openThreeDotMenu {
         }.openNewTab {
-            verifyNewTabAddressView()
-            // The number of tabs in Daisy is never 0
-            checkNumberOfTabsTabCounter("2")
+        }
+        browser {
+            verifyFreshTabView()
         }
     }
 
