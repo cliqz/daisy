@@ -9,3 +9,7 @@ plugins {
 repositories {
     jcenter()
 }
+
+dependencies {
+    implementation("de.undercouch:gradle-download-task:4.0.4")
+}

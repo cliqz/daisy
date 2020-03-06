@@ -1,10 +1,8 @@
-plugins {
-    id ("de.undercouch.download").version("4.0.0")
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin:  'cliqz-assets-downloader'
+
 android {
     compileSdkVersion 29
 
@@ -34,24 +32,11 @@ android {
 
 }
 
-def addonsPath = 'src/main/assets/extensions'
-
-task downloadAddon(type: Download) {
-    src 'https://cdncliqz.s3.amazonaws.com/update/edge/cliqz_privacy/master/12.43.0.fea3070.zip'
-    dest new File(downloadTaskDir, "privacy@cliqz.com.zip")
+assetsDownloader {
+    url = "https://cdncliqz.s3.amazonaws.com/update/edge/cliqz_privacy/master/12.43.0.fea3070.zip"
+    path = "extensions/cliqz"
+    filename = "privacy@cliqz.com.zip"
 }
-
-task extractAddon(dependsOn: [downloadAddon], type: Copy) {
-    from zipTree(downloadAddon.dest)
-    into "${addonsPath}/cliqz"
-}
-
-task deleteAddon(type: Delete) {
-    delete "${addonsPath}/cliqz"
-}
-
-preBuild.dependsOn(extractAddon)
-clean.dependsOn deleteAddon
 
 dependencies {
     implementation Deps.mozilla_concept_engine
