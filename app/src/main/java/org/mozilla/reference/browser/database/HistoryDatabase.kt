@@ -484,7 +484,7 @@ class HistoryDatabase(context: Context)
         if (limit <= 0) {
             limit = MIN_SEARCH_LIMIT
         }
-        val lcSearch = search.toLowerCase()
+        val lcSearch = search.toLowerCase(Locale.getDefault())
         val formattedSearch = String.format("%%%s%%", lcSearch)
         val selectQuery = res.getString(R.string.seach_history_query_v8)
         val cursor = mDatabase!!.rawQuery(selectQuery, arrayOf(
