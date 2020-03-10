@@ -12,35 +12,69 @@ import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
+data class ModuleStatus(
+        val adblockerEnabled: Boolean,
+        val anolysisEnabled: Boolean,
+        val antitrackingEnabled: Boolean,
+        val autoconsentEnabled: Boolean,
+        val cookieMonsterEnabled: Boolean,
+        val humanwebEnabled: Boolean,
+        val insightsEnabled: Boolean
+)
+
 /**
  * @author Sam Macbeth
  */
 class CliqzExtensionFeature {
     private val logger = Logger("cliqz-privacy")
 
-    private val APP_NAME = "cliqz"
-    private val PRIVACY_EXTENSION_ID = "privacy@cliqz.com"
-    private val PRIVACY_EXTENSION_URL = "resource://android/assets/extensions/cliqz/"
+    private val appName = "cliqz"
+    private val privacyExtensionID = "privacy@cliqz.com"
+    private val privacyExtensionUrl = "resource://android/assets/extensions/cliqz/"
 
-    private val extensionController = WebExtensionController(PRIVACY_EXTENSION_ID, PRIVACY_EXTENSION_URL)
+    private val extensionController = WebExtensionController(privacyExtensionID, privacyExtensionUrl)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
 
     fun install(engine: Engine) {
-        extensionController.registerBackgroundMessageHandler(messageHandler, APP_NAME)
+        extensionController.registerBackgroundMessageHandler(messageHandler, appName)
         extensionController.install(engine)
     }
 
-    fun callActionSync(module: String, action: String, vararg args: Any): JSONObject? {
-        return messageHandler.callAction(module, action, args)
+    private fun callActionSync(module: String, action: String, vararg args: Any?): Any? {
+        return messageHandler.callAction(module, action, *args)
     }
 
-    fun callActionAsync(module: String, action: String, vararg args: Any): Deferred<JSONObject?> {
+    fun callActionAsync(module: String, action: String, vararg args: Any?): Deferred<Any?> {
         return GlobalScope.async {
-            callActionSync(module, action, args)
+            callActionSync(module, action, *args)
         }
     }
 
-    private class CliqzBackgroundMessageHandler(private val parent: CliqzExtensionFeature): MessageHandler {
+    suspend fun getModuleStatus(): ModuleStatus? {
+        val moduleStatus = callActionAsync("core", "status").await().let { (it as JSONObject).getJSONObject("modules") }
+
+        fun isModuleEnabled(module: String) = moduleStatus.has(module) && moduleStatus.getJSONObject(module).getBoolean("isEnabled")
+
+        return ModuleStatus(
+                isModuleEnabled("adblocker"),
+                isModuleEnabled("anolysis"),
+                isModuleEnabled("antitracking"),
+                isModuleEnabled("autoconsent"),
+                isModuleEnabled("cookie-monster"),
+                isModuleEnabled("human-web-lite"),
+                isModuleEnabled("insights")
+
+        )
+    }
+
+
+    suspend fun setModuleEnabled(module: String, enabled: Boolean) {
+        if (enabled) {
+            callActionAsync("core", "enableModule", module).await()
+        }
+    }
+
+    private class CliqzBackgroundMessageHandler(private val parent: CliqzExtensionFeature) : MessageHandler {
 
         var messageCtr = 0
         var ready = CountDownLatch(1)
@@ -69,7 +103,7 @@ class CliqzExtensionFeature {
         }
 
 
-        fun callAction(module: String, action: String, vararg args: Any): JSONObject? {
+        fun callAction(module: String, action: String, vararg args: Any?): Any? {
             val message = JSONObject()
             val latch = CountDownLatch(1)
             var messageId: Int
@@ -78,7 +112,7 @@ class CliqzExtensionFeature {
                 message.put("id", messageId)
                 message.put("module", module)
                 message.put("action", action)
-                message.put("args", JSONArray())
+                message.put("args", JSONArray(args))
                 awaitingResults.put(messageId, latch)
             }
             // wait for port connection with extension to be ready
@@ -86,7 +120,7 @@ class CliqzExtensionFeature {
 
             // send message to extension
             parent.logger.debug("Send extension message: " + message.toString())
-            parent.extensionController.sendBackgroundMessage(message, parent.APP_NAME)
+            parent.extensionController.sendBackgroundMessage(message, parent.appName)
 
             latch.await()
 
@@ -95,7 +129,7 @@ class CliqzExtensionFeature {
             if (result != null && result.has("error")) {
                 throw RuntimeException("Action threw an error: " + result.get("error"))
             } else if (result != null) {
-                return result.getJSONObject("result")
+                return result.get("result")
             }
             return null
         }
