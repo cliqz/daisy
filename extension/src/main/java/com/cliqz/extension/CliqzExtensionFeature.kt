@@ -1,4 +1,4 @@
-package com.cliqz.privacy
+package com.cliqz.extension
 
 import kotlinx.coroutines.*
 import mozilla.components.concept.engine.Engine
@@ -11,12 +11,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Future
 
 /**
  * @author Sam Macbeth
  */
-class PrivacyFeature {
+class CliqzExtensionFeature {
     private val logger = Logger("cliqz-privacy")
 
     private val APP_NAME = "cliqz"
@@ -41,7 +40,7 @@ class PrivacyFeature {
         }
     }
 
-    private class CliqzBackgroundMessageHandler(private val parent: PrivacyFeature): MessageHandler {
+    private class CliqzBackgroundMessageHandler(private val parent: CliqzExtensionFeature): MessageHandler {
 
         var messageCtr = 0
         var ready = CountDownLatch(1)

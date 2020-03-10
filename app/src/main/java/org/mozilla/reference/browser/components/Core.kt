@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.cliqz.dat.DatFeature
-import com.cliqz.privacy.PrivacyFeature
+import com.cliqz.extension.CliqzExtensionFeature
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -46,7 +46,7 @@ private const val DAY_IN_MINUTES = 24 * 60L
  */
 class Core(private val context: Context) {
 
-    val cliqz = PrivacyFeature()
+    val cliqz = CliqzExtensionFeature()
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
