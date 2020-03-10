@@ -56,7 +56,7 @@ class CliqzExtensionFeature {
     private val logger = Logger("cliqz-privacy")
 
     private val appName = "cliqz"
-    private val privacyExtensionID = "privacy@cliqz.com"
+    private val privacyExtensionID = "cliqz@cliqz.com"
     private val privacyExtensionUrl = "resource://android/assets/extensions/cliqz/"
 
     private val extensionController = WebExtensionController(privacyExtensionID, privacyExtensionUrl)

@@ -16,6 +16,7 @@ import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import java.io.File
 
 object EngineProvider {
 
@@ -35,6 +36,15 @@ object EngineProvider {
 
             // About config it's no longer enabled by default
             builder.aboutConfigEnabled(true)
+
+            // copy gecko config to cache dir
+            val geckoViewConfigPath = "geckoview-config.yaml"
+            val configAssets = context.assets.open(geckoViewConfigPath)
+            val configFile = File(context.cacheDir, geckoViewConfigPath)
+            configFile.createNewFile()
+            configAssets.copyTo(configFile.outputStream())
+            configAssets.close()
+            builder.configFilePath(configFile.absolutePath)
 
             runtime = GeckoRuntime.create(context, builder.build())
         }
