@@ -22,6 +22,33 @@ data class ModuleStatus(
         val insightsEnabled: Boolean
 )
 
+enum class StatsPeriod(val period: String) {
+    ALL_TIME(""),
+    DAY("day"),
+    WEEK("week"),
+    MONTH("month")
+}
+
+data class TrackerInfo(
+        val name: String,
+        val category: String,
+        val wtm: String
+)
+
+data class BlockingStats(
+        val adsBlocked: Int,
+        val cookiesBlocked: Int,
+        val dataSaved: Int,
+        val day: String,
+        val fingerprintsRemoved: Int,
+        val loadTime: Int,
+        val pages: Int,
+        val timeSaved: Int,
+        val trackers: List<String>,
+        val trackersDetailed: List<TrackerInfo>,
+        val trackersDetected: Int
+)
+
 /**
  * @author Sam Macbeth
  */
@@ -50,6 +77,9 @@ class CliqzExtensionFeature {
         }
     }
 
+    /**
+     * Gets the current enabled status of Cliqz modules running in the extension.
+     */
     suspend fun getModuleStatus(): ModuleStatus? {
         val moduleStatus = callActionAsync("core", "status").await().let { (it as JSONObject).getJSONObject("modules") }
 
@@ -63,14 +93,44 @@ class CliqzExtensionFeature {
                 isModuleEnabled("cookie-monster"),
                 isModuleEnabled("human-web-lite"),
                 isModuleEnabled("insights")
-
         )
     }
 
 
+    /**
+     * Set the enabled status of an extension module.
+     */
     suspend fun setModuleEnabled(module: String, enabled: Boolean) {
         if (enabled) {
             callActionAsync("core", "enableModule", module).await()
+        }
+    }
+
+    /**
+     * Get aggregated privacy stats over the given {StatsPeriod}.
+     */
+    suspend fun getBlockingStats(period: StatsPeriod): BlockingStats? {
+        return callActionAsync("insights", "getDashboardStats", period.period).await().let { (it as JSONObject) }.let { res ->
+            BlockingStats(
+                    res.getInt("adsBlocked"),
+                    res.getInt("cookiesBlocked"),
+                    res.getInt("dataSaved"),
+                    res.getString("day"),
+                    res.getInt("fingerprintsRemoved"),
+                    res.getInt("loadTime"),
+                    res.getInt("pages"),
+                    res.getInt("timeSaved"),
+                    res.getJSONArray("trackers").let {
+                        List(it.length()) { i -> it.getString(i) }
+                    },
+                    res.getJSONArray("trackersDetailed").let {
+                        List(it.length()) { i ->
+                            val tracker = it.getJSONObject(i)
+                            TrackerInfo(tracker.getString("name"), tracker.getString("cat"), tracker.getString("wtm"))
+                        }
+                    },
+                    res.getInt("trackersDetected")
+            )
         }
     }
 
