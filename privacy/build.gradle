@@ -40,4 +40,5 @@ assetsDownloader {
 
 dependencies {
     implementation Deps.mozilla_concept_engine
+    implementation Deps.mozilla_support_webextensions
 }

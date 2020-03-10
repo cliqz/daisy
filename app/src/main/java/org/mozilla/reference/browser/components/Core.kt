@@ -45,6 +45,8 @@ private const val DAY_IN_MINUTES = 24 * 60L
  * Component group for all core browser functionality.
  */
 class Core(private val context: Context) {
+
+    val cliqz = PrivacyFeature()
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
@@ -61,7 +63,7 @@ class Core(private val context: Context) {
         )
         val engine = EngineProvider.createEngine(context, defaultSettings)
         DatFeature.install(engine)
-        PrivacyFeature.install(engine)
+        cliqz.install(engine)
         engine
     }
     /**
