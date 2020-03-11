@@ -13,51 +13,33 @@ class FreshTab @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : NestedScrollView(context, attrs, defStyleAttr) {
 
-    private var view: LinearLayout = LinearLayout(context)
+    private var content: LinearLayout = LinearLayout(context)
 
     init {
-        view.orientation = LinearLayout.VERTICAL
-        addView(view)
+        content.orientation = LinearLayout.VERTICAL
+        super.addView(content, -1, super.generateDefaultLayoutParams())
     }
 
     override fun addView(child: View?, params: ViewGroup.LayoutParams?) {
-        if (this.childCount > 0) {
-            view.addView(child, params)
-        } else {
-            super.addView(child)
-        }
+        addView(child, -1, params)
     }
 
     override fun addView(child: View?) {
-        if (this.childCount > 0) {
-            view.addView(child)
-        } else {
-            super.addView(child)
-        }
+        val params = child?.layoutParams ?: generateDefaultLayoutParams()
+        addView(child, -1, params)
     }
 
     override fun addView(child: View?, width: Int, height: Int) {
-        if (this.childCount > 0) {
-            view.addView(child, width, height)
-        } else {
-            super.addView(child)
-        }
+        throw NotImplementedError("Do not use this variant")
     }
 
     override fun addView(child: View?, index: Int) {
-        if (this.childCount > 0) {
-            view.addView(child, index)
-        } else {
-            super.addView(child, index)
-        }
+        val params = child?.layoutParams ?: generateDefaultLayoutParams()
+        addView(child, index, params)
     }
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
-        if (this.childCount > 0) {
-            view.addView(child, index, params)
-        } else {
-            super.addView(child, index, params)
-        }
+        content.addView(child, index, params)
     }
 
     override fun performClick(): Boolean {
