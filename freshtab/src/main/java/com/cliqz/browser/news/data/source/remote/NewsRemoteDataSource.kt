@@ -57,7 +57,7 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
         var lang: String? = null
         var newsEdition = "intl"
         if (parts.isNotEmpty()) {
-            lang = parts[0].toLowerCase()
+            lang = parts[0].toLowerCase(Locale.getDefault())
         }
         val sb = StringBuilder(NEWS_URL)
         sb.append("&locale=").append(locale)

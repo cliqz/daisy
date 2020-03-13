@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.Gravity
@@ -15,9 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
-import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.copy
-import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste
-import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.paste_and_go
+import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
@@ -192,6 +191,7 @@ class ToolbarIntegration(
 
         toolbar.display.setOnUrlLongClickListener {
             val clipboard = context.components.clipboardHandler
+            @SuppressLint("InflateParams")
             val customView = LayoutInflater.from(context)
                 .inflate(R.layout.browser_toolbar_popup_window, null)
             val popupWindow = PopupWindow(
