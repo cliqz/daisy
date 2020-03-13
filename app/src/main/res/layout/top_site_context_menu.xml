@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Mozac.Browser.Menu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/mozac_browser_menu_corner_radius"
+    app:cardElevation="@dimen/mozac_browser_menu_elevation"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/open_in_new_tab"
+            style="@style/Mozac.Browser.Menu.Item.Text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mozac_browser_menu_item_container_layout_height"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/top_site_menu_open_in_new_tab"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/open_in_private_tab"
+            style="@style/Mozac.Browser.Menu.Item.Text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mozac_browser_menu_item_container_layout_height"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/top_site_menu_open_in_private_tab"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

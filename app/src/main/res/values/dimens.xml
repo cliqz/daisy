@@ -31,4 +31,5 @@
 
     <dimen name="context_menu_height">48dp</dimen>
     <dimen name="context_menu_x_offset">8dp</dimen>
+    <dimen name="top_site_context_menu_extra_y_offset">8dp</dimen>
 </resources>

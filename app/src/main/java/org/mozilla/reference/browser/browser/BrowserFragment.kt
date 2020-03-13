@@ -74,7 +74,8 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             .addTopSitesFeature(
                 topSitesView,
                 requireComponents.useCases.sessionUseCases.loadUrl,
-                requireComponents.useCases.historyUseCases.getTopSites,
+                requireComponents.useCases.tabsUseCases,
+                requireComponents.useCases.historyUseCases,
                 requireComponents.core.icons
             ),
             owner = this,

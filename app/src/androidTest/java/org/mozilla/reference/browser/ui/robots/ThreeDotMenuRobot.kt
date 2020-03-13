@@ -102,10 +102,10 @@ class ThreeDotMenuRobot {
             return HistoryViewRobot.Transition()
         }
 
-        fun openNewTab(interact: NavigationToolbarRobot.() -> Unit): NavigationToolbarRobot.Transition {
+        fun openNewTab(interact: FreshTabRobot.() -> Unit): FreshTabRobot.Transition {
             newTabButton().click()
-            NavigationToolbarRobot().interact()
-            return NavigationToolbarRobot.Transition()
+            FreshTabRobot().interact()
+            return FreshTabRobot.Transition()
         }
 
         fun clearData(interact: ClearDataDialogRobot.() -> Unit): ClearDataDialogRobot.Transition {

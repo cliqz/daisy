@@ -9,13 +9,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
+import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesPresenter(
     private val view: View,
     private val loadUrlUseCase: LoadUrlUseCase,
-    private val topSitesUseCase: HistoryUseCases.GetTopSitesUseCase
+    private val tabsUseCases: TabsUseCases,
+    private val historyUseCases: HistoryUseCases
 ) {
 
     interface View {
@@ -28,12 +30,20 @@ class TopSitesPresenter(
 
     fun fetchTopSites() = GlobalScope.launch(Dispatchers.Main) {
         val historyInfo = withContext(Dispatchers.IO) {
-            topSitesUseCase.invoke()
+            historyUseCases.getTopSites.invoke()
         }
         view.updateTopSitesData(historyInfo)
     }
 
     fun onTopSiteClicked(topSite: TopSite) {
         loadUrlUseCase.invoke(topSite.url)
+    }
+
+    fun openInNewTab(topSite: TopSite) {
+        tabsUseCases.addTab.invoke(topSite.url)
+    }
+
+    fun openInPrivateTab(topSite: TopSite) {
+        tabsUseCases.addPrivateTab.invoke(topSite.url)
     }
 }

@@ -23,11 +23,12 @@ import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.toolbar.Toolbar
 import mozilla.components.feature.session.SessionUseCases
+import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.ext.preferences
 import org.mozilla.reference.browser.freshtab.FreshTabToolbar
-import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases.GetTopSitesUseCase
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 import org.mozilla.reference.browser.topsites.ui.TopSitesFeature
 import org.mozilla.reference.browser.topsites.ui.TopSitesView
 
@@ -176,13 +177,15 @@ class FreshTabIntegration(
     fun addTopSitesFeature(
         topSitesView: TopSitesView,
         loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
-        getTopSitesUseCase: GetTopSitesUseCase,
+        tabsUseCases: TabsUseCases,
+        historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons
     ): FreshTabIntegration {
         topSitesFeature = TopSitesFeature(
             topSitesView,
             loadUrlUseCase,
-            getTopSitesUseCase,
+            tabsUseCases,
+            historyUseCases,
             browserIcons)
         return this
     }
