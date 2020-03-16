@@ -1,14 +1,14 @@
 package com.cliqz.extension
 
 import kotlinx.coroutines.*
-import mozilla.components.concept.engine.Engine
+import mozilla.components.browser.engine.gecko.webextension.GeckoWebExtension
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
 import mozilla.components.concept.engine.webextension.Port
 import mozilla.components.support.base.log.logger.Logger
-import mozilla.components.support.webextensions.WebExtensionController
 import org.json.JSONArray
 import org.json.JSONObject
+import org.mozilla.geckoview.GeckoRuntime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
@@ -52,19 +52,19 @@ data class BlockingStats(
 /**
  * @author Sam Macbeth
  */
-class CliqzExtensionFeature {
-    private val logger = Logger("cliqz-privacy")
+class CliqzExtensionFeature(runtime: GeckoRuntime) {
+    private val logger = Logger("cliqz-extension")
 
     private val appName = "cliqz"
     private val privacyExtensionID = "cliqz@cliqz.com"
     private val privacyExtensionUrl = "resource://android/assets/extensions/cliqz/"
 
-    private val extensionController = WebExtensionController(privacyExtensionID, privacyExtensionUrl)
+    private var extension = GeckoWebExtension(privacyExtensionID, privacyExtensionUrl, runtime.webExtensionController, allowContentMessaging = true)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
 
-    fun install(engine: Engine) {
-        extensionController.registerBackgroundMessageHandler(messageHandler, appName)
-        extensionController.install(engine)
+    init {
+        extension.registerBackgroundMessageHandler(appName, messageHandler)
+        runtime.registerWebExtension(extension.nativeExtension)
     }
 
     private fun callActionSync(module: String, action: String, vararg args: Any?): Any? {
@@ -140,7 +140,7 @@ class CliqzExtensionFeature {
         var ready = CountDownLatch(1)
         val awaitingResults = ConcurrentHashMap<Int, CountDownLatch>()
         val results = ConcurrentHashMap<Int, JSONObject>()
-
+        var port: Port? = null
 
         override fun onMessage(message: Any, source: EngineSession?): Any? {
             parent.logger.debug("message from extension:" + message.toString())
@@ -162,6 +162,35 @@ class CliqzExtensionFeature {
             super.onPortMessage(message, port)
         }
 
+        override fun onPortConnected(port: Port) {
+            parent.logger.debug("port was connected")
+            this.port = port
+            val config = JSONObject("""{
+                "settings": {
+                    "channel": "MA60",
+                    "telemetry": {
+                        "demographics": {
+                            "brand": "cliqz",
+                            "name": "browser",
+                            "platform": "android"
+                        }
+                    }
+                },
+                "prefs": {
+                    "showConsoleLogs": true
+                }
+            }""".trimMargin())
+            val message = JSONObject(mapOf(
+                    "action" to "startApp",
+                    "debug" to BuildConfig.DEBUG,
+                    "config" to config
+            ))
+            port.postMessage(message)
+        }
+
+        override fun onPortDisconnected(port: Port) {
+            this.port = null
+        }
 
         fun callAction(module: String, action: String, vararg args: Any?): Any? {
             val message = JSONObject()
@@ -180,7 +209,7 @@ class CliqzExtensionFeature {
 
             // send message to extension
             parent.logger.debug("Send extension message: " + message.toString())
-            parent.extensionController.sendBackgroundMessage(message, parent.appName)
+            port!!.postMessage(message)
 
             latch.await()
 

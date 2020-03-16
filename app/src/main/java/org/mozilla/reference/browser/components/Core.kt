@@ -46,7 +46,9 @@ private const val DAY_IN_MINUTES = 24 * 60L
  */
 class Core(private val context: Context) {
 
-    val cliqz = CliqzExtensionFeature()
+    val cliqz: CliqzExtensionFeature by lazy {
+        EngineProvider.createCliqz(context)
+    }
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
@@ -63,7 +65,6 @@ class Core(private val context: Context) {
         )
         val engine = EngineProvider.createEngine(context, defaultSettings)
         DatFeature.install(engine)
-        cliqz.install(engine)
         engine
     }
     /**
