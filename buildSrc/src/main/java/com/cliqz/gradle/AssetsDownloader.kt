@@ -62,15 +62,15 @@ class AssetsDownloader : Plugin<Project> {
 
             // Find the merge.*Assets tasks (but avoid the tests assets)
             val taskNames = this.tasks.names.filter {
-                MERGE_ASSETS_REGEX.matches(it) && !MERGE_TEST_ASSETS_REGEX.matches(it)
+                PACKAGE_ASSETS_REGEX.matches(it) && !PACKAGE_TEST_ASSETS_REGEX.matches(it)
             }
 
             // Configure the merge assets tasks
             taskNames.forEach {
                 val relativePath = taskNameToPath(it)
-                val flavorName = MERGE_ASSETS_REGEX.find(it)!!.groupValues[1]
+                val flavorName = PACKAGE_ASSETS_REGEX.find(it)!!.groupValues[1]
                 val destinationDir = project.buildDir
-                        .resolve("intermediates/merged_assets/$relativePath/out/${extension.path}")
+                        .resolve("intermediates/library_assets/$relativePath/out/${extension.path}")
                         .absoluteFile
 
                 val downloadTaskName = "download${flavorName}Assets"
@@ -89,7 +89,7 @@ class AssetsDownloader : Plugin<Project> {
                 }
 
                 val task = tasks.named(it).get()
-                task.dependsOn(unzipTask)
+                task.finalizedBy(unzipTask)
             }
         }
     }
@@ -105,7 +105,7 @@ class AssetsDownloader : Plugin<Project> {
             .joinToString(separator = File.pathSeparator) { match -> match.value.toLowerCase() }
 
     companion object {
-        val MERGE_ASSETS_REGEX = "merge(.*)Assets".toRegex()
-        val MERGE_TEST_ASSETS_REGEX = "merge.*TestAssets".toRegex()
+        val PACKAGE_ASSETS_REGEX = "package(.*)Assets".toRegex()
+        val PACKAGE_TEST_ASSETS_REGEX = "package.*TestAssets".toRegex()
     }
 }
