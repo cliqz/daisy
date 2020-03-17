@@ -73,7 +73,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
         var port: Port? = null
 
         override fun onMessage(message: Any, source: EngineSession?): Any? {
-            parent.logger.debug("message from extension:" + message.toString())
+            parent.logger.debug("message from extension:$message")
             if (message == "ready") {
                 parent.logger.debug("extension is ready")
                 ready.countDown()
@@ -82,7 +82,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
         }
 
         override fun onPortMessage(message: Any, port: Port) {
-            parent.logger.debug("message on port:" + message.toString())
+            parent.logger.debug("message on port:$message")
             if (message is JSONObject) {
                 val id = message.getInt("id")
                 results[id] = message
@@ -123,12 +123,12 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
             ready.await()
 
             // send message to extension
-            parent.logger.debug("Send extension message: " + message.toString())
+            parent.logger.debug("Send extension message: $message")
             port!!.postMessage(message)
 
             latch.await()
 
-            val result = results.get(messageId)
+            val result = results[messageId]
             results.remove(messageId)
             if (result != null && result.has("error")) {
                 throw RuntimeException("Action threw an error: " + result.get("error"))
