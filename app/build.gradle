@@ -315,6 +315,8 @@ dependencies {
 
     testImplementation Deps.mozilla_support_test_appservices
     testImplementation Deps.testing_mockito
+
+    androidTestImplementation Deps.kotlin_coroutines_test
 }
 
 // -------------------------------------------------------------------------------------------------
