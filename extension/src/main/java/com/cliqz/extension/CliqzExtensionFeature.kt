@@ -12,47 +12,17 @@ import org.mozilla.geckoview.GeckoRuntime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
-data class ModuleStatus(
-        val adblockerEnabled: Boolean,
-        val anolysisEnabled: Boolean,
-        val antitrackingEnabled: Boolean,
-        val autoconsentEnabled: Boolean,
-        val cookieMonsterEnabled: Boolean,
-        val humanwebEnabled: Boolean,
-        val insightsEnabled: Boolean
+val DEMOGRAPHICS = mapOf(
+        "brand" to "cliqz",
+        "name" to "browser",
+        "platform" to "android"
 )
-
-enum class StatsPeriod(val period: String) {
-    ALL_TIME(""),
-    DAY("day"),
-    WEEK("week"),
-    MONTH("month")
-}
-
-data class TrackerInfo(
-        val name: String,
-        val category: String,
-        val wtm: String
-)
-
-data class BlockingStats(
-        val adsBlocked: Int,
-        val cookiesBlocked: Int,
-        val dataSaved: Int,
-        val day: String,
-        val fingerprintsRemoved: Int,
-        val loadTime: Int,
-        val pages: Int,
-        val timeSaved: Int,
-        val trackers: List<String>,
-        val trackersDetailed: List<TrackerInfo>,
-        val trackersDetected: Int
-)
+val TELEMETRY_CHANNEL = if (BuildConfig.DEBUG) "MA99" else "MA60"
 
 /**
  * @author Sam Macbeth
  */
-class CliqzExtensionFeature(runtime: GeckoRuntime) {
+class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     private val logger = Logger("cliqz-extension")
 
     private val appName = "cliqz"
@@ -61,6 +31,23 @@ class CliqzExtensionFeature(runtime: GeckoRuntime) {
 
     private var extension = GeckoWebExtension(privacyExtensionID, privacyExtensionUrl, runtime.webExtensionController, allowContentMessaging = true)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
+
+    val extensionConfig: JSONObject by lazy {
+        val settings = JSONObject(mapOf(
+                "channel" to TELEMETRY_CHANNEL,
+                "telemetry" to mapOf(
+                        "demographics" to DEMOGRAPHICS
+                ),
+                "ADBLOCKER_PLATFORM" to "desktop"
+        ))
+        val prefs = JSONObject(mapOf(
+                "showConsoleLogs" to true
+        ))
+        JSONObject(mapOf(
+                "settings" to settings,
+                "prefs" to prefs
+        ))
+    }
 
     init {
         extension.registerBackgroundMessageHandler(appName, messageHandler)
@@ -71,66 +58,9 @@ class CliqzExtensionFeature(runtime: GeckoRuntime) {
         return messageHandler.callAction(module, action, *args)
     }
 
-    fun callActionAsync(module: String, action: String, vararg args: Any?): Deferred<Any?> {
-        return GlobalScope.async {
+    fun callActionAsync(scope: CoroutineScope, module: String, action: String, vararg args: Any?): Deferred<Any?> {
+        return scope.async {
             callActionSync(module, action, *args)
-        }
-    }
-
-    /**
-     * Gets the current enabled status of Cliqz modules running in the extension.
-     */
-    suspend fun getModuleStatus(): ModuleStatus? {
-        val moduleStatus = callActionAsync("core", "status").await().let { (it as JSONObject).getJSONObject("modules") }
-
-        fun isModuleEnabled(module: String) = moduleStatus.has(module) && moduleStatus.getJSONObject(module).getBoolean("isEnabled")
-
-        return ModuleStatus(
-                isModuleEnabled("adblocker"),
-                isModuleEnabled("anolysis"),
-                isModuleEnabled("antitracking"),
-                isModuleEnabled("autoconsent"),
-                isModuleEnabled("cookie-monster"),
-                isModuleEnabled("human-web-lite"),
-                isModuleEnabled("insights")
-        )
-    }
-
-
-    /**
-     * Set the enabled status of an extension module.
-     */
-    suspend fun setModuleEnabled(module: String, enabled: Boolean) {
-        if (enabled) {
-            callActionAsync("core", "enableModule", module).await()
-        }
-    }
-
-    /**
-     * Get aggregated privacy stats over the given {StatsPeriod}.
-     */
-    suspend fun getBlockingStats(period: StatsPeriod): BlockingStats? {
-        return callActionAsync("insights", "getDashboardStats", period.period).await().let { (it as JSONObject) }.let { res ->
-            BlockingStats(
-                    res.getInt("adsBlocked"),
-                    res.getInt("cookiesBlocked"),
-                    res.getInt("dataSaved"),
-                    res.getString("day"),
-                    res.getInt("fingerprintsRemoved"),
-                    res.getInt("loadTime"),
-                    res.getInt("pages"),
-                    res.getInt("timeSaved"),
-                    res.getJSONArray("trackers").let {
-                        List(it.length()) { i -> it.getString(i) }
-                    },
-                    res.getJSONArray("trackersDetailed").let {
-                        List(it.length()) { i ->
-                            val tracker = it.getJSONObject(i)
-                            TrackerInfo(tracker.getString("name"), tracker.getString("cat"), tracker.getString("wtm"))
-                        }
-                    },
-                    res.getInt("trackersDetected")
-            )
         }
     }
 
@@ -165,25 +95,10 @@ class CliqzExtensionFeature(runtime: GeckoRuntime) {
         override fun onPortConnected(port: Port) {
             parent.logger.debug("port was connected")
             this.port = port
-            val config = JSONObject("""{
-                "settings": {
-                    "channel": "MA60",
-                    "telemetry": {
-                        "demographics": {
-                            "brand": "cliqz",
-                            "name": "browser",
-                            "platform": "android"
-                        }
-                    }
-                },
-                "prefs": {
-                    "showConsoleLogs": true
-                }
-            }""".trimMargin())
             val message = JSONObject(mapOf(
                     "action" to "startApp",
                     "debug" to BuildConfig.DEBUG,
-                    "config" to config
+                    "config" to parent.extensionConfig
             ))
             port.postMessage(message)
         }
@@ -223,5 +138,5 @@ class CliqzExtensionFeature(runtime: GeckoRuntime) {
             return null
         }
     }
-
 }
+
