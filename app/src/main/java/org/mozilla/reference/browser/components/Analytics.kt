@@ -12,16 +12,12 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
 import mozilla.components.lib.crash.service.MozillaSocorroService
 import mozilla.components.lib.crash.service.SentryService
 import mozilla.components.service.experiments.Experiments
-import mozilla.components.service.glean.Glean
-import mozilla.components.service.glean.config.Configuration
-import mozilla.components.service.glean.net.ConceptFetchHttpUploader
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.BrowserApplication
 import org.mozilla.reference.browser.BuildConfig
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
-import org.mozilla.reference.browser.settings.Settings
 
 /**
  * Component group for all functionality related to analytics e.g. crash
@@ -55,14 +51,6 @@ class Analytics(private val context: Context) {
                 .getBroadcast(context, 0, Intent(BrowserApplication.NON_FATAL_CRASH_BROADCAST), 0),
             enabled = true
         )
-    }
-
-    internal fun initializeGlean() {
-        val enableUpload =
-            BuildConfig.TELEMETRY_ENABLED && Settings.isTelemetryEnabled(context)
-        Glean.initialize(context, enableUpload, Configuration(
-            httpClient = ConceptFetchHttpUploader(lazy { context.components.core.client })
-        ))
     }
 
     internal fun initializeExperiments() {

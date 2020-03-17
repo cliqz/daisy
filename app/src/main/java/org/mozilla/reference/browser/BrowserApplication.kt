@@ -61,7 +61,6 @@ open class BrowserApplication : Application() {
             onUpdatePermissionRequest = components.core.addonUpdater::onUpdatePermissionRequest
         )
 
-        components.analytics.initializeGlean()
         components.analytics.initializeExperiments()
 
         components.backgroundServices.pushFeature?.let {
