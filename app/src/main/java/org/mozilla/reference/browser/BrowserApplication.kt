@@ -20,7 +20,8 @@ import mozilla.components.support.webextensions.WebExtensionSupport
 import org.mozilla.reference.browser.ext.isCrashReportActive
 
 open class BrowserApplication : Application() {
-    val components by lazy { Components(this) }
+
+    open val components by lazy { Components(this) }
 
     override fun onCreate() {
         super.onCreate()

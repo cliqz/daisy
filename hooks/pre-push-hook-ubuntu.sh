@@ -1,2 +1,2 @@
 #!/bin/bash
-./gradlew detekt ktlint lintDebug
+./gradlew detekt ktlint lintDebug testDebug
