@@ -33,9 +33,9 @@ android {
 }
 
 assetsDownloader {
-    url = "https://cdncliqz.s3.amazonaws.com/update/edge/cliqz_privacy/master/12.43.0.fea3070.zip"
+    url = "https://cdncliqz.s3.amazonaws.com/update/edge/cliqz-geckoview/master/12.45.0.717f31b.zip"
     path = "extensions/cliqz"
-    filename = "privacy@cliqz.com.zip"
+    filename = "cliqz@cliqz.com.zip"
 }
 
 dependencies {
