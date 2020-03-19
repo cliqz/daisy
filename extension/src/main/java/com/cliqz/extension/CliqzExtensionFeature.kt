@@ -19,7 +19,6 @@ val DEMOGRAPHICS = mapOf(
         "name" to "browser",
         "platform" to "android"
 )
-val TELEMETRY_CHANNEL = if (BuildConfig.DEBUG) "MA99" else "MA60"
 
 /**
  * @author Sam Macbeth
@@ -37,7 +36,6 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
 
     val extensionConfig: JSONObject by lazy {
         val settings = JSONObject(mapOf(
-                "channel" to TELEMETRY_CHANNEL,
                 "telemetry" to mapOf(
                         "demographics" to DEMOGRAPHICS
                 ),
