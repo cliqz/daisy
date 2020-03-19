@@ -45,10 +45,10 @@ class CliqzExtensionTest {
     @Test
     fun moduleEnableDisable() = runBlockingTest {
         val api = CliqzAPI(core.cliqz, this)
-        api.setModuleEnabled(api.ANTITRACKING_MODULE, false)
+        api.setModuleEnabled(ANTITRACKING_MODULE, false)
         var status = api.getModuleStatus()
         Assert.assertFalse("antitracking should be disabled", status!!.antitrackingEnabled)
-        api.setModuleEnabled(api.ANTITRACKING_MODULE, true)
+        api.setModuleEnabled(ANTITRACKING_MODULE, true)
         status = api.getModuleStatus()
         Assert.assertTrue("antitracking should be enabled", status!!.antitrackingEnabled)
     }

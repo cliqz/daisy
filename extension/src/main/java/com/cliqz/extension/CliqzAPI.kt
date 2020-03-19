@@ -3,16 +3,15 @@ package com.cliqz.extension
 import kotlinx.coroutines.CoroutineScope
 import org.json.JSONObject
 
+const val ANTITRACKING_MODULE = "antitracking"
+const val ADBLOCKER_MODULE = "adblocker"
+const val ANOLYSIS_MODULE = "anolysis"
+const val AUTOCONSENT_MODULE = "autoconsent"
+const val COOKIEMONSTER_MODULE = "cookie-monster"
+const val HUMANWEB_MODULE = "human-web-lite"
+const val INSIGHTS_MODULE = "insights"
 
 class CliqzAPI(val extension: CliqzExtensionFeature, private val scope: CoroutineScope) {
-
-    val ANTITRACKING_MODULE = "antitracking"
-    val ADBLOCKER_MODULE = "adblocker"
-    val ANOLYSIS_MODULE = "anolysis"
-    val AUTOCONSENT_MODULE = "autoconsent"
-    val COOKIEMONSTER_MODULE = "cookie-monster"
-    val HUMANWEB_MODULE = "human-web-lite"
-    val INSIGHTS_MODULE = "insights"
 
     /**
      * Gets the current enabled status of Cliqz modules running in the extension.

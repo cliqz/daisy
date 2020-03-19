@@ -24,6 +24,21 @@ object EngineProvider {
     private var runtime: GeckoRuntime? = null
     private var cliqz: CliqzExtensionFeature? = null
 
+    private const val geckoViewConfigPath = "geckoview-config.yaml"
+
+    /**
+     * Import a geckoview config YAML file from assets and return a File that the GeckoRuntime
+     * can load it from.
+     */
+    private fun importGeckoConfig(context: Context): File {
+        val configAssets = context.assets.open(geckoViewConfigPath)
+        val configFile = File(context.cacheDir, geckoViewConfigPath)
+        configFile.createNewFile()
+        configAssets.copyTo(configFile.outputStream())
+        configAssets.close()
+        return configFile
+    }
+
     @Synchronized
     private fun getOrCreateRuntime(context: Context): GeckoRuntime {
         if (runtime == null) {
@@ -40,13 +55,7 @@ object EngineProvider {
             builder.aboutConfigEnabled(true)
 
             // copy gecko config to cache dir
-            val geckoViewConfigPath = "geckoview-config.yaml"
-            val configAssets = context.assets.open(geckoViewConfigPath)
-            val configFile = File(context.cacheDir, geckoViewConfigPath)
-            configFile.createNewFile()
-            configAssets.copyTo(configFile.outputStream())
-            configAssets.close()
-            builder.configFilePath(configFile.absolutePath)
+            builder.configFilePath(importGeckoConfig(context).absolutePath)
 
             runtime = GeckoRuntime.create(context, builder.build())
         }
