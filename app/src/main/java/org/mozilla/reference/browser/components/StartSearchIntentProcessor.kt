@@ -9,7 +9,8 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.BrowserActivity
-import org.mozilla.reference.browser.browser.isFreshTab
+import org.mozilla.reference.browser.ext.isFreshTab
+import org.mozilla.reference.browser.freshtab.isFreshTab
 
 class StartSearchIntentProcessor(
     private val tabsUseCases: TabsUseCases,
@@ -20,8 +21,10 @@ class StartSearchIntentProcessor(
         val openToSearch = safeIntent.getBooleanExtra(BrowserActivity.EXTRA_OPEN_TO_SEARCH, false)
         return if (openToSearch) {
             sessionManager.selectedSession?.let { selectedSession ->
-                if (!selectedSession.url.isFreshTab()) {
+                if (!selectedSession.isFreshTab()) {
                     tabsUseCases.addTab("", selectTab = true)
+                } else {
+                    tabsUseCases.selectTab(selectedSession)
                 }
             } ?: tabsUseCases.addTab("", selectTab = true)
             true

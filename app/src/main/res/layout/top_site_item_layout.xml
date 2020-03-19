@@ -16,8 +16,8 @@
         android:layout_margin="@dimen/margin_padding_size_medium">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="@dimen/freshtab_icons_size"
-            android:layout_height="@dimen/freshtab_icons_size"
+            android:layout_width="@dimen/fresh_tab_icons_size"
+            android:layout_height="@dimen/fresh_tab_icons_size"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:foreground="?android:attr/selectableItemBackground"
             app:cardBackgroundColor="@color/light_grey_2"

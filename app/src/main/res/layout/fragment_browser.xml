@@ -24,38 +24,6 @@
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <mozilla.components.browser.awesomebar.BrowserAwesomeBar
-        android:id="@+id/awesomeBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height"
-        android:padding="4dp"
-        android:visibility="gone"
-        mozac:awesomeBarTitleTextColor="?android:attr/textColorPrimary"
-        mozac:awesomeBarDescriptionTextColor="?android:attr/textColorSecondary"
-        mozac:awesomeBarChipTextColor="#ffffff"
-        mozac:awesomeBarChipBackgroundColor="#444444" />
-
-    <org.mozilla.reference.browser.freshtab.FreshTabToolbar
-        android:id="@+id/fresh_tab_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        android:visibility="gone" />
-
-    <com.cliqz.browser.freshtab.FreshTab
-        android:id="@+id/freshTab"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <include layout="@layout/top_sites_layout" />
-
-        <include layout="@layout/news_layout" />
-
-    </com.cliqz.browser.freshtab.FreshTab>
-
     <mozilla.components.feature.findinpage.view.FindInPageBar
         android:id="@+id/findInPageBar"
         android:layout_width="match_parent"

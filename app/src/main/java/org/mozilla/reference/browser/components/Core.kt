@@ -10,7 +10,6 @@ import android.preference.PreferenceManager
 import com.cliqz.dat.DatFeature
 import com.cliqz.extension.CliqzExtensionFeature
 import mozilla.components.browser.icons.BrowserIcons
-import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.session.storage.SessionStorage
 import mozilla.components.browser.state.store.BrowserStore
@@ -106,9 +105,6 @@ class Core(private val context: Context) {
 
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
 
-            if (size == 0) {
-                add(Session(""), selected = true)
-            }
             sessionStorage.autoSave(this)
                 .periodicallyInForeground(interval = 30, unit = TimeUnit.SECONDS)
                 .whenGoingToBackground()

@@ -14,8 +14,8 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.navigation.NavController
 import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -40,27 +40,24 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.kotlin.isUrl
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.share
-import org.mozilla.reference.browser.freshtab.FreshTabToolbar
-import org.mozilla.reference.browser.library.history.ui.HistoryFragment
+import org.mozilla.reference.browser.freshtab.isFreshTab
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
 class ToolbarIntegration(
     context: Context,
     toolbar: BrowserToolbar,
-    freshTabToolbar: FreshTabToolbar,
     coroutineScope: LifecycleCoroutineScope,
-    private val historyStorage: HistoryStorage,
+    historyStorage: HistoryStorage,
     sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
     searchUseCases: SearchUseCases,
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
-    sessionId: String? = null,
-    private val fragmentManager: FragmentManager?,
-    toolbarEditMode: Boolean = false,
-    showFreshTab: () -> Unit
+    private val sessionId: String? = null,
+    private val navController: NavController
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
@@ -102,7 +99,7 @@ class ToolbarIntegration(
             menuToolbar,
             SimpleBrowserMenuItem("New Tab") {
                 tabsUseCases.addTab.invoke("")
-                showFreshTab.invoke()
+                openFreshTabFragment()
             },
             SimpleBrowserMenuItem(context.getString(R.string.menu_item_forget_tab)) {
                 tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
@@ -154,7 +151,7 @@ class ToolbarIntegration(
                     coroutineScope,
                     tabsUseCases,
                     sessionManager,
-                    showFreshTab)
+                    ::openFreshTabFragment)
                 deleteBrowsingData.askToDelete()
             }
         )
@@ -166,11 +163,11 @@ class ToolbarIntegration(
         toolbar.display.indicators = listOf(DisplayToolbar.Indicators.SECURITY)
         toolbar.display.displayIndicatorSeparator = true
         toolbar.display.menuBuilder = menuBuilder
-        if (toolbarEditMode) {
-            toolbar.editMode()
-        }
 
-        freshTabToolbar.setMenuBuilder(menuBuilder)
+        toolbar.display.onUrlClicked = {
+            openSearchFragment()
+            false
+        }
 
         val iconColor = ContextCompat.getColor(context, R.color.icons)
         toolbar.display.colors = toolbar.display.colors.copy(
@@ -275,9 +272,17 @@ class ToolbarIntegration(
     }
 
     private fun openHistoryFragment() {
-        fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, HistoryFragment())
-            commit()
-        }
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToHistoryFragment()
+        navController.nav(R.id.browserFragment, direction)
+    }
+
+    private fun openFreshTabFragment() {
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToFreshTabFragment()
+        navController.nav(R.id.browserFragment, direction)
+    }
+
+    private fun openSearchFragment() {
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(sessionId)
+        navController.nav(R.id.browserFragment, direction)
     }
 }

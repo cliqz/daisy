@@ -9,13 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tabstray.*
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.feature.tabs.tabstray.TabsFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.browser.BrowserFragment
+import org.mozilla.reference.browser.ext.isFreshTab
+import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.requireComponents
 
 /**
@@ -36,7 +38,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler, SessionManager.Obse
             requireComponents.useCases.tabsUseCases,
             ::closeTabsTray)
 
-        tabsPanel.initialize(tabsFeature) { closeTabsTray() }
+        tabsPanel.initialize(tabsFeature, ::closeTabsTray, ::openFreshTabFragment, ::openBrowserFragment)
     }
 
     override fun onStart() {
@@ -75,9 +77,27 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler, SessionManager.Obse
     }
 
     private fun closeTabsTray() {
-        activity?.supportFragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, BrowserFragment.create())
-            commit()
+        if (tabsPanel.isTrayEmpty()) {
+            requireComponents.useCases.tabsUseCases.addTab.invoke("")
+            openFreshTabFragment()
+        } else {
+            val selectedSession = requireComponents.core.sessionManager.selectedSession
+            if (selectedSession != null && selectedSession.isFreshTab()) {
+                openFreshTabFragment()
+            } else {
+                findNavController().navigateUp()
+            }
         }
+    }
+
+    private fun openFreshTabFragment() {
+        val direction = TabsTrayFragmentDirections.actionTabsTrayFragmentToFreshTabFragment()
+        nav(R.id.tabsTrayFragment, direction)
+    }
+
+    private fun openBrowserFragment() {
+        val direction =
+            TabsTrayFragmentDirections.actionTabsTrayFragmentToBrowserFragment(sessionId = null)
+        nav(R.id.tabsTrayFragment, direction)
     }
 }

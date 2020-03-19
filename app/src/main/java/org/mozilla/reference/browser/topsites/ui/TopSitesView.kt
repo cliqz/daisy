@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.top_site_context_menu.view.open_in_new_tab
 import kotlinx.android.synthetic.main.top_site_context_menu.view.open_in_private_tab
 import mozilla.components.browser.icons.BrowserIcons
-import mozilla.components.feature.session.SessionUseCases
-import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
@@ -46,12 +44,11 @@ class TopSitesView @JvmOverloads constructor(
     }
 
     fun init(
-        loadUrlUseCase: SessionUseCases.LoadUrlUseCase,
-        tabsUseCases: TabsUseCases,
+        context: Context,
         historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons
     ) {
-        presenter = TopSitesPresenter(this, loadUrlUseCase, tabsUseCases, historyUseCases)
+        presenter = TopSitesPresenter(context, this, historyUseCases)
         topSitesAdapter = TopSitesAdapter(browserIcons,
             presenter::onTopSiteClicked,
             ::onTopSiteLongClicked

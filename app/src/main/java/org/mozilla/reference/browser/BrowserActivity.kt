@@ -9,10 +9,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.state.WebExtensionState
 import org.mozilla.reference.browser.tabstray.BrowserTabsTray
@@ -21,6 +25,8 @@ import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
 import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
+import mozilla.components.support.ktx.kotlin.isUrl
+import mozilla.components.support.ktx.kotlin.toNormalizedUrl
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.R.color.navigationBarColor
 import org.mozilla.reference.browser.R.color.statusBarColor
@@ -28,14 +34,21 @@ import mozilla.components.support.webextensions.WebExtensionPopupFeature
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
 import org.mozilla.reference.browser.browser.CrashIntegration
+import org.mozilla.reference.browser.ext.alreadyOnDestination
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isCrashReportActive
+import org.mozilla.reference.browser.ext.isFreshTab
+import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.setSystemBarsTheme
+import org.mozilla.reference.browser.freshtab.FreshTabFragmentDirections
+import org.mozilla.reference.browser.library.history.ui.HistoryFragmentDirections
+import org.mozilla.reference.browser.search.SearchFragmentDirections
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
 
 /**
  * Activity that holds the [BrowserFragment].
  */
+@Suppress("TooManyFunctions")
 open class BrowserActivity : AppCompatActivity() {
 
     private lateinit var crashIntegration: CrashIntegration
@@ -45,6 +58,10 @@ open class BrowserActivity : AppCompatActivity() {
 
     private val webExtensionPopupFeature by lazy {
         WebExtensionPopupFeature(components.core.store, ::openPopup)
+    }
+
+    private val navHost by lazy {
+        supportFragmentManager.findFragmentById(R.id.container) as NavHostFragment
     }
 
     /**
@@ -61,9 +78,22 @@ open class BrowserActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val openToSearch = components.utils.startSearchIntentProcessor.process(intent)
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.container, createBrowserFragment(sessionId, openToSearch))
-                commit()
+            if (openToSearch) {
+                val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
+                navHost.navController.nav(null, direction)
+            } else if (sessionId != null) {
+                val direction = FreshTabFragmentDirections
+                    .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId)
+                navHost.navController.navigate(direction)
+            } else {
+                val session = components.core.sessionManager.selectedSession
+                if (session != null && !session.isFreshTab()) {
+                    val direction = FreshTabFragmentDirections
+                        .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId = null)
+                    navHost.navController.navigate(direction)
+                } else {
+                    components.useCases.tabsUseCases.addTab.invoke("")
+                }
             }
         }
 
@@ -83,10 +113,8 @@ open class BrowserActivity : AppCompatActivity() {
         intent ?: return
 
         if (components.utils.startSearchIntentProcessor.process(intent)) {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.container, createBrowserFragment(null, openToSearch = true))
-                commit()
-            }
+            val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
+            navHost.navController.nav(null, direction)
         } else if (components.utils.tabIntentProcessor.matches(intent)) {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(null, openToSearch = false))
@@ -96,7 +124,7 @@ open class BrowserActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        supportFragmentManager.fragments.forEach {
+        supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.forEach {
             if (it is UserInteractionHandler && it.onBackPressed()) {
                 return
             }
@@ -164,6 +192,106 @@ open class BrowserActivity : AppCompatActivity() {
         intent.putExtra("web_extension_name", webExtensionState.name)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
+    }
+
+    @Suppress("LongParameterList")
+    fun openToBrowserAndLoad(
+        searchTermOrUrl: String,
+        newTab: Boolean,
+        from: BrowserDirection,
+        private: Boolean,
+        sessionId: String? = null,
+        engine: SearchEngine? = null
+    ) {
+        openBrowser(from, sessionId)
+        val fromFreshTab = from == BrowserDirection.FromFreshTab
+        load(searchTermOrUrl, newTab, private, fromFreshTab, engine)
+    }
+
+    fun openBrowser(from: BrowserDirection, sessionId: String? = null) {
+        if (navHost.navController.alreadyOnDestination(R.id.browserFragment)) {
+            return
+        }
+        @IdRes val fragmentId = if (from.fragmentId != 0) from.fragmentId else null
+        val direction = getNavDirections(from, sessionId)
+        if (direction != null) {
+            navHost.navController.nav(fragmentId, direction)
+        }
+    }
+
+    private fun getNavDirections(
+        from: BrowserDirection,
+        sessionId: String?
+    ): NavDirections? = when (from) {
+        BrowserDirection.FromFreshTab ->
+            FreshTabFragmentDirections.actionFreshTabFragmentToBrowserFragment(sessionId)
+        BrowserDirection.FromSearch ->
+            SearchFragmentDirections.actionSearchFragmentToBrowserFragment(sessionId)
+        BrowserDirection.FromHistory ->
+            HistoryFragmentDirections.actionHistoryFragmentToBrowserFragment(sessionId)
+    }
+
+    fun load(
+        searchTermOrURL: String,
+        newTab: Boolean,
+        private: Boolean,
+        fromFreshTab: Boolean,
+        engine: SearchEngine? = null
+    ) {
+        if (searchTermOrURL.isUrl()) {
+            loadUrl(searchTermOrURL, newTab, private, fromFreshTab)
+        } else {
+            searchTerm(searchTermOrURL, newTab, private, engine)
+        }
+    }
+
+    @Suppress("ComplexMethod")
+    private fun loadUrl(
+        url: String,
+        newTab: Boolean,
+        private: Boolean,
+        fromFreshTab: Boolean
+    ) {
+        val loadUrlUseCase = if (fromFreshTab) {
+            components.core.sessionManager.selectedSession?.let {
+                components.useCases.tabsUseCases.removeTab.invoke(it)
+            }
+            if (private) {
+                components.useCases.tabsUseCases.addPrivateTab
+            } else {
+                components.useCases.tabsUseCases.addTab
+            }
+        } else {
+            if (newTab) {
+                if (private) {
+                    components.useCases.tabsUseCases.addPrivateTab
+                } else {
+                    components.useCases.tabsUseCases.addTab
+                }
+            } else components.useCases.sessionUseCases.loadUrl
+        }
+        loadUrlUseCase.invoke(url.toNormalizedUrl())
+    }
+
+    private fun searchTerm(
+        searchTerm: String,
+        newTab: Boolean,
+        private: Boolean,
+        engine: SearchEngine? = null
+    ) {
+        val searchUseCase: (String) -> Unit = { searchTerms ->
+            if (newTab) {
+                components.useCases.searchUseCases.newTabSearch
+                    .invoke(
+                        searchTerms,
+                        Session.Source.USER_ENTERED,
+                        true,
+                        private,
+                        searchEngine = engine
+                    )
+            } else components.useCases.searchUseCases.defaultSearch.invoke(searchTerms, engine)
+        }
+        searchUseCase.invoke(searchTerm)
     }
 
     companion object {
