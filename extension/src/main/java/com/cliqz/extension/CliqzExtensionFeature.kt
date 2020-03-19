@@ -41,7 +41,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
                 "ADBLOCKER_PLATFORM" to "desktop"
         ))
         val prefs = JSONObject(mapOf(
-                "showConsoleLogs" to true
+                "showConsoleLogs" to BuildConfig.DEBUG
         ))
         JSONObject(mapOf(
                 "settings" to settings,
@@ -54,13 +54,9 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
         runtime.registerWebExtension(extension.nativeExtension)
     }
 
-    private fun callActionSync(module: String, action: String, vararg args: Any?): Any? {
-        return messageHandler.callAction(module, action, *args)
-    }
-
     fun callActionAsync(scope: CoroutineScope, module: String, action: String, vararg args: Any?): Deferred<Any?> {
         return scope.async {
-            callActionSync(module, action, *args)
+            messageHandler.callAction(module, action, *args)
         }
     }
 
