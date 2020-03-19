@@ -1,6 +1,8 @@
 package com.cliqz.extension
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import mozilla.components.browser.engine.gecko.webextension.GeckoWebExtension
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
@@ -29,7 +31,8 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     private val privacyExtensionID = "cliqz@cliqz.com"
     private val privacyExtensionUrl = "resource://android/assets/extensions/cliqz/"
 
-    private var extension = GeckoWebExtension(privacyExtensionID, privacyExtensionUrl, runtime.webExtensionController, allowContentMessaging = true)
+    private var extension = GeckoWebExtension(privacyExtensionID, privacyExtensionUrl,
+            runtime.webExtensionController, allowContentMessaging = true)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
 
     val extensionConfig: JSONObject by lazy {

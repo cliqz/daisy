@@ -18,9 +18,11 @@ class CliqzAPI(val extension: CliqzExtensionFeature, private val scope: Coroutin
      * Gets the current enabled status of Cliqz modules running in the extension.
      */
     suspend fun getModuleStatus(): ModuleStatus? {
-        val moduleStatus = extension.callActionAsync(scope, "core", "status").await().let { (it as JSONObject).getJSONObject("modules") }
+        val moduleStatus = extension.callActionAsync(scope, "core", "status").await()
+                .let { (it as JSONObject).getJSONObject("modules") }
 
-        fun isModuleEnabled(module: String) = moduleStatus.has(module) && moduleStatus.getJSONObject(module).optBoolean("isEnabled", false)
+        fun isModuleEnabled(module: String) = moduleStatus.has(module) &&
+                moduleStatus.getJSONObject(module).optBoolean("isEnabled", false)
 
         return ModuleStatus(
                 isModuleEnabled(ADBLOCKER_MODULE),
@@ -37,35 +39,41 @@ class CliqzAPI(val extension: CliqzExtensionFeature, private val scope: Coroutin
      * Set the enabled status of an extension module.
      */
     suspend fun setModuleEnabled(module: String, enabled: Boolean) {
-        extension.callActionAsync(scope, "core", if (enabled) "enableModule" else "disableModule", module).await()
+        extension.callActionAsync(scope, "core",
+                if (enabled) "enableModule" else "disableModule", module).await()
     }
 
     /**
      * Get aggregated privacy stats over the given {StatsPeriod}.
      */
     suspend fun getBlockingStats(period: StatsPeriod): BlockingStats? {
-        return extension.callActionAsync(scope, "insights", "getDashboardStats", period.period).await().let { (it as JSONObject) }.let { res ->
-            BlockingStats(
-                    res.optInt("adsBlocked", 0),
-                    res.optInt("cookiesBlocked", 0),
-                    res.optInt("dataSaved", 0),
-                    res.optString("day", ""),
-                    res.optInt("fingerprintsRemoved", 0),
-                    res.optInt("loadTime", 0),
-                    res.optInt("pages", 0),
-                    res.optInt("timeSaved", 0),
-                    res.optJSONArray("trackers").let {
-                        if (it != null) List(it.length()) { i -> it.getString(i) } else emptyList()
-                    },
-                    res.optJSONArray("trackersDetailed").let {
-                        if (it != null) List(it.length()) { i ->
-                            val tracker = it.getJSONObject(i)
-                            TrackerInfo(tracker.getString("name"), tracker.getString("cat"), tracker.getString("wtm"))
-                        } else emptyList()
-                    },
-                    res.optInt("trackersDetected", 0)
-            )
-        }
+        return extension.callActionAsync(scope, "insights", "getDashboardStats",
+                period.period).await()
+                .let { (it as JSONObject) }
+                .let { res ->
+                    BlockingStats(
+                            res.optInt("adsBlocked", 0),
+                            res.optInt("cookiesBlocked", 0),
+                            res.optInt("dataSaved", 0),
+                            res.optString("day", ""),
+                            res.optInt("fingerprintsRemoved", 0),
+                            res.optInt("loadTime", 0),
+                            res.optInt("pages", 0),
+                            res.optInt("timeSaved", 0),
+                            res.optJSONArray("trackers").let {
+                                if (it != null) List(it.length()) { i -> it.getString(i) } else emptyList()
+                            },
+                            res.optJSONArray("trackersDetailed").let {
+                                if (it != null) List(it.length()) { i ->
+                                    val tracker = it.getJSONObject(i)
+                                    TrackerInfo(tracker.getString("name"),
+                                            tracker.getString("cat"),
+                                            tracker.getString("wtm"))
+                                } else emptyList()
+                            },
+                            res.optInt("trackersDetected", 0)
+                    )
+                }
     }
 }
 
