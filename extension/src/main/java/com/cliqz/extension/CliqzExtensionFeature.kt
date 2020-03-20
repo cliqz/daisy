@@ -58,6 +58,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
 
     fun callActionAsync(scope: CoroutineScope, module: String, action: String, vararg args: Any?): Deferred<Any?> {
         return scope.async {
+            @Suppress("performance.SpreadOperator")
             messageHandler.callAction(module, action, *args)
         }
     }
