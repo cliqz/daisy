@@ -18,7 +18,7 @@ import org.mozilla.geckoview.GeckoRuntime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
-val DEMOGRAPHICS = mapOf(
+val demographics = mapOf(
         "brand" to "cliqz",
         "name" to "browser",
         "platform" to "android"
@@ -38,7 +38,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     val extensionConfig: JSONObject by lazy {
         val settings = JSONObject(mapOf(
                 "telemetry" to mapOf(
-                        "demographics" to DEMOGRAPHICS
+                        "demographics" to demographics
                 ),
                 "ADBLOCKER_PLATFORM" to "desktop"
         ))
@@ -129,11 +129,13 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
             val result = results[messageId]
             results.remove(messageId)
             if (result != null && result.has("error")) {
-                throw RuntimeException("Action threw an error: " + result.get("error"))
+                throw ActionError(result.get("error").toString())
             } else if (result != null) {
                 return result.get("result")
             }
             return null
         }
     }
+
+    class ActionError(error: String) : java.lang.RuntimeException(error)
 }

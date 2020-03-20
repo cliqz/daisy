@@ -8,7 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mozilla.reference.browser.components.Core
@@ -34,12 +34,12 @@ class CliqzExtensionTest {
         val api = CliqzAPI(core.cliqz, this)
         val status = api.getModuleStatus()
         // check modules are enabled by default
-        Assert.assertNotNull("Status should not be null", status)
-        Assert.assertTrue("Adblocker should be enabled", status!!.adblockerEnabled)
-        Assert.assertTrue("Antitracking should be enabled", status.antitrackingEnabled)
-        Assert.assertTrue("Anolysis should be enabled", status.anolysisEnabled)
-        Assert.assertTrue("Humanweb should be enabled", status.humanwebEnabled)
-        Assert.assertTrue("Insights should be enabled", status.insightsEnabled)
+        assertNotNull("Status should not be null", status)
+        assertTrue("Adblocker should be enabled", status!!.adblockerEnabled)
+        assertTrue("Antitracking should be enabled", status.antitrackingEnabled)
+        assertTrue("Anolysis should be enabled", status.anolysisEnabled)
+        assertTrue("Humanweb should be enabled", status.humanwebEnabled)
+        assertTrue("Insights should be enabled", status.insightsEnabled)
     }
 
     @ExperimentalCoroutinesApi
@@ -48,10 +48,10 @@ class CliqzExtensionTest {
         val api = CliqzAPI(core.cliqz, this)
         api.setModuleEnabled(ANTITRACKING_MODULE, false)
         var status = api.getModuleStatus()
-        Assert.assertFalse("antitracking should be disabled", status!!.antitrackingEnabled)
+        assertFalse("antitracking should be disabled", status!!.antitrackingEnabled)
         api.setModuleEnabled(ANTITRACKING_MODULE, true)
         status = api.getModuleStatus()
-        Assert.assertTrue("antitracking should be enabled", status!!.antitrackingEnabled)
+        assertTrue("antitracking should be enabled", status!!.antitrackingEnabled)
     }
 
     @ExperimentalCoroutinesApi
@@ -59,7 +59,7 @@ class CliqzExtensionTest {
     fun getBlockingStats() = runBlockingTest {
         val api = CliqzAPI(core.cliqz, this)
         val stats = api.getBlockingStats(StatsPeriod.ALL_TIME)
-        Assert.assertNotNull("Stats is not null", stats)
-        Assert.assertEquals("Initially no pages", stats!!.pages, 0)
+        assertNotNull("Stats is not null", stats)
+        assertEquals("Initially no pages", stats!!.pages, 0)
     }
 }
