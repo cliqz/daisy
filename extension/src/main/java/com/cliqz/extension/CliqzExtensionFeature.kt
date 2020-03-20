@@ -136,4 +136,3 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
         }
     }
 }
-

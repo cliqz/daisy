@@ -77,13 +77,13 @@ class CliqzAPI(val extension: CliqzExtensionFeature, private val scope: Coroutin
 }
 
 data class ModuleStatus(
-        val adblockerEnabled: Boolean,
-        val anolysisEnabled: Boolean,
-        val antitrackingEnabled: Boolean,
-        val autoconsentEnabled: Boolean,
-        val cookieMonsterEnabled: Boolean,
-        val humanwebEnabled: Boolean,
-        val insightsEnabled: Boolean
+    val adblockerEnabled: Boolean,
+    val anolysisEnabled: Boolean,
+    val antitrackingEnabled: Boolean,
+    val autoconsentEnabled: Boolean,
+    val cookieMonsterEnabled: Boolean,
+    val humanwebEnabled: Boolean,
+    val insightsEnabled: Boolean
 )
 
 enum class StatsPeriod(val period: String) {
@@ -94,21 +94,21 @@ enum class StatsPeriod(val period: String) {
 }
 
 data class TrackerInfo(
-        val name: String,
-        val category: String,
-        val wtm: String
+    val name: String,
+    val category: String,
+    val wtm: String
 )
 
 data class BlockingStats(
-        val adsBlocked: Int,
-        val cookiesBlocked: Int,
-        val dataSaved: Int,
-        val day: String,
-        val fingerprintsRemoved: Int,
-        val loadTime: Int,
-        val pages: Int,
-        val timeSaved: Int,
-        val trackers: List<String>,
-        val trackersDetailed: List<TrackerInfo>,
-        val trackersDetected: Int
+    val adsBlocked: Int,
+    val cookiesBlocked: Int,
+    val dataSaved: Int,
+    val day: String,
+    val fingerprintsRemoved: Int,
+    val loadTime: Int,
+    val pages: Int,
+    val timeSaved: Int,
+    val trackers: List<String>,
+    val trackersDetailed: List<TrackerInfo>,
+    val trackersDetected: Int
 )
