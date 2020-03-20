@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package com.cliqz.extension
 
 import kotlinx.coroutines.CoroutineScope
@@ -20,9 +24,6 @@ val DEMOGRAPHICS = mapOf(
         "platform" to "android"
 )
 
-/**
- * @author Sam Macbeth
- */
 class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     private val logger = Logger("cliqz-extension")
 

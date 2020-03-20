@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package com.cliqz.extension
 
 import androidx.test.platform.app.InstrumentationRegistry
@@ -9,9 +13,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mozilla.reference.browser.components.Core
 
-/**
- * @author Sam Macbeth
- */
 class CliqzExtensionTest {
 
     lateinit var core: Core
