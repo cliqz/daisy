@@ -7,7 +7,7 @@
 package org.mozilla.reference.browser.tabs
 
 import androidx.recyclerview.widget.ItemTouchHelper
-import mozilla.components.browser.tabstray.TabTouchCallback
+import org.mozilla.reference.browser.tabstray.TabTouchCallback
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.support.base.observer.Observable
 

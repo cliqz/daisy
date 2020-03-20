@@ -15,4 +15,12 @@
     <declare-styleable name="DeleteBrowsingDataItem">
         <attr name="deleteBrowsingDataItemTitle" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="BrowserTabsTray">
+        <attr name="tabsTrayItemBackgroundColor" format="reference|color" />
+        <attr name="tabsTrayItemTextColor" format="reference|color" />
+        <attr name="tabsTraySelectedItemBackgroundColor" format="reference|color" />
+        <attr name="tabsTraySelectedItemTextColor" format="reference|color" />
+        <attr name="tabsTrayItemElevation" format="reference|dimension" />
+    </declare-styleable>
 </resources>

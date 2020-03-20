@@ -193,7 +193,6 @@ dependencies {
     implementation Deps.mozilla_browser_awesomebar
     implementation Deps.mozilla_browser_domains
     implementation Deps.mozilla_browser_search
-    implementation Deps.mozilla_browser_tabstray
     implementation Deps.mozilla_browser_toolbar
     implementation Deps.mozilla_browser_menu
     implementation Deps.mozilla_browser_session
@@ -313,6 +312,7 @@ dependencies {
     testImplementation Deps.tools_test_runner
     testImplementation Deps.tools_test_rules
 
+    testImplementation Deps.mozilla_support_test
     testImplementation Deps.mozilla_support_test_appservices
     testImplementation Deps.testing_mockito
 }
