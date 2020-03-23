@@ -52,6 +52,10 @@ android {
 
         unitTests {
             includeAndroidResources = true
+            all {
+                systemProperty 'robolectric.dependency.repo.url', 'https://repo1.maven.org/maven2/'
+                systemProperty 'robolectric.dependency.repo.id', 'central'
+            }
         }
     }
 
@@ -262,7 +266,7 @@ dependencies {
 
     testImplementation Deps.testing_junit
     testImplementation Deps.testing_mockk
-    testImplementation Deps.kotlin_coroutines_test
+    androidTestImplementation Deps.kotlin_coroutines_test
 
     androidTestImplementation Deps.uiautomator
 
@@ -315,8 +319,10 @@ dependencies {
     testImplementation Deps.mozilla_support_test
     testImplementation Deps.mozilla_support_test_appservices
     testImplementation Deps.testing_mockito
+    testImplementation Deps.kotlin_coroutines_test
 
-    androidTestImplementation Deps.kotlin_coroutines_test
+    // Must be in debug implementation
+    debugImplementation Deps.androidx_fragment_testing
 }
 
 // -------------------------------------------------------------------------------------------------

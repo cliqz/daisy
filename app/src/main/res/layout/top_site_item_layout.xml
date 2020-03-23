@@ -21,7 +21,7 @@
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:foreground="?android:attr/selectableItemBackground"
             app:cardBackgroundColor="@color/light_grey_2"
-            app:cardCornerRadius="4dp"
+            app:cardCornerRadius="@dimen/favicon_corner_radius"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@id/domain_view"
             app:layout_constraintEnd_toEndOf="parent"

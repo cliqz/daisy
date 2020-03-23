@@ -11,36 +11,48 @@
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/mozac_ic_close"
+        android:tint="@color/light_grey_4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <ImageSwitcher
+    <ViewSwitcher
         android:id="@+id/icon_view"
         android:layout_width="@dimen/two_line_list_item_icon_size"
         android:layout_height="@dimen/two_line_list_item_icon_size"
         android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/favicon"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:src="@tools:sample/avatars"
-            tools:ignore="ContentDescription" />
+            app:cardCornerRadius="@dimen/favicon_corner_radius">
+
+            <ImageView
+                android:id="@+id/favicon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="ContentDescription"
+                tools:src="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/checkmark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/mozac_ic_check"
+            android:src="@drawable/cliqz_ic_check"
+            android:tint="?attr/colorPrimary"
             tools:ignore="ContentDescription" />
-    </ImageSwitcher>
+    </ViewSwitcher>
 
     <TextView
         android:id="@+id/url_view"
@@ -62,7 +74,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_size_medium"
-        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?android:textColorPrimary"

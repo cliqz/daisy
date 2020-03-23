@@ -15,8 +15,8 @@
     <dimen name="text_size_xlarge">34sp</dimen>
 
     <!-- List dimensions as per material design guidelines -->
-    <dimen name="two_line_list_item_height">72dp</dimen>
-    <dimen name="two_line_list_item_icon_size">40dp</dimen>
+    <dimen name="two_line_list_item_height">64dp</dimen>
+    <dimen name="two_line_list_item_icon_size">36dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
@@ -32,4 +32,8 @@
     <dimen name="context_menu_height">48dp</dimen>
     <dimen name="context_menu_x_offset">8dp</dimen>
     <dimen name="top_site_context_menu_extra_y_offset">8dp</dimen>
+
+    <dimen name="favicon_corner_radius">5dp</dimen>
+
+    <dimen name="library_item_max_width">458dp</dimen>
 </resources>

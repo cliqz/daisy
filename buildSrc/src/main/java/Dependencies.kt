@@ -9,18 +9,10 @@ private object Versions {
 
     const val junit = "4.12"
     const val mockk = "1.9.3"
-    const val androidx_test_ext = "1.1.1"
-
-    const val androidx_appcompat = "1.0.2"
-    const val androidx_recyclerview = "1.1.0-rc01"
-    const val androidx_paging = "2.1.0"
-    const val androidx_constraintlayout = "2.0.0-beta3"
-    const val androidx_preference = "1.0.0"
 
     const val workmanager = "2.0.0"
     const val google_material = "1.2.0-alpha03"
 
-    const val androidx_lifecycle = "2.2.0-rc02"
     const val android_gradle_plugin = "3.6.0"
     const val mozilla_android_components = "29.0.0"
 
@@ -28,20 +20,27 @@ private object Versions {
 
     const val thirdparty_sentry = "1.7.10"
 
-    const val espresso_core = "3.1.0"
-    const val espresso_version = "3.1.0"
     const val mockwebserver = "3.10.0"
     const val orchestrator = "1.1.1"
     const val tools_test_rules = "1.1.0"
     const val tools_test_runner = "1.1.0"
     const val uiautomator = "2.2.0"
-    const val robolectric = "4.3"
+    const val robolectric = "4.3.1"
     const val mockito = "2.24.5"
 
     const val leakcanary = "2.0-beta-3"
 
     object AndroidX {
         const val core = "1.1.0"
+        const val test_ext = "1.1.1"
+        const val appcompat = "1.0.2"
+        const val recyclerview = "1.1.0-rc01"
+        const val paging = "2.1.0"
+        const val constraintlayout = "2.0.0-beta3"
+        const val preference = "1.0.0"
+        const val lifecycle = "2.2.0-rc02"
+        const val espresso = "3.1.0"
+        const val fragment = "1.1.0"
     }
 }
 
@@ -54,7 +53,7 @@ object Deps {
 
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_mockk = "io.mockk:mockk:${Versions.mockk}"
-    const val androidx_test_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
+    const val androidx_test_junit = "androidx.test.ext:junit:${Versions.AndroidX.test_ext}"
 
     const val mozilla_concept_engine = "org.mozilla.components:concept-engine:${Versions.mozilla_android_components}"
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"
@@ -126,24 +125,26 @@ object Deps {
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
 
-    const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
-    const val androidx_recyclerview = "androidx.recyclerview:recyclerview:${Versions.androidx_recyclerview}"
-    const val androidx_paging = "androidx.paging:paging-runtime-ktx:${Versions.androidx_paging}"
+    const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}"
+    const val androidx_recyclerview = "androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerview}"
+    const val androidx_paging = "androidx.paging:paging-runtime-ktx:${Versions.AndroidX.paging}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
-    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_constraintlayout}"
-    const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.androidx_preference}"
+    const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintlayout}"
+    const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.AndroidX.preference}"
     const val androidx_work_runtime_ktx = "androidx.work:work-runtime-ktx:${Versions.workmanager}"
-    const val androidx_lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidx_lifecycle}"
-    const val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidx_lifecycle}"
+    const val androidx_lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
+    const val androidx_lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
+    const val androidx_fragment_testing = "androidx.fragment:fragment-testing:${Versions.AndroidX.fragment}"
+
     const val google_material = "com.google.android.material:material:${Versions.google_material}"
 
     const val tools_androidgradle = "com.android.tools.build:gradle:${Versions.android_gradle_plugin}"
     const val tools_kotlingradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 
-    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso_version}"
-    const val espresso_core = "androidx.test.espresso:espresso-core:${Versions.espresso_core}"
-    const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.espresso_version}"
-    const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.espresso_version}"
+    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.AndroidX.espresso}"
+    const val espresso_core = "androidx.test.espresso:espresso-core:${Versions.AndroidX.espresso}"
+    const val espresso_idling_resources = "androidx.test.espresso:espresso-idling-resource:${Versions.AndroidX.espresso}"
+    const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.AndroidX.espresso}"
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
     const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
     const val tools_test_ext_junit = "androidx.test.ext:junit:${Versions.AndroidX.core}"
