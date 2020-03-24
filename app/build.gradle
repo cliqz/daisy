@@ -179,7 +179,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 dependencies {
     implementation project(':freshtab')
     implementation project(':dat')
-    implementation project(':privacy')
+    implementation project(':extension')
 
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_tabstray
@@ -315,6 +315,8 @@ dependencies {
     testImplementation Deps.mozilla_support_test
     testImplementation Deps.mozilla_support_test_appservices
     testImplementation Deps.testing_mockito
+
+    androidTestImplementation Deps.kotlin_coroutines_test
 }
 
 // -------------------------------------------------------------------------------------------------
