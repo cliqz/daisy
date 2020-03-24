@@ -18,12 +18,6 @@ import org.mozilla.geckoview.GeckoRuntime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
-val demographics = mapOf(
-        "brand" to "cliqz",
-        "name" to "browser",
-        "platform" to "android"
-)
-
 class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     private val logger = Logger("cliqz-extension")
 
@@ -35,18 +29,28 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
             runtime.webExtensionController, allowContentMessaging = true)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
 
-    val extensionConfig: JSONObject by lazy {
-        val settings = JSONObject(mapOf(
+    private companion object ExtensionSettings {
+        private val demographics = mapOf(
+            "brand" to "cliqz",
+            "name" to "browser",
+            "platform" to "android"
+        )
+        private const val adblockerPlatform = "desktop"
+        val settings = mapOf(
                 "telemetry" to mapOf(
                         "demographics" to demographics
                 ),
-                "ADBLOCKER_PLATFORM" to "desktop"
-        ))
+                "ADBLOCKER_PLATFORM" to adblockerPlatform
+        )
+    }
+
+    val extensionConfig: JSONObject by lazy {
+        val settingsJson = JSONObject(settings)
         val prefs = JSONObject(mapOf(
                 "showConsoleLogs" to BuildConfig.DEBUG
         ))
         JSONObject(mapOf(
-                "settings" to settings,
+                "settings" to settingsJson,
                 "prefs" to prefs
         ))
     }
