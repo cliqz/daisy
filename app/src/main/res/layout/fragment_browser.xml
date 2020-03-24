@@ -5,7 +5,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:cliqz="http://schemas.android.com/apk/res-auto"
     xmlns:mozac="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,7 +15,7 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <mozilla.components.concept.engine.EngineView
             android:id="@+id/engineView"
@@ -37,17 +36,24 @@
         android:visibility="gone"
         app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior" />
 
-    <mozilla.components.browser.toolbar.BrowserToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_gravity="top"
-        android:background="@color/toolbarBackgroundColor"
-        android:elevation="@dimen/toolbar_elevation"
-        app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
-        mozac:browserToolbarTrackingProtectionAndSecurityIndicatorSeparatorColor="@color/photonWhite"
-        mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
-        mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
+        android:layout_height="wrap_content">
+
+        <mozilla.components.browser.toolbar.BrowserToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_gravity="top"
+            android:background="@color/toolbarBackgroundColor"
+            android:elevation="@dimen/toolbar_elevation"
+            app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
+            mozac:browserToolbarTrackingProtectionAndSecurityIndicatorSeparatorColor="@color/photonWhite"
+            mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
+            mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <mozilla.components.feature.readerview.view.ReaderViewControlsBar
         android:id="@+id/readerViewBar"
