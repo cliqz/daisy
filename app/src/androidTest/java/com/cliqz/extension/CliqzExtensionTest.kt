@@ -7,31 +7,28 @@ package com.cliqz.extension
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mozilla.reference.browser.Components
 import org.mozilla.reference.browser.components.Core
+import org.mozilla.reference.browser.ext.application
 
+@ExperimentalCoroutinesApi
 class CliqzExtensionTest {
 
+    lateinit var components: Components
     lateinit var core: Core
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getInstrumentation().context
-        core = Core(context)
+        components = InstrumentationRegistry.getInstrumentation().targetContext.application.components
+        core = components.core
     }
 
-    @After
-    fun tearDown() {
-        core.cliqz.runtime.shutdown()
-    }
-
-    @ExperimentalCoroutinesApi
     @Test
     fun getModuleStatus() = runBlockingTest {
         val api = CliqzAPI(core.cliqz, this)
@@ -45,7 +42,6 @@ class CliqzExtensionTest {
         assertTrue("Insights should be enabled", status.insightsEnabled)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun moduleEnableDisable() = runBlockingTest {
         val api = CliqzAPI(core.cliqz, this)
@@ -57,12 +53,11 @@ class CliqzExtensionTest {
         assertTrue("antitracking should be enabled", status!!.antitrackingEnabled)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getBlockingStats() = runBlockingTest {
         val api = CliqzAPI(core.cliqz, this)
         val stats = api.getBlockingStats(StatsPeriod.ALL_TIME)
         assertNotNull("Stats is not null", stats)
-        assertEquals("Initially no pages", stats!!.pages, 0)
+        assertEquals("Initially no pages", 0, stats!!.pages)
     }
 }

@@ -49,6 +49,7 @@ class Core(private val context: Context) {
     val cliqz: CliqzExtensionFeature by lazy {
         EngineProvider.createCliqz(context)
     }
+
     /**
      * The browser engine component initialized based on the build
      * configuration (see build variants).
