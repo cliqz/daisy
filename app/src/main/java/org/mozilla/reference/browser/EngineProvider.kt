@@ -5,6 +5,7 @@
 package org.mozilla.reference.browser
 
 import android.content.Context
+import androidx.core.util.AtomicFile
 import com.cliqz.extension.CliqzExtensionFeature
 import mozilla.components.browser.engine.gecko.GeckoEngine
 import mozilla.components.browser.engine.gecko.fetch.GeckoViewFetchClient
@@ -24,18 +25,29 @@ object EngineProvider {
     private var runtime: GeckoRuntime? = null
     private var cliqz: CliqzExtensionFeature? = null
 
-    private const val geckoViewConfigPath = "geckoview-config.yaml"
+    /**
+     * Path to geckoview config in app assets
+     */
+    private const val geckoViewConfigAssetPath = "geckoview-config.yaml"
+    /**
+     * Path to geckoview config in cache dir.
+     */
+    private const val geckoViewConfigCachePath = "geckoview-config-v1.yaml"
 
     /**
      * Import a geckoview config YAML file from assets and return a File that the GeckoRuntime
      * can load it from.
      */
     private fun importGeckoConfig(context: Context): File {
-        val configAssets = context.assets.open(geckoViewConfigPath)
-        val configFile = File(context.cacheDir, geckoViewConfigPath)
-        configFile.createNewFile()
-        configAssets.copyTo(configFile.outputStream())
-        configAssets.close()
+        val configFile = File(context.cacheDir, geckoViewConfigCachePath)
+        if (!configFile.exists()) {
+            val configAssets = context.assets.open(geckoViewConfigAssetPath)
+            val atomicConfigFile = AtomicFile(configFile)
+            val writeStream = atomicConfigFile.startWrite()
+            configAssets.copyTo(writeStream)
+            configAssets.close()
+            atomicConfigFile.finishWrite(writeStream)
+        }
         return configFile
     }
 
