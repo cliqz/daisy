@@ -8,4 +8,5 @@
 <resources>
     <item name="button_tabs" type="id"/>
     <item name="button_private_tabs" type="id"/>
+    <item name="mozac_browser_thumbnail_tag_job" type="id" />
 </resources>

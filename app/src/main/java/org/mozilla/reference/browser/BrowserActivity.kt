@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.state.WebExtensionState
-import mozilla.components.browser.tabstray.BrowserTabsTray
+import org.mozilla.reference.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID

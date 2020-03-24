@@ -79,6 +79,14 @@ class Core(private val context: Context) {
     }
 
     /**
+     * The thumbnails repository provides a way to store tabs thumbnails permanently as fetch
+     * them as needed.
+     */
+    val thumbnailsRepository by lazy {
+        ThumbnailsRepository(context)
+    }
+
+    /**
      * The session manager component provides access to a centralized registry of
      * all browser sessions (i.e. tabs). It is initialized here to persist and restore
      * sessions from the [SessionStorage], and with a default session (about:blank) in
@@ -88,6 +96,9 @@ class Core(private val context: Context) {
         val sessionStorage = SessionStorage(context, engine)
 
         SessionManager(engine, store).apply {
+
+            register(thumbnailsRepository.asSessionManagerObserver())
+
             sessionStorage.restore()?.let { snapshot -> restore(snapshot) }
 
             if (size == 0) {

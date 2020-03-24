@@ -13,6 +13,7 @@ import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.service.fxa.manager.FxaAccountManager
+import mozilla.components.support.rustlog.RustLog
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doReturn
@@ -25,6 +26,8 @@ import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.TestEngineView
 
 class TestBrowserApplication : BrowserApplication() {
+
+    private var alreadyCreated = false
 
     private val realComponents = Components(this)
 
@@ -61,6 +64,13 @@ class TestBrowserApplication : BrowserApplication() {
             doReturn(backgroundServices).`when`(it).backgroundServices
             doReturn(analytics).`when`(it).analytics
         }
+
+    override fun onCreate() {
+        // RustLog has a static instance that crash if instantiated multiple times, we disable it
+        // before being enabled again in BrowserApplication::onCreate()
+        RustLog.disable()
+        super.onCreate()
+    }
 }
 
 private fun <T> doReturnMock(clazz: Class<T>): Stubber = doReturn(mock(clazz))
