@@ -39,6 +39,12 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
+    class RemoveFromTopSitesUsesCase(private val historyStorage: HistoryStorage) {
+        operator fun invoke(topSite: TopSite) {
+            (historyStorage as HistoryDatabase).blockDomainsForTopsites(topSite.domain)
+        }
+    }
+
     class DeleteMultipleHistoryUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(historyItemList: Set<HistoryItem>) {
             historyItemList.forEach { historyItem ->
@@ -67,6 +73,7 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
 
     val getHistory by lazy { GetHistoryUseCase(historyStorage) }
     val getTopSites: GetTopSitesUseCase by lazy { GetTopSitesUseCase(historyStorage) }
+    val removeFromTopSites: RemoveFromTopSitesUsesCase by lazy { RemoveFromTopSitesUsesCase(historyStorage) }
     val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
     val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
     val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }

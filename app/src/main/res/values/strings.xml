@@ -213,6 +213,7 @@
     <!-- Top Site Context Menu -->
     <string name="top_site_menu_open_in_new_tab">Open in New tab</string>
     <string name="top_site_menu_open_in_private_tab">Open in Private tab</string>
+    <string name="top_site_menu_remove_from_top_site">Hide from New tab</string>
 
     <!-- Browser long press popup menu -->
     <!-- Copy the current url -->

@@ -79,11 +79,13 @@ class FreshTabIntegration(
 
     fun addTopSitesFeature(
         topSitesView: TopSitesView,
+        scope: CoroutineScope,
         historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons
     ): FreshTabIntegration {
         topSitesFeature = TopSitesFeature(
             topSitesView,
+            scope,
             historyUseCases,
             browserIcons)
         return this

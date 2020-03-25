@@ -4,18 +4,20 @@
 
 package org.mozilla.reference.browser.topsites.ui
 
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesFeature(
     private val topSitesView: TopSitesView,
+    private val scope: CoroutineScope,
     private val historyUseCases: HistoryUseCases,
     private val browserIcons: BrowserIcons
 ) : LifecycleAwareFeature {
 
     override fun start() {
-        topSitesView.initialize(historyUseCases, browserIcons)
+        topSitesView.initialize(scope, historyUseCases, browserIcons)
     }
 
     override fun stop() {
