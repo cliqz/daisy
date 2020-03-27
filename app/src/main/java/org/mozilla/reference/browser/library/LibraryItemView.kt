@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.ImageSwitcher
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ViewSwitcher
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.loadIntoView
@@ -47,7 +47,7 @@ class LibraryItemView @JvmOverloads constructor(
     val urlView: TextView
     val metaButton: ImageButton
 
-    private val iconView: ImageSwitcher
+    private val iconView: ViewSwitcher
     private val favicon: ImageView
 
     init {

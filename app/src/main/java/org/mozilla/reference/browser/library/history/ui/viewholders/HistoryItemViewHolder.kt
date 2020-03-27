@@ -5,29 +5,29 @@
 package org.mozilla.reference.browser.library.history.ui.viewholders
 
 import android.content.Context
+import android.text.format.DateFormat
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.history_list_item.view.*
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.library.SelectionHolder
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.ui.HistoryInteractor
 import org.mozilla.reference.browser.library.history.ui.ViewMode
-import org.mozilla.reference.browser.library.SelectionHolder
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 enum class HistoryItemTimeGroup {
     Today, Yesterday, Older;
 
-    private val datePattern = "dd MMM yyyy"
-    private val dateFormat = SimpleDateFormat(datePattern, Locale.getDefault())
-
-    fun humanReadable(context: Context, visitTime: Long): String = when (this) {
-        Today -> context.getString(R.string.history_today)
-        Yesterday -> context.getString(R.string.history_yesterday)
-        Older -> dateFormat.format(Date(visitTime))
+    fun humanReadable(context: Context, visitTime: Long): String {
+        val dateFormat = DateFormat.getMediumDateFormat(context)
+        val date = dateFormat.format(Date(visitTime))
+        return when (this) {
+            Today -> context.resources.getString(R.string.history_today, date)
+            Yesterday -> context.resources.getString(R.string.history_yesterday, date)
+            Older -> date
+        }
     }
 }
 

@@ -6,64 +6,108 @@ package org.mozilla.reference.browser
 
 import android.content.Context
 import android.util.AttributeSet
+import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.support.rustlog.RustLog
-import org.mockito.ArgumentMatchers.any
+import mozilla.components.support.test.any
+import mozilla.components.support.test.mock
+import mozilla.components.support.test.whenever
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.spy
-import org.mockito.stubbing.Stubber
 import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
 import org.mozilla.reference.browser.components.Core
+import org.mozilla.reference.browser.components.News
+import org.mozilla.reference.browser.components.Search
+import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.TestEngineView
+import org.mozilla.reference.browser.components.UseCases
+import org.mozilla.reference.browser.components.Utilities
+import org.mozilla.reference.browser.database.HistoryDatabase
+import org.mozilla.reference.browser.ext.whenever
+import org.mozilla.reference.browser.utils.ClipboardHandler
 
 class TestBrowserApplication : BrowserApplication() {
 
-    private var alreadyCreated = false
-
-    private val realComponents = Components(this)
-
     // Mocking Core
-    private val engine = mock(Engine::class.java).also {
-        `when`(it.createView(any(Context::class.java) ?: this, any(AttributeSet::class.java)))
+    private val engine = mock<Engine>().also {
+        val settings = DefaultSettings()
+        whenever(it.createView(any(), any<AttributeSet>()))
                 .then { invocation ->
                     val context = invocation.arguments[0] as Context
                     val attrs = invocation.arguments[1] as AttributeSet
                     return@then TestEngineView(context, attrs)
                 }
+        whenever(it.settings).thenReturn(settings)
     }
 
-    private val core = mock(Core::class.java).also {
-        doReturnMock(AddonManager::class.java).`when`(it).addonManager
-        doReturnMock(DefaultAddonUpdater::class.java).`when`(it).addonUpdater
-        doReturn(engine).`when`(it).engine
+    private val core = mock<Core>().also {
+        val client = mock<Client>()
+        doReturnMock<AddonManager>().`when`(it).addonManager
+        doReturnMock<DefaultAddonUpdater>().`when`(it).addonUpdater
+        doReturn(engine).whenever(it).engine
         doReturn(SessionManager(engine)).`when`(it).sessionManager
-        doReturnMock(Client::class.java).`when`(it).client
-        doReturn(BrowserStore()).`when`(it).store
+        doReturn(client).whenever(it).client
+        doReturn(BrowserStore()).whenever(it).store
+        doReturnMock<BrowserIcons>().whenever(it).icons
+        doReturnMock<HistoryDatabase>().whenever(it).historyStorage
     }
 
-    private val backgroundServices = mock(BackgroundServices::class.java).also {
-        doReturnMock(FxaAccountManager::class.java).`when`(it).accountManager
+    private val backgroundServices = mock<BackgroundServices>().also {
+        doReturnMock<FxaAccountManager>().whenever(it).accountManager
     }
-
-    // Mocking Analytics
-    private val analytics = mock(Analytics::class.java)
 
     // Finally, override the components
-    override val components: Components
-        get() = spy(realComponents).also {
-            doReturn(core).`when`(it).core
-            doReturn(backgroundServices).`when`(it).backgroundServices
-            doReturn(analytics).`when`(it).analytics
+    private val mockedComponents by lazy {
+        mock<Components>().also {
+            val realSearch = spy(Search(this))
+            val realNews = spy(News(core.client, this))
+            val realUseCases = spy(UseCases(
+                    this,
+                    core.sessionManager,
+                    core.store,
+                    core.engine.settings,
+                    realSearch.searchEngineManager,
+                    core.client,
+                    core.historyStorage,
+                    realNews.newsRepository
+            ))
+            val realUtils = spy(Utilities(
+                    this,
+                    core.sessionManager,
+                    realUseCases.sessionUseCases,
+                    realUseCases.searchUseCases,
+                    realUseCases.tabsUseCases
+            ))
+            val realServices = spy(Services(
+                    this,
+                    backgroundServices.accountManager,
+                    realUseCases.tabsUseCases
+            ))
+            val realClipboardHandler = spy(ClipboardHandler(this))
+            whenever(it.core).thenReturn(core)
+            whenever(it.search).thenReturn(realSearch)
+            whenever(it.news).thenReturn(realNews)
+            whenever(it.useCases).thenReturn(realUseCases)
+            whenever(it.backgroundServices).thenReturn(backgroundServices)
+            doReturnMock<Analytics>().whenever(it).analytics
+            whenever(it.utils).thenReturn(realUtils)
+            whenever(it.services).thenReturn(realServices)
+            whenever(it.clipboardHandler).thenReturn(realClipboardHandler)
         }
+    }
+
+    override val components: Components
+    get() = mockedComponents
 
     override fun onCreate() {
         // RustLog has a static instance that crash if instantiated multiple times, we disable it
@@ -73,4 +117,4 @@ class TestBrowserApplication : BrowserApplication() {
     }
 }
 
-private fun <T> doReturnMock(clazz: Class<T>): Stubber = doReturn(mock(clazz))
+private inline fun <reified T : Any> doReturnMock() = doReturn(Mockito.mock(T::class.java))

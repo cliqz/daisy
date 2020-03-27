@@ -18,6 +18,7 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
+import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
@@ -140,7 +141,7 @@ class Core(private val context: Context) {
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
-    val historyStorage by lazy { HistoryDatabase(context) }
+    val historyStorage: HistoryStorage by lazy { HistoryDatabase(context) }
 
     /**
      * Icons component for loading, caching and processing website icons.

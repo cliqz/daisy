@@ -76,8 +76,10 @@ class AssetsDownloader : Plugin<Project> {
                 val downloadTaskName = "download${flavorName}Assets"
                 val downloadTask = tasks.register<Download>(downloadTaskName)
                 downloadTask.configure {
+                    val destFile = File(downloadTaskDir, extension.filename!!)
                     src(extension.url)
-                    dest(File(downloadTaskDir, extension.filename!!))
+                    dest(destFile)
+                    enabled = !destFile.isFile
                 }
 
                 val unzipTask = tasks.register<Copy>("unzip${flavorName}Assets")

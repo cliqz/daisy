@@ -170,7 +170,7 @@
 
     <!-- History -->
     <string name="history_title_untitled">Untitled</string>
-    <string name="history_clear_all">Clear Browsing History</string>
+    <string name="history_clear_all">Delete Browsing History</string>
     <string name="history_clear_all_dialog_msg">Are you sure you want to clear history?</string>
     <string name="history_clear_all_dialog_positive_btn">Clear</string>
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
@@ -182,8 +182,8 @@
     </plurals>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
-    <string name="history_today">Today</string>
-    <string name="history_yesterday">Yesterday</string>
+    <string name="history_today">Today \u2013 %s </string>
+    <string name="history_yesterday">Yesterday \u2013 %s</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>
