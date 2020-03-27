@@ -9,9 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesPresenter(
@@ -36,7 +36,7 @@ class TopSitesPresenter(
     }
 
     fun onTopSiteClicked(topSite: TopSite) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = topSite.url,
             newTab = false,
             from = BrowserDirection.FromFreshTab,
@@ -45,7 +45,7 @@ class TopSitesPresenter(
     }
 
     fun openInNewTab(topSite: TopSite) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = topSite.url,
             newTab = true,
             from = BrowserDirection.FromFreshTab,
@@ -54,7 +54,7 @@ class TopSitesPresenter(
     }
 
     fun openInPrivateTab(topSite: TopSite) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = topSite.url,
             newTab = true,
             from = BrowserDirection.FromFreshTab,

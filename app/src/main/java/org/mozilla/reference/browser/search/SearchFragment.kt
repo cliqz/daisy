@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.fragment_search.*
 import mozilla.components.browser.session.Session
-import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.search.awesomebar.AwesomeBarFeature
@@ -42,7 +41,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val searchController = DefaultSearchController(
-            activity as BrowserActivity,
+            requireContext(),
             awesomeBar,
             findNavController(),
             session,

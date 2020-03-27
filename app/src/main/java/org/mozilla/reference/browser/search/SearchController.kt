@@ -11,6 +11,7 @@ import mozilla.components.concept.awesomebar.AwesomeBar
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 
 interface SearchController {
     fun handleUrlCommitted(url: String)
@@ -33,9 +34,10 @@ class DefaultSearchController(
 ) : SearchController {
 
     private var inputStarted = false
+
     override fun handleUrlCommitted(url: String) {
         if (url.isNotBlank()) {
-            (context as BrowserActivity).openToBrowserAndLoad(
+            context.openToBrowserAndLoad(
                 searchTermOrUrl = url,
                 newTab = session == null,
                 from = BrowserDirection.FromSearch,
@@ -68,7 +70,7 @@ class DefaultSearchController(
     }
 
     override fun handleUrlTapped(url: String) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = url,
             newTab = false,
             private = false,
@@ -77,7 +79,7 @@ class DefaultSearchController(
     }
 
     override fun handleSearchTermsTapped(searchTerms: String) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = searchTerms,
             newTab = false,
             private = false,

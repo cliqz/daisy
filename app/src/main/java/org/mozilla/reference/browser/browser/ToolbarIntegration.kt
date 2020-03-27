@@ -40,9 +40,9 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.kotlin.isUrl
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.share
-import org.mozilla.reference.browser.freshtab.isFreshTab
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
@@ -68,7 +68,7 @@ class ToolbarIntegration(
         val forward = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Forward",
+            contentDescription = context.getString(R.string.toolbar_menu_item_forward),
             isEnabled = { sessionManager.selectedSession?.canGoForward == true }) {
             sessionUseCases.goForward.invoke()
         }
@@ -76,14 +76,14 @@ class ToolbarIntegration(
         val refresh = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Refresh") {
+            contentDescription = context.getString(R.string.toolbar_menu_item_refresh)) {
             sessionUseCases.reload.invoke()
         }
 
         val stop = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Stop") {
+            contentDescription = context.getString(R.string.toolbar_menu_item_stop)) {
             sessionUseCases.stopLoading.invoke()
         }
 
@@ -93,24 +93,24 @@ class ToolbarIntegration(
     private val menuItems: List<BrowserMenuItem> by lazy {
         val hasSessionAndUrl = {
             sessionManager.selectedSession != null &&
-                    !sessionManager.selectedSession!!.url.isFreshTab()
+                    !sessionManager.selectedSession!!.isFreshTab()
         }
         listOf(
             menuToolbar,
-            SimpleBrowserMenuItem("New Tab") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_new_tab)) {
                 tabsUseCases.addTab.invoke("")
                 openFreshTabFragment()
             },
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_forget_tab)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_forget_tab)) {
                 tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
             },
-            SimpleBrowserMenuItem("Share") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_share)) {
                 val url = sessionManager.selectedSession?.url ?: ""
                 context.share(url)
             }.apply {
                 visible = hasSessionAndUrl
             },
-            BrowserMenuSwitch("Request desktop site", {
+            BrowserMenuSwitch(context.getString(R.string.toolbar_menu_item_request_desktop_site), {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
@@ -118,7 +118,7 @@ class ToolbarIntegration(
                 visible = hasSessionAndUrl
             },
 
-            SimpleBrowserMenuItem("Add to homescreen") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_add_to_homescreen)) {
                 MainScope().launch { webAppUseCases.addToHomescreen() }
             }.apply {
                 visible = {
@@ -126,26 +126,26 @@ class ToolbarIntegration(
                 }
             },
 
-            SimpleBrowserMenuItem("Find in Page") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_find_in_page)) {
                 FindInPageIntegration.launch?.invoke()
             }.apply {
                 visible = hasSessionAndUrl
             },
 
-            SimpleBrowserMenuItem("Report issue") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_report_issue)) {
                 tabsUseCases.addTab.invoke(
                     "https://cliqz.com/en/support")
             },
 
-            SimpleBrowserMenuItem("Settings") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_settings)) {
                 openSettingsActivity(context)
             },
 
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_history)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_history)) {
                 openHistoryFragment()
             },
 
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_clear_data)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_clear_data)) {
                 val deleteBrowsingData = DeleteBrowsingData(
                     context,
                     coroutineScope,
@@ -203,7 +203,7 @@ class ToolbarIntegration(
             popupWindow.elevation =
                 context.resources.getDimension(R.dimen.mozac_browser_menu_elevation)
 
-            customView.copy.isVisible = selectedSession != null && !selectedSession.url.isFreshTab()
+            customView.copy.isVisible = selectedSession != null && !selectedSession.isFreshTab()
             customView.paste.isVisible = !clipboard.text.isNullOrEmpty()
             customView.paste_and_go.isVisible = !clipboard.text.isNullOrEmpty()
 

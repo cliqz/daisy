@@ -36,7 +36,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
             toolbar = toolbar,
             sessionId = sessionId,
             sessionManager = requireComponents.core.sessionManager,
-            showTabs = ::showTabs)
+            showTabs = ::showTabsTrayFragment)
 
         thumbnailsFeature.set(
                 feature = ThumbnailsFeature(requireContext(),
@@ -69,7 +69,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         )
     }
 
-    private fun showTabs() {
+    private fun showTabsTrayFragment() {
         val direction = BrowserFragmentDirections.actionBrowserFragmentToTabsTrayFragment()
         nav(R.id.browserFragment, direction)
     }

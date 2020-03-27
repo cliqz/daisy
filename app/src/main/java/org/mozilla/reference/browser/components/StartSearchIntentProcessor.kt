@@ -10,7 +10,6 @@ import mozilla.components.feature.tabs.TabsUseCases
 import mozilla.components.support.utils.SafeIntent
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.ext.isFreshTab
-import org.mozilla.reference.browser.freshtab.isFreshTab
 
 class StartSearchIntentProcessor(
     private val tabsUseCases: TabsUseCases,

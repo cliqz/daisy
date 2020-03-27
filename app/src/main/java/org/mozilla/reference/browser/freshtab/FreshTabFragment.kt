@@ -19,6 +19,7 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.ext.requireComponents
 
 class FreshTabFragment : Fragment(), UserInteractionHandler {
@@ -76,7 +77,7 @@ class FreshTabFragment : Fragment(), UserInteractionHandler {
     private fun removeSessionIfNeeded(): Boolean {
         val sessionManager = requireComponents.core.sessionManager
         if (sessionManager.selectedSession != null &&
-                !sessionManager.selectedSession!!.url.isFreshTab()) {
+                !sessionManager.selectedSession!!.isFreshTab()) {
             sessionManager.remove()
         }
         return false

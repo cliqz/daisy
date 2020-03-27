@@ -43,7 +43,7 @@ class TopSitesView @JvmOverloads constructor(
         }
     }
 
-    fun init(
+    fun initialize(
         context: Context,
         historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons

@@ -14,6 +14,7 @@ import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.nav
+import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
@@ -92,7 +93,7 @@ class DefaultFreshTabController(
             tabsUseCases.removeTab.invoke(it)
             tabsUseCases.addTab.invoke(url, selectTab = true)
         }
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context.openToBrowserAndLoad(
             searchTermOrUrl = url,
             newTab = false,
             from = BrowserDirection.FromFreshTab,

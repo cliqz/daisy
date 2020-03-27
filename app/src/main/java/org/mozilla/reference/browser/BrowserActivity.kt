@@ -78,23 +78,24 @@ open class BrowserActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val openToSearch = components.utils.startSearchIntentProcessor.process(intent)
-            if (openToSearch) {
-                val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
-                navHost.navController.nav(null, direction)
-            } else if (sessionId != null) {
-                val direction = FreshTabFragmentDirections
-                    .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId)
-                navHost.navController.navigate(direction)
-            } else {
-                val session = components.core.sessionManager.selectedSession
-                if (session != null && !session.isFreshTab()) {
-                    val direction = FreshTabFragmentDirections
-                        .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId = null)
-                    navHost.navController.navigate(direction)
-                } else {
-                    components.useCases.tabsUseCases.addTab.invoke("")
+            val selectedSession = components.core.sessionManager.selectedSession
+            val direction = when {
+                openToSearch -> {
+                    NavGraphDirections.actionWidgetSearch(sessionId = null)
                 }
+                sessionId != null -> {
+                    FreshTabFragmentDirections
+                        .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId)
+                }
+                selectedSession != null && !selectedSession.isFreshTab() -> {
+                    FreshTabFragmentDirections
+                        .actionFreshTabFragmentToBrowserFragmentNewStartDestination(sessionId = null)
+                }
+                else -> null
             }
+            direction?.let {
+                navHost.navController.navigate(it)
+            } ?: components.useCases.tabsUseCases.addTab.invoke("")
         }
 
         if (isCrashReportActive) {
@@ -114,7 +115,7 @@ open class BrowserActivity : AppCompatActivity() {
 
         if (components.utils.startSearchIntentProcessor.process(intent)) {
             val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
-            navHost.navController.nav(null, direction)
+            navHost.navController.navigate(direction)
         } else if (components.utils.tabIntentProcessor.matches(intent)) {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.container, createBrowserFragment(null, openToSearch = false))
@@ -231,7 +232,7 @@ open class BrowserActivity : AppCompatActivity() {
             HistoryFragmentDirections.actionHistoryFragmentToBrowserFragment(sessionId)
     }
 
-    fun load(
+    private fun load(
         searchTermOrURL: String,
         newTab: Boolean,
         private: Boolean,

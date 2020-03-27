@@ -51,7 +51,7 @@ class ToolbarFeature(
         val forward = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Forward",
+            contentDescription = context.getString(R.string.toolbar_menu_item_forward),
             isEnabled = { sessionManager.selectedSession?.isFreshTab() == false },
             listener = toolbarMenuInteractor::onForwardClicked
         )
@@ -59,7 +59,7 @@ class ToolbarFeature(
         val refresh = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Refresh",
+            contentDescription = context.getString(R.string.toolbar_menu_item_refresh),
             isEnabled = { false },
             listener = {}
         )
@@ -67,7 +67,7 @@ class ToolbarFeature(
         val stop = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
             iconTintColorResource = R.color.icons,
-            contentDescription = "Stop",
+            contentDescription = context.getString(R.string.toolbar_menu_item_stop),
             isEnabled = { false },
             listener = {}
         )
@@ -78,27 +78,27 @@ class ToolbarFeature(
     private val menuItems: List<BrowserMenuItem> by lazy {
         listOf(
             menuToolbar,
-            SimpleBrowserMenuItem("New Tab") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_new_tab)) {
                 toolbarMenuInteractor.onNewTabClicked()
             },
 
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_forget_tab)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_forget_tab)) {
                 toolbarMenuInteractor.onNewForgetTabClicked()
             },
 
-            SimpleBrowserMenuItem("Report issue") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_report_issue)) {
                 toolbarMenuInteractor.onReportIssueClicked()
             },
 
-            SimpleBrowserMenuItem("Settings") {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_settings)) {
                 toolbarMenuInteractor.onSettingsClicked()
             },
 
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_history)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_history)) {
                 toolbarMenuInteractor.onHistoryClicked()
             },
 
-            SimpleBrowserMenuItem(context.getString(R.string.menu_item_clear_data)) {
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_clear_data)) {
                 toolbarMenuInteractor.onClearDataClicked()
             }
         )

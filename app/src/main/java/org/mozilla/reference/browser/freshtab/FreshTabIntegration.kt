@@ -88,9 +88,6 @@ class FreshTabIntegration(
     }
 
     companion object {
-        const val NEW_TAB_URL = "about:blank"
         const val FRESH_TAB_TOOLBAR_EXPAND_INTERACTION_DELAY = 200L
     }
 }
-
-fun CharSequence.isFreshTab() = (this == FreshTabIntegration.NEW_TAB_URL) || (this == "")

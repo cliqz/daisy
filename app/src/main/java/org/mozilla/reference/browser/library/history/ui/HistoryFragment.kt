@@ -19,11 +19,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import mozilla.components.support.base.feature.UserInteractionHandler
-import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.ext.application
+import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 class HistoryFragment : Fragment(), UserInteractionHandler {
@@ -95,7 +95,7 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
     }
 
     private fun openHistoryItem(item: HistoryItem) {
-        (context as BrowserActivity).openToBrowserAndLoad(
+        context?.openToBrowserAndLoad(
             searchTermOrUrl = item.url,
             newTab = false,
             from = BrowserDirection.FromHistory,
@@ -127,11 +127,11 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
         if (historyView.onBackPressed()) {
             return true
         }
-        showFreshTab()
+        navigateUp()
         return true
     }
 
-    private fun showFreshTab() {
+    private fun navigateUp() {
         findNavController().navigateUp()
     }
 }

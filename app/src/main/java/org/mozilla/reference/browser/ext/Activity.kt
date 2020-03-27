@@ -5,11 +5,15 @@
 package org.mozilla.reference.browser.ext
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import mozilla.components.browser.search.SearchEngine
 import mozilla.components.support.ktx.android.view.setNavigationBarTheme
 import mozilla.components.support.ktx.android.view.setStatusBarTheme
+import org.mozilla.reference.browser.BrowserActivity
+import org.mozilla.reference.browser.BrowserDirection
 
 /**
  * Colors the status bar and the navigation bar.
@@ -21,4 +25,23 @@ fun Activity.setSystemBarsTheme(@ColorRes statusBarColor: Int, @ColorRes navigat
             setNavigationBarTheme(ContextCompat.getColor(context, navigationBarColor))
         }
     }
+}
+
+@Suppress("LongParameterList")
+fun Context.openToBrowserAndLoad(
+    searchTermOrUrl: String,
+    newTab: Boolean,
+    from: BrowserDirection,
+    private: Boolean,
+    sessionId: String? = null,
+    engine: SearchEngine? = null
+) {
+    (this as? BrowserActivity)?.openToBrowserAndLoad(
+        searchTermOrUrl,
+        newTab,
+        from,
+        private,
+        sessionId,
+        engine
+    )
 }

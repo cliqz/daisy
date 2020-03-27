@@ -247,7 +247,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     /**
      * Removes the session if it has a parent session and no more history
      */
-    protected open fun removeSessionIfNeeded(): Boolean {
+    private fun removeSessionIfNeeded(): Boolean {
         getSessionById()?.let { session ->
             val sessionManager = requireComponents.core.sessionManager
             val isLastSession =
