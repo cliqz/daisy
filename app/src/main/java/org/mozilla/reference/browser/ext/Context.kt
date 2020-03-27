@@ -15,9 +15,12 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.ContextThemeWrapper
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
+import mozilla.components.browser.search.SearchEngine
 import mozilla.components.support.base.log.Log.Priority.WARN
 import mozilla.components.support.base.log.Log
+import org.mozilla.reference.browser.BrowserActivity
 import org.mozilla.reference.browser.BrowserApplication
+import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.Components
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.utils.PreferenceHelper
@@ -94,3 +97,22 @@ fun Context.getQuantityString(
     quantity: Int,
     vararg formatArgs: Any
 ) = resources.getQuantityString(pluralId, quantity, *formatArgs)
+
+@Suppress("LongParameterList")
+fun Context.openToBrowserAndLoad(
+    searchTermOrUrl: String,
+    newTab: Boolean,
+    from: BrowserDirection,
+    private: Boolean,
+    sessionId: String? = null,
+    engine: SearchEngine? = null
+) {
+    (this as? BrowserActivity)?.openToBrowserAndLoad(
+        searchTermOrUrl,
+        newTab,
+        from,
+        private,
+        sessionId,
+        engine
+    )
+}

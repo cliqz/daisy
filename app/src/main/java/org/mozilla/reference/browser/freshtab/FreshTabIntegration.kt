@@ -10,6 +10,7 @@ import com.cliqz.browser.news.domain.GetNewsUseCase
 import com.cliqz.browser.news.ui.NewsFeature
 import com.cliqz.browser.news.ui.NewsInteractor
 import com.cliqz.browser.news.ui.NewsView
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.support.base.feature.LifecycleAwareFeature
@@ -32,9 +33,9 @@ class FreshTabIntegration(
     private var toolbarFeature: ToolbarFeature? = null
 
     override fun start() {
+        topSitesFeature?.start()
         if (context.preferences().shouldShowNewsView) {
             newsFeature?.start()
-            topSitesFeature?.start()
         } else {
             newsFeature?.hideNews()
         }
@@ -45,10 +46,12 @@ class FreshTabIntegration(
     }
 
     fun addToolbarFeature(
-        freshTabInteractor: FreshTabInteractor
+        freshTabInteractor: FreshTabInteractor,
+        scope: CoroutineScope
     ): FreshTabIntegration {
         toolbarFeature = ToolbarFeature(
             context,
+            scope,
             sessionManager,
             freshTabToolbar,
             freshTabInteractor as ToolbarMenuInteractor,

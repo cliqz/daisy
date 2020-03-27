@@ -44,7 +44,6 @@ class TopSitesView @JvmOverloads constructor(
     }
 
     fun initialize(
-        context: Context,
         historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons
     ) {

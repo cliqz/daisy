@@ -5,8 +5,11 @@
 package org.mozilla.reference.browser.freshtab.toolbar
 
 import android.content.Context
-import android.os.Handler
 import android.view.View
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.BrowserMenuItem
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
@@ -41,6 +44,7 @@ interface SearchBarInteractor {
 
 class ToolbarFeature(
     private val context: Context,
+    private val scope: CoroutineScope,
     private val sessionManager: SessionManager,
     private val freshTabToolbar: FreshTabToolbar,
     private val toolbarMenuInteractor: ToolbarMenuInteractor,
@@ -111,9 +115,10 @@ class ToolbarFeature(
 
         freshTabToolbar.setSearchBarClickListener(View.OnClickListener {
             freshTabToolbar.setExpanded(false)
-            Handler().postDelayed({
+            scope.launch(Dispatchers.Main) {
+                delay(FreshTabIntegration.FRESH_TAB_TOOLBAR_EXPAND_INTERACTION_DELAY)
                 searchBarInteractor.onSearchBarClicked()
-            }, FreshTabIntegration.FRESH_TAB_TOOLBAR_EXPAND_INTERACTION_DELAY)
+            }
         })
     }
 }

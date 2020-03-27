@@ -127,11 +127,7 @@ class HistoryFragment : Fragment(), UserInteractionHandler {
         if (historyView.onBackPressed()) {
             return true
         }
-        navigateUp()
-        return true
-    }
-
-    private fun navigateUp() {
         findNavController().navigateUp()
+        return true
     }
 }

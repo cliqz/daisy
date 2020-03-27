@@ -17,7 +17,7 @@ class TopSitesFeature(
 ) : LifecycleAwareFeature {
 
     override fun start() {
-        topSitesView.initialize(context, historyUseCases, browserIcons)
+        topSitesView.initialize(historyUseCases, browserIcons)
     }
 
     override fun stop() {
