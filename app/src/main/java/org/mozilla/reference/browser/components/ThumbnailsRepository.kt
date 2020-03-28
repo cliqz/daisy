@@ -44,7 +44,7 @@ import java.util.Locale
  *              `CoroutineScope(Dispatchers.IO)`)
  */
 class ThumbnailsRepository(
-    context: Context,
+    private val context: Context,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : Session.Observer {
 
@@ -59,10 +59,7 @@ class ThumbnailsRepository(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     class Observer(private val repository: ThumbnailsRepository) : SessionManager.Observer {
         override fun onSessionAdded(session: Session) {
-            session.register(repository)
-            synchronized(repository.checksumsMap) {
-                repository.checksumsMap[session.id] = 0
-            }
+            registerIfNeeded(session)
         }
 
         override fun onSessionRemoved(session: Session) {
@@ -78,6 +75,16 @@ class ThumbnailsRepository(
                 repository.checksumsMap.clear()
             }
             repository.removeAllThumbnails()
+        }
+
+        override fun onSessionSelected(session: Session) {
+            registerIfNeeded(session)
+        }
+
+        private fun registerIfNeeded(session: Session) {
+            synchronized(repository.checksumsMap) {
+                repository.checksumsMap[session.id] ?: session.register(repository)
+            }
         }
     }
 
