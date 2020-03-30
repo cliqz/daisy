@@ -23,16 +23,13 @@ class HistoryViewModel(
     private val sessionUseCases: SessionUseCases
 ) : ViewModel() {
 
-    private lateinit var historyItems: LiveData<PagedList<HistoryItem>>
+    var historyItems: LiveData<PagedList<HistoryItem>> = historyUseCases.getPagedHistory()
+        private set
 
     var viewMode = ViewMode.Normal
 
     val selectedItems = mutableSetOf<HistoryItem>()
     val selectedItemsLiveData = MutableLiveData<MutableSet<HistoryItem>>()
-
-    init {
-        fetchHistoryItems()
-    }
 
     fun addToSelectedItems(item: HistoryItem) {
         selectedItems.add(item)
@@ -47,10 +44,6 @@ class HistoryViewModel(
     fun clearSelectedItems() {
         selectedItems.clear()
         selectedItemsLiveData.value = selectedItems
-    }
-
-    fun getHistoryItems(): LiveData<PagedList<HistoryItem>> {
-        return historyItems
     }
 
     fun openHistoryItem(item: HistoryItem) {
@@ -87,10 +80,6 @@ class HistoryViewModel(
 
     private fun invalidate() {
         historyItems.value?.dataSource?.invalidate()
-    }
-
-    private fun fetchHistoryItems() {
-        historyItems = historyUseCases.getPagedHistory()
     }
 }
 

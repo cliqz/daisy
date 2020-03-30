@@ -1,8 +1,10 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
-package org.mozilla.reference.browser.ui
+package org.mozilla.reference.browser.settings
 
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -21,10 +23,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.settings.SettingsActivity
 
 @RunWith(AndroidJUnit4::class)
-class SettingsTest {
+class SettingsActivityTest {
 
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(SettingsActivity::class.java)
