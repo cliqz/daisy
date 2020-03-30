@@ -59,7 +59,7 @@ class TestBrowserApplication : BrowserApplication() {
         doReturn(client).whenever(it).client
         doReturn(BrowserStore()).whenever(it).store
         doReturnMock<BrowserIcons>().whenever(it).icons
-        doReturnMock<HistoryDatabase>().whenever(it).historyStorage
+        doReturnMock<HistoryDatabase>().whenever(it).cliqzHistoryStorage
     }
 
     private val backgroundServices = mock<BackgroundServices>().also {
@@ -78,7 +78,7 @@ class TestBrowserApplication : BrowserApplication() {
                     core.engine.settings,
                     realSearch.searchEngineManager,
                     core.client,
-                    core.historyStorage,
+                    core.cliqzHistoryStorage,
                     realNews.newsRepository
             ))
             val realUtils = spy(Utilities(

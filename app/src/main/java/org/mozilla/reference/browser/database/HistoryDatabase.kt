@@ -28,20 +28,24 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.topsites.storage.TopSiteStorage
 import java.net.URI
 import java.util.Locale
 
 /**
- *Ported the class from Cliqz browser. This class implements the HistoryStorage interface
+ * Encapsulates the [TopSiteStorage] and Mozilla Android Component's [HistoryStorage]
+ */
+interface CliqzHistoryStorage : HistoryStorage, TopSiteStorage
+
+/**
+ * Ported the class from Cliqz browser. This class implements the HistoryStorage interface
  * which makes it compatible with the Mozilla components.
  * The implemented methods are wired to the existing methods of the class.
  */
 @Suppress("LargeClass", "TooManyFunctions")
-class HistoryDatabase(context: Context)
-    : SQLiteOpenHelper(context.applicationContext,
-    DATABASE_NAME,
-    null,
-    DATABASE_VERSION), HistoryStorage {
+class HistoryDatabase(context: Context) :
+    SQLiteOpenHelper(context.applicationContext, DATABASE_NAME, null, DATABASE_VERSION),
+    CliqzHistoryStorage {
 
     override suspend fun deleteEverything() {
         clearHistory(false)
@@ -379,7 +383,7 @@ class HistoryDatabase(context: Context)
     /**
      * Simply delete all the entries in the blocked_topsites table
      */
-    fun restoreTopSites() {
+    override fun restoreTopSites() {
         val db = dbHandler.database ?: return
         db.beginTransaction()
         try {
@@ -390,15 +394,9 @@ class HistoryDatabase(context: Context)
         }
     }
 
-    /**
-     * Query the history db to fetch the top most visited websites.
-     *
-     * @param limit the number of items to return
-     * @return a list of [TopSite]. The time stamp of these elements is always -1.
-     */
     @Suppress("NestedBlockDepth")
     @Synchronized
-    fun getTopSites(limit: Int): List<TopSite> {
+    override fun getTopSites(limit: Int): List<TopSite> {
         var limit = limit
         val db = dbHandler.database ?: return listOf()
         if (limit < 1) {
@@ -753,12 +751,7 @@ class HistoryDatabase(context: Context)
         cursor.close()
     }
 
-    /**
-     * Add the domains to the blocked_topsites table
-     *
-     * @param domains one or more entries to add to the table
-     */
-    fun blockDomainsForTopsites(vararg domains: String) {
+    override fun blockDomainsForTopSites(vararg domains: String) {
         if (domains.isEmpty()) {
             return
         }

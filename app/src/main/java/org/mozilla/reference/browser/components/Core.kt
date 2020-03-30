@@ -35,6 +35,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
+import org.mozilla.reference.browser.database.CliqzHistoryStorage
 import org.mozilla.reference.browser.database.HistoryDatabase
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import java.util.concurrent.TimeUnit
@@ -133,11 +134,13 @@ class Core(private val context: Context) {
      */
     val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
 
+    val cliqzHistoryStorage: CliqzHistoryStorage by lazy { HistoryDatabase(context) }
+
     /**
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
-    val historyStorage: HistoryStorage by lazy { HistoryDatabase(context) }
+    val historyStorage: HistoryStorage by lazy { cliqzHistoryStorage }
 
     /**
      * Icons component for loading, caching and processing website icons.

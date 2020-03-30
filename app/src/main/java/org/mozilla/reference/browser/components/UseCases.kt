@@ -19,7 +19,9 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
+import org.mozilla.reference.browser.database.CliqzHistoryStorage
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.topsites.storage.TopSiteStorage
 
 /**
  * Component group for all use cases. Use cases are provided by feature
@@ -32,7 +34,7 @@ class UseCases(
     private val engineSettings: Settings,
     private val searchEngineManager: SearchEngineManager,
     private val client: Client,
-    private val historyStorage: HistoryStorage,
+    private val cliqzHistoryStorage: CliqzHistoryStorage,
     private val newsRepository: NewsRepository
 ) {
     /**
@@ -68,7 +70,11 @@ class UseCases(
     /**
      * Uses cases that provides history integration
      */
-    val historyUseCases by lazy { HistoryUseCases(historyStorage) }
+    val historyUseCases by lazy {
+        HistoryUseCases(
+            cliqzHistoryStorage as HistoryStorage,
+            cliqzHistoryStorage as TopSiteStorage)
+    }
 
     val getNewsUseCase: GetNewsUseCase by lazy { GetNewsUseCase(newsRepository) }
 }

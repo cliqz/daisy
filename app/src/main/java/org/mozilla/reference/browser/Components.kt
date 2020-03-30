@@ -30,7 +30,7 @@ class Components(private val context: Context) {
             core.engine.settings,
             search.searchEngineManager,
             core.client,
-            core.historyStorage,
+            core.cliqzHistoryStorage,
             news.newsRepository
         )
     }

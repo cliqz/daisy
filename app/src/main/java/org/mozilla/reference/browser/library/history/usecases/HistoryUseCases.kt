@@ -10,13 +10,13 @@ import androidx.paging.PagedList
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.concept.storage.SearchResult
 import mozilla.components.concept.storage.VisitInfo
-import org.mozilla.reference.browser.database.HistoryDatabase
 import org.mozilla.reference.browser.database.model.TopSite
 import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
+import org.mozilla.reference.browser.topsites.storage.TopSiteStorage
 
-class HistoryUseCases(historyStorage: HistoryStorage) {
+class HistoryUseCases(historyStorage: HistoryStorage, topSiteStorage: TopSiteStorage) {
 
     class GetPagedHistoryUseCase(private val historyStorage: HistoryStorage) {
         operator fun invoke(): LiveData<PagedList<HistoryItem>> {
@@ -33,15 +33,15 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
         }
     }
 
-    class GetTopSitesUseCase(private val historyStorage: HistoryStorage) {
+    class GetTopSitesUseCase(private val topSiteStorage: TopSiteStorage) {
         operator fun invoke(): List<TopSite> {
-            return (historyStorage as HistoryDatabase).getTopSites(TOP_SITES_COUNT)
+            return topSiteStorage.getTopSites(TOP_SITES_COUNT)
         }
     }
 
-    class RemoveFromTopSitesUsesCase(private val historyStorage: HistoryStorage) {
+    class RemoveFromTopSitesUsesCase(private val topSiteStorage: TopSiteStorage) {
         operator fun invoke(topSite: TopSite) {
-            (historyStorage as HistoryDatabase).blockDomainsForTopsites(topSite.domain)
+            topSiteStorage.blockDomainsForTopSites(topSite.domain)
         }
     }
 
@@ -72,8 +72,8 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
     }
 
     val getHistory by lazy { GetHistoryUseCase(historyStorage) }
-    val getTopSites: GetTopSitesUseCase by lazy { GetTopSitesUseCase(historyStorage) }
-    val removeFromTopSites: RemoveFromTopSitesUsesCase by lazy { RemoveFromTopSitesUsesCase(historyStorage) }
+    val getTopSites: GetTopSitesUseCase by lazy { GetTopSitesUseCase(topSiteStorage) }
+    val removeFromTopSites: RemoveFromTopSitesUsesCase by lazy { RemoveFromTopSitesUsesCase(topSiteStorage) }
     val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
     val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
     val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }
