@@ -83,7 +83,6 @@ class FreshTabIntegration(
         browserIcons: BrowserIcons
     ): FreshTabIntegration {
         topSitesFeature = TopSitesFeature(
-            context,
             topSitesView,
             historyUseCases,
             browserIcons)

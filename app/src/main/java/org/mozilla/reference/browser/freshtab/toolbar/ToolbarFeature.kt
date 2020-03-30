@@ -108,11 +108,8 @@ class ToolbarFeature(
         )
     }
 
-    private val menuBuilder = BrowserMenuBuilder(menuItems)
-
     init {
-        freshTabToolbar.setMenuBuilder(menuBuilder)
-
+        freshTabToolbar.setMenuBuilder(BrowserMenuBuilder(menuItems))
         freshTabToolbar.setSearchBarClickListener(View.OnClickListener {
             freshTabToolbar.setExpanded(false)
             scope.launch(Dispatchers.Main) {

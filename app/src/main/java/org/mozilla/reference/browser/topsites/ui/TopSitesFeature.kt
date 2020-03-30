@@ -4,13 +4,11 @@
 
 package org.mozilla.reference.browser.topsites.ui
 
-import android.content.Context
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesFeature(
-    private val context: Context,
     private val topSitesView: TopSitesView,
     private val historyUseCases: HistoryUseCases,
     private val browserIcons: BrowserIcons

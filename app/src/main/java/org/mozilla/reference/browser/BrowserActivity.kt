@@ -70,6 +70,7 @@ open class BrowserActivity : AppCompatActivity() {
     open fun createBrowserFragment(sessionId: String?, openToSearch: Boolean): Fragment =
         BrowserFragment.create(sessionId, openToSearch)
 
+    @Suppress("ComplexMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -95,7 +96,12 @@ open class BrowserActivity : AppCompatActivity() {
             }
             direction?.let {
                 navHost.navController.navigate(it)
-            } ?: components.useCases.tabsUseCases.addTab.invoke("")
+            } ?: run {
+                // On new install, there is no selected session.
+                if (selectedSession == null) {
+                    components.useCases.tabsUseCases.addTab.invoke("")
+                }
+            }
         }
 
         if (isCrashReportActive) {

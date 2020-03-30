@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
-import mozilla.components.browser.session.Session
 import mozilla.components.feature.app.links.AppLinksFeature
 import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
@@ -37,7 +36,6 @@ import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_DOWNLOAD_PE
 import org.mozilla.reference.browser.AppPermissionCodes.REQUEST_CODE_PROMPT_PERMISSIONS
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.downloads.DownloadService
-import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
 import org.mozilla.reference.browser.ext.sessionsOfType
@@ -248,30 +246,21 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
      * Removes the session if it has a parent session and no more history
      */
     private fun removeSessionIfNeeded(): Boolean {
-        getSessionById()?.let { session ->
-            val sessionManager = requireComponents.core.sessionManager
-            val isLastSession =
-                sessionManager.sessionsOfType(private = session.private).count() == 1
-            if (session.hasParentSession) {
-                sessionManager.remove(session, true)
-            }
-            val goToOverview = isLastSession || !session.hasParentSession
-            return !goToOverview
-        }
-        return false
-    }
+        val sessionManager = requireComponents.core.sessionManager
+        val sessionId = sessionId
 
-    /**
-     * Returns the current session.
-     */
-    private fun getSessionById(): Session? {
-        val sessionManager = context?.components?.core?.sessionManager ?: return null
-        val localCustomTabId = sessionId
-        return if (localCustomTabId != null) {
-            sessionManager.findSessionById(localCustomTabId)
+        val session = (if (sessionId != null) {
+            sessionManager.findSessionById(sessionId)
         } else {
             sessionManager.selectedSession
+        }) ?: return false
+
+        val isLastSession = sessionManager.sessionsOfType(private = session.private).count() == 1
+        if (session.hasParentSession) {
+            sessionManager.remove(session, true)
         }
+        val goToOverview = isLastSession || !session.hasParentSession
+        return !goToOverview
     }
 
     final override fun onPictureInPictureModeChanged(enabled: Boolean) {

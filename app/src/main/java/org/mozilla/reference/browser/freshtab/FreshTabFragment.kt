@@ -74,6 +74,10 @@ class FreshTabFragment : Fragment(), UserInteractionHandler {
         return removeSessionIfNeeded()
     }
 
+    /**
+     * Since the user navigated back to fresh tab from a browsing session, on reopening the app
+     * this session shouldn't be selected.
+     */
     private fun removeSessionIfNeeded(): Boolean {
         val sessionManager = requireComponents.core.sessionManager
         if (sessionManager.selectedSession != null &&
