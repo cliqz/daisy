@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.top_site_context_menu.view.remove_from_top
 import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.icons.BrowserIcons
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 import org.mozilla.reference.browser.topsites.ui.TopSitesView.TopSiteMenu.Item.OpenInNewTab
 import org.mozilla.reference.browser.topsites.ui.TopSitesView.TopSiteMenu.Item.OpenInPrivateTab

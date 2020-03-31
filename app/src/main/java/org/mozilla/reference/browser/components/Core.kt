@@ -17,7 +17,6 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
@@ -35,9 +34,9 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
-import org.mozilla.reference.browser.database.CliqzHistoryStorage
-import org.mozilla.reference.browser.database.HistoryDatabase
+import org.mozilla.reference.browser.storage.HistoryDatabase
 import org.mozilla.reference.browser.ext.getPreferenceKey
+import org.mozilla.reference.browser.storage.HistoryStorage
 import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L
@@ -134,13 +133,11 @@ class Core(private val context: Context) {
      */
     val downloadsUseCases: DownloadsUseCases by lazy { DownloadsUseCases(store) }
 
-    val cliqzHistoryStorage: CliqzHistoryStorage by lazy { HistoryDatabase(context) }
-
     /**
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
-    val historyStorage: HistoryStorage by lazy { cliqzHistoryStorage }
+    val historyStorage: HistoryStorage by lazy { HistoryDatabase(context) }
 
     /**
      * Icons component for loading, caching and processing website icons.

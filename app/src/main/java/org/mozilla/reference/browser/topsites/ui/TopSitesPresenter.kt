@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mozilla.reference.browser.BrowserDirection
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 

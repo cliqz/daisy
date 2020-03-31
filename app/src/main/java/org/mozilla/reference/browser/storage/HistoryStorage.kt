@@ -1,15 +1,13 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+package org.mozilla.reference.browser.storage
 
-package org.mozilla.reference.browser.topsites.storage
-
-import org.mozilla.reference.browser.database.model.TopSite
+import mozilla.components.concept.storage.HistoryStorage
+import org.mozilla.reference.browser.storage.model.TopSite
 
 /**
- * An interface which defines the storage implementation of top sites.
+ * An interface which extends the components HistoryStorage with the specific top sites support
+ * methods
  */
-interface TopSiteStorage {
+interface HistoryStorage : HistoryStorage {
 
     /**
      * Retrieves a list of top most visited websites.
