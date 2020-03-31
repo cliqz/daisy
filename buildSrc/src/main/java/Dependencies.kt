@@ -28,7 +28,7 @@ private object Versions {
     const val robolectric = "4.3.1"
     const val mockito = "2.24.5"
 
-    const val leakcanary = "2.0-beta-3"
+    const val leakcanary = "2.2"
 
     object AndroidX {
         const val core = "1.1.0"
@@ -41,6 +41,7 @@ private object Versions {
         const val lifecycle = "2.2.0-rc02"
         const val espresso = "3.1.0"
         const val fragment = "1.1.0"
+        const val navigation = "2.3.0-alpha04"
     }
 }
 
@@ -128,6 +129,8 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}"
     const val androidx_recyclerview = "androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerview}"
     const val androidx_paging = "androidx.paging:paging-runtime-ktx:${Versions.AndroidX.paging}"
+    const val androidx_safeargs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.AndroidX.navigation}"
+    const val androidx_navigation_fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintlayout}"
     const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.AndroidX.preference}"

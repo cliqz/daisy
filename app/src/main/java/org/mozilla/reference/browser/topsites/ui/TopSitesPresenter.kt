@@ -4,19 +4,19 @@
 
 package org.mozilla.reference.browser.topsites.ui
 
+import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
-import mozilla.components.feature.tabs.TabsUseCases
+import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesPresenter(
+    private val context: Context,
     private val view: View,
-    private val loadUrlUseCase: LoadUrlUseCase,
-    private val tabsUseCases: TabsUseCases,
     private val historyUseCases: HistoryUseCases
 ) {
 
@@ -36,14 +36,29 @@ class TopSitesPresenter(
     }
 
     fun onTopSiteClicked(topSite: TopSite) {
-        loadUrlUseCase.invoke(topSite.url)
+        context.openToBrowserAndLoad(
+            searchTermOrUrl = topSite.url,
+            newTab = false,
+            from = BrowserDirection.FromFreshTab,
+            private = false
+        )
     }
 
     fun openInNewTab(topSite: TopSite) {
-        tabsUseCases.addTab.invoke(topSite.url)
+        context.openToBrowserAndLoad(
+            searchTermOrUrl = topSite.url,
+            newTab = true,
+            from = BrowserDirection.FromFreshTab,
+            private = false
+        )
     }
 
     fun openInPrivateTab(topSite: TopSite) {
-        tabsUseCases.addPrivateTab.invoke(topSite.url)
+        context.openToBrowserAndLoad(
+            searchTermOrUrl = topSite.url,
+            newTab = true,
+            from = BrowserDirection.FromFreshTab,
+            private = true
+        )
     }
 }

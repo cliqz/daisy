@@ -50,29 +50,6 @@ class SettingsViewTest {
     }
 
     @Test
-    fun openFXATest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openFXASignin {
-            verifyFXAUrl()
-        }
-    }
-
-    // openFXAQrCodeTest tests that we get to the camera
-    // Additional tests are needed to verify that the QR code reader works
-    @Test
-    fun openFXAQrCodeTest() {
-        navigationToolbar {
-        }.openThreeDotMenu {
-        }.openSettings {
-        }.openFXAQrCode {
-            verifyFxAQrCode()
-        }
-
-    }
-
-    @Test
     fun privacySettingsItemsTest() {
         navigationToolbar {
         }.openThreeDotMenu {

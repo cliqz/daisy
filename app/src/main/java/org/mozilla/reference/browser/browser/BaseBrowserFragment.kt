@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_browser.*
 import kotlinx.android.synthetic.main.fragment_browser.view.*
@@ -37,6 +38,7 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.downloads.DownloadService
 import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.ext.requireComponents
+import org.mozilla.reference.browser.ext.sessionsOfType
 import org.mozilla.reference.browser.pip.PictureInPictureIntegration
 
 /**
@@ -59,7 +61,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     private val swipeRefreshFeature = ViewBoundFeatureWrapper<SwipeRefreshFeature>()
     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
 
-    val backButtonHandler: MutableList<ViewBoundFeatureWrapper<*>> = mutableListOf(
+    private val backButtonHandler: List<ViewBoundFeatureWrapper<*>> = listOf(
         fullScreenFeature,
         findInPageIntegration,
         toolbarIntegration,
@@ -97,7 +99,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
             feature = ToolbarIntegration(
                 requireContext(),
                 toolbar,
-                fresh_tab_toolbar,
                 lifecycleScope,
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
@@ -106,9 +107,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
-                activity?.supportFragmentManager,
-                toolbarEditMode = openToSearch,
-                showFreshTab = ::showFreshTab),
+                findNavController()),
             owner = this,
             view = view)
 
@@ -236,11 +235,32 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
 
     @CallSuper
     override fun onBackPressed(): Boolean {
-        return backButtonHandler.any { it.onBackPressed() }
+        return backButtonHandler.any { it.onBackPressed() } || removeSessionIfNeeded()
     }
 
     final override fun onHomePressed(): Boolean {
         return pictureInPictureIntegration.get()?.onHomePressed() ?: false
+    }
+
+    /**
+     * Removes the session if it has a parent session and no more history
+     */
+    private fun removeSessionIfNeeded(): Boolean {
+        val sessionManager = requireComponents.core.sessionManager
+        val sessionId = sessionId
+
+        val session = (if (sessionId != null) {
+            sessionManager.findSessionById(sessionId)
+        } else {
+            sessionManager.selectedSession
+        }) ?: return false
+
+        val isLastSession = sessionManager.sessionsOfType(private = session.private).count() == 1
+        if (session.hasParentSession) {
+            sessionManager.remove(session, true)
+        }
+        val goToOverview = isLastSession || !session.hasParentSession
+        return !goToOverview
     }
 
     final override fun onPictureInPictureModeChanged(enabled: Boolean) {
@@ -284,12 +304,5 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
 
     final override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         promptsFeature.withFeature { it.onActivityResult(requestCode, resultCode, data) }
-    }
-
-    private fun showFreshTab() {
-        activity?.supportFragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, BrowserFragment.create())
-            commit()
-        }
     }
 }

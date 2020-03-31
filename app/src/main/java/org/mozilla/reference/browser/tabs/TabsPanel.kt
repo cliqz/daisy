@@ -19,6 +19,7 @@ import org.mozilla.reference.browser.R.color.mid_blue
 import org.mozilla.reference.browser.R.color.icons
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ext.sessionsOfType
 import org.mozilla.reference.browser.view.ToggleImageButton
 
 class TabsPanel @JvmOverloads constructor(
@@ -30,6 +31,8 @@ class TabsPanel @JvmOverloads constructor(
     private var tabsFeature: TabsFeature? = null
     private var isPrivateTray = false
     private var closeTabsTray: (() -> Unit)? = null
+    private var openFreshTabFragment: (() -> Unit)? = null
+    private var openBrowserFragment: (() -> Unit)? = null
 
     init {
         navigationContentDescription = "back"
@@ -44,10 +47,15 @@ class TabsPanel @JvmOverloads constructor(
             when (it.itemId) {
                 R.id.newTab -> {
                     when (isPrivateTray) {
-                        true -> tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
-                        false -> tabsUseCases.addTab.invoke("", selectTab = true)
+                        true -> {
+                            tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
+                            openBrowserFragment?.invoke()
+                        }
+                        false -> {
+                            tabsUseCases.addTab.invoke("", selectTab = true)
+                            openFreshTabFragment?.invoke()
+                        }
                     }
-                    closeTabsTray?.invoke()
                 }
                 R.id.closeTab -> {
                     tabsUseCases.removeAllTabsOfType.invoke(private = isPrivateTray)
@@ -103,13 +111,22 @@ class TabsPanel @JvmOverloads constructor(
         }
     }
 
-    fun initialize(tabsFeature: TabsFeature?, closeTabsTray: () -> Unit) {
+    fun initialize(
+        tabsFeature: TabsFeature?,
+        closeTabsTray: () -> Unit,
+        openFreshTabFragment: () -> Unit,
+        openBrowserFragment: () -> Unit
+    ) {
         this.tabsFeature = tabsFeature
         this.closeTabsTray = closeTabsTray
+        this.openFreshTabFragment = openFreshTabFragment
+        this.openBrowserFragment = openBrowserFragment
 
         // initial opening of tabs tray should show regular tabs.
         button.isChecked = true
     }
+
+    fun isTrayEmpty() = components.core.sessionManager.sessionsOfType(isPrivateTray).count() == 0
 
     private fun Resources.getThemedDrawable(@DrawableRes resId: Int) = getDrawable(resId, context.theme)
 

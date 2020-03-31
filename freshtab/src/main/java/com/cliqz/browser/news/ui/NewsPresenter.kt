@@ -12,14 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import mozilla.components.browser.icons.BrowserIcons
-import mozilla.components.concept.toolbar.Toolbar
-import mozilla.components.feature.session.SessionUseCases.LoadUrlUseCase
 
 class DefaultNewsPresenter(
     private val newsView: NewsView,
-    private val toolbar: Toolbar,
     private val scope: CoroutineScope,
-    private val loadUrlUseCase: LoadUrlUseCase,
+    private val newsInteractor: NewsInteractor,
     private val getNewsUseCase: GetNewsUseCase,
     private val icons: BrowserIcons? = null
 ) : NewsPresenter {
@@ -49,8 +46,7 @@ class DefaultNewsPresenter(
     }
 
     override fun onOpenInNormalTab(item: NewsItem) {
-        loadUrlUseCase.invoke(item.url)
-        toolbar.displayMode()
+        newsInteractor.onNewsItemClicked(item.url)
     }
 }
 

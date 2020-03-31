@@ -24,8 +24,8 @@ class NewsFeatureTest {
 
     @Before
     fun setup() {
-        presenter = spyk(DefaultNewsPresenter(newsView, mockk(), coroutineScope, mockk(), mockk()))
-        feature = NewsFeature(newsView, mockk(), coroutineScope, mockk(), mockk())
+        presenter = spyk(DefaultNewsPresenter(newsView, coroutineScope, mockk(), mockk(), mockk()))
+        feature = NewsFeature(newsView, coroutineScope, mockk(), mockk(), mockk())
         feature.presenter = presenter
     }
 
