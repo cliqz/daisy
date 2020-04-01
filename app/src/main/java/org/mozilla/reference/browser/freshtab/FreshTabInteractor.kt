@@ -6,11 +6,16 @@ package org.mozilla.reference.browser.freshtab
 
 import com.cliqz.browser.news.ui.NewsInteractor
 import org.mozilla.reference.browser.freshtab.toolbar.SearchBarInteractor
+import org.mozilla.reference.browser.freshtab.toolbar.TabsToolbarInteractor
 import org.mozilla.reference.browser.freshtab.toolbar.ToolbarMenuInteractor
 
 class FreshTabInteractor(
     private val freshTabController: FreshTabController
-) : ToolbarMenuInteractor, SearchBarInteractor, NewsInteractor {
+) : ToolbarMenuInteractor, SearchBarInteractor, NewsInteractor, TabsToolbarInteractor {
+
+    override fun onTabsCounterClicked() {
+        freshTabController.handleTabsCounterClicked()
+    }
 
     override fun onForwardClicked() {
         freshTabController.handleForwardClicked()

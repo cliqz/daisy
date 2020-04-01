@@ -16,6 +16,8 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import org.mozilla.reference.browser.ext.preferences
 import org.mozilla.reference.browser.freshtab.toolbar.SearchBarInteractor
+import org.mozilla.reference.browser.freshtab.toolbar.TabsToolbarFeature
+import org.mozilla.reference.browser.freshtab.toolbar.TabsToolbarInteractor
 import org.mozilla.reference.browser.freshtab.toolbar.ToolbarFeature
 import org.mozilla.reference.browser.freshtab.toolbar.ToolbarMenuInteractor
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
@@ -31,6 +33,7 @@ class FreshTabIntegration(
     private var newsFeature: NewsFeature? = null
     private var topSitesFeature: TopSitesFeature? = null
     private var toolbarFeature: ToolbarFeature? = null
+    private var tabsToolbarFeature: TabsToolbarFeature? = null
 
     override fun start() {
         topSitesFeature?.start()
@@ -56,6 +59,17 @@ class FreshTabIntegration(
             freshTabToolbar,
             freshTabInteractor as ToolbarMenuInteractor,
             freshTabInteractor as SearchBarInteractor
+        )
+        return this
+    }
+
+    fun addTabsToolbarFeature(
+        freshTabInteractor: FreshTabInteractor
+    ): FreshTabIntegration {
+        tabsToolbarFeature = TabsToolbarFeature(
+            freshTabToolbar,
+            sessionManager,
+            freshTabInteractor as TabsToolbarInteractor
         )
         return this
     }

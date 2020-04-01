@@ -20,6 +20,7 @@ import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingD
 
 interface FreshTabController {
     fun handleSearchBarClicked()
+    fun handleTabsCounterClicked()
     fun handleForwardClicked()
     fun handleMenuNewTabClicked()
     fun handleMenuNewForgetTabClicked()
@@ -47,6 +48,11 @@ class DefaultFreshTabController(
         val direction = FreshTabFragmentDirections.actionFreshTabFragmentToSearchFragment(
             sessionId = sessionManager.selectedSession?.id
         )
+        navController.nav(R.id.freshTabFragment, direction)
+    }
+
+    override fun handleTabsCounterClicked() {
+        val direction = FreshTabFragmentDirections.actionFreshTabFragmentToTabsTrayFragment()
         navController.nav(R.id.freshTabFragment, direction)
     }
 

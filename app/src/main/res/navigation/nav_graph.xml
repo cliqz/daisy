@@ -33,6 +33,10 @@
             app:destination="@id/browserFragment" />
 
         <action
+            android:id="@+id/action_freshTabFragment_to_tabsTrayFragment"
+            app:destination="@id/tabsTrayFragment" />
+
+        <action
             android:id="@+id/action_freshTabFragment_to_freshTabFragment"
             app:destination="@id/freshTabFragment"
             app:launchSingleTop="true" />
