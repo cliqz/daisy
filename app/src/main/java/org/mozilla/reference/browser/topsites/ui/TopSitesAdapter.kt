@@ -16,7 +16,7 @@ import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.icons.IconRequest
 import mozilla.components.support.ktx.android.util.dpToFloat
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import kotlin.properties.Delegates
 
 class TopSitesAdapter(

@@ -37,6 +37,17 @@
             android:paddingEnd="16dp"
             android:text="@string/top_site_menu_open_in_private_tab"
             android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/remove_from_top_site"
+            style="@style/Mozac.Browser.Menu.Item.Text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mozac_browser_menu_item_container_layout_height"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/top_site_menu_remove_from_top_site"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -63,6 +63,7 @@ class FreshTabFragment : Fragment(), UserInteractionHandler {
                     requireComponents.core.icons)
                 .addTopSitesFeature(
                     topSitesView,
+                    lifecycleScope,
                     requireComponents.useCases.historyUseCases,
                     requireComponents.core.icons),
             owner = this,

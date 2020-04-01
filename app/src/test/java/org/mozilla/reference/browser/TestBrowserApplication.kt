@@ -20,7 +20,6 @@ import mozilla.components.support.test.any
 import mozilla.components.support.test.mock
 import mozilla.components.support.test.whenever
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.spy
 import org.mozilla.reference.browser.components.Analytics
@@ -32,7 +31,7 @@ import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.TestEngineView
 import org.mozilla.reference.browser.components.UseCases
 import org.mozilla.reference.browser.components.Utilities
-import org.mozilla.reference.browser.database.HistoryDatabase
+import org.mozilla.reference.browser.storage.HistoryDatabase
 import org.mozilla.reference.browser.ext.whenever
 import org.mozilla.reference.browser.utils.ClipboardHandler
 

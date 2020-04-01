@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.mozilla.reference.browser.database.model
+package org.mozilla.reference.browser.storage.model
 
 /**
  * This class holds basic information about a "topSite"

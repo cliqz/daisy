@@ -7,14 +7,13 @@ package org.mozilla.reference.browser.library.history.usecases
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.concept.storage.SearchResult
 import mozilla.components.concept.storage.VisitInfo
-import org.mozilla.reference.browser.database.HistoryDatabase
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
+import org.mozilla.reference.browser.storage.HistoryStorage
 
 class HistoryUseCases(historyStorage: HistoryStorage) {
 
@@ -35,7 +34,13 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
 
     class GetTopSitesUseCase(private val historyStorage: HistoryStorage) {
         operator fun invoke(): List<TopSite> {
-            return (historyStorage as HistoryDatabase).getTopSites(TOP_SITES_COUNT)
+            return historyStorage.getTopSites(TOP_SITES_COUNT)
+        }
+    }
+
+    class RemoveFromTopSitesUsesCase(private val historyStorage: HistoryStorage) {
+        operator fun invoke(topSite: TopSite) {
+            historyStorage.blockDomainsForTopSites(topSite.domain)
         }
     }
 
@@ -67,6 +72,7 @@ class HistoryUseCases(historyStorage: HistoryStorage) {
 
     val getHistory by lazy { GetHistoryUseCase(historyStorage) }
     val getTopSites: GetTopSitesUseCase by lazy { GetTopSitesUseCase(historyStorage) }
+    val removeFromTopSites: RemoveFromTopSitesUsesCase by lazy { RemoveFromTopSitesUsesCase(historyStorage) }
     val getPagedHistory by lazy { GetPagedHistoryUseCase(historyStorage) }
     val deleteMultipleHistoryUseCase by lazy { DeleteMultipleHistoryUseCase(historyStorage) }
     val deleteHistory by lazy { DeleteHistoryUseCase(historyStorage) }

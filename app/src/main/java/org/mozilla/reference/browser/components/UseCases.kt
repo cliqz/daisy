@@ -12,7 +12,6 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
@@ -20,6 +19,7 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.storage.HistoryStorage
 
 /**
  * Component group for all use cases. Use cases are provided by feature

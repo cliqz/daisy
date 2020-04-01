@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.mozilla.reference.browser.database
+package org.mozilla.reference.browser.storage
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException

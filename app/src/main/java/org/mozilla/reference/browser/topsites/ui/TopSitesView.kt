@@ -14,10 +14,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.top_site_context_menu.view.open_in_new_tab
 import kotlinx.android.synthetic.main.top_site_context_menu.view.open_in_private_tab
+import kotlinx.android.synthetic.main.top_site_context_menu.view.remove_from_top_site
+import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.icons.BrowserIcons
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
+import org.mozilla.reference.browser.topsites.ui.TopSitesView.TopSiteMenu.Item.OpenInNewTab
+import org.mozilla.reference.browser.topsites.ui.TopSitesView.TopSiteMenu.Item.OpenInPrivateTab
+import org.mozilla.reference.browser.topsites.ui.TopSitesView.TopSiteMenu.Item.RemoveFromTopSite
 
 class TopSitesView @JvmOverloads constructor(
     context: Context,
@@ -37,17 +42,19 @@ class TopSitesView @JvmOverloads constructor(
         topSiteMenu = TopSiteMenu(context) { menuItem, topSite ->
             popupWindow.dismiss()
             when (menuItem) {
-                is TopSiteMenu.Item.OpenInNewTab -> presenter.openInNewTab(topSite)
-                is TopSiteMenu.Item.OpenInPrivateTab -> presenter.openInPrivateTab(topSite)
+                is OpenInNewTab -> presenter.openInNewTab(topSite)
+                is OpenInPrivateTab -> presenter.openInPrivateTab(topSite)
+                is RemoveFromTopSite -> presenter.removeFromTopSite(topSite)
             }
         }
     }
 
     fun initialize(
+        scope: CoroutineScope,
         historyUseCases: HistoryUseCases,
         browserIcons: BrowserIcons
     ) {
-        presenter = TopSitesPresenter(context, this, historyUseCases)
+        presenter = TopSitesPresenter(context, this, scope, historyUseCases)
         topSitesAdapter = TopSitesAdapter(browserIcons,
             presenter::onTopSiteClicked,
             ::onTopSiteLongClicked
@@ -94,16 +101,20 @@ class TopSitesView @JvmOverloads constructor(
         sealed class Item {
             object OpenInNewTab : Item()
             object OpenInPrivateTab : Item()
+            object RemoveFromTopSite : Item()
         }
 
         val view: View = View.inflate(context, R.layout.top_site_context_menu, null)
 
         init {
             view.open_in_new_tab.setOnClickListener {
-                onItemTapped.invoke(Item.OpenInNewTab, topSite)
+                onItemTapped.invoke(OpenInNewTab, topSite)
             }
             view.open_in_private_tab.setOnClickListener {
-                onItemTapped.invoke(Item.OpenInPrivateTab, topSite)
+                onItemTapped.invoke(OpenInPrivateTab, topSite)
+            }
+            view.remove_from_top_site.setOnClickListener {
+                onItemTapped.invoke(RemoveFromTopSite, topSite)
             }
         }
     }

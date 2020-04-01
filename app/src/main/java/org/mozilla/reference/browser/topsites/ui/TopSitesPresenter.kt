@@ -5,18 +5,19 @@
 package org.mozilla.reference.browser.topsites.ui
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mozilla.reference.browser.BrowserDirection
-import org.mozilla.reference.browser.database.model.TopSite
+import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 class TopSitesPresenter(
     private val context: Context,
     private val view: View,
+    private val scope: CoroutineScope,
     private val historyUseCases: HistoryUseCases
 ) {
 
@@ -28,11 +29,11 @@ class TopSitesPresenter(
         fetchTopSites()
     }
 
-    fun fetchTopSites() = GlobalScope.launch(Dispatchers.Main) {
-        val historyInfo = withContext(Dispatchers.IO) {
-            historyUseCases.getTopSites.invoke()
+    fun fetchTopSites() = scope.launch(Dispatchers.IO) {
+        val historyInfo = historyUseCases.getTopSites.invoke()
+        withContext(Dispatchers.Main) {
+            view.updateTopSitesData(historyInfo)
         }
-        view.updateTopSitesData(historyInfo)
     }
 
     fun onTopSiteClicked(topSite: TopSite) {
@@ -60,5 +61,10 @@ class TopSitesPresenter(
             from = BrowserDirection.FromFreshTab,
             private = true
         )
+    }
+
+    fun removeFromTopSite(topSite: TopSite) = scope.launch(Dispatchers.IO) {
+        historyUseCases.removeFromTopSites.invoke(topSite)
+        fetchTopSites()
     }
 }
