@@ -4,7 +4,6 @@
 
 package org.mozilla.reference.browser.ui
 
-import android.net.Uri
 import android.os.Build
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -43,10 +42,10 @@ class ExternalIntentsTest {
         Assume.assumeTrue(
                 "Can only run on API > 22",
                 Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1)
-        val url = "https://cliqz.com"
+        val testPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
         externalIntents {
-        }.openUrlByImplicitIntent(Uri.parse(url)) {
-            verifyCustomUrl(url)
+        }.openUrlByImplicitIntent(testPage.url) {
+            verifyCustomUrl(testPage.url.toString())
         }
     }
 
@@ -59,10 +58,10 @@ class ExternalIntentsTest {
         navigationToolbar {
         }.freshTabEnterUrlAndEnterToBrowser(defaultWebPage.url) {
         }
-        val url = "https://cliqz.com"
+        val testPage = TestAssetHelper.getLoremIpsumAsset(mockWebServer)
         externalIntents {
-        }.openUrlByImplicitIntent(Uri.parse(url)) {
-            verifyCustomUrl(url)
+        }.openUrlByImplicitIntent(testPage.url) {
+            verifyCustomUrl(testPage.url.toString())
         }
         navigationToolbar {
             verifyUrlBarNotFocused()

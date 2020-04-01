@@ -77,7 +77,7 @@ private fun assertHistoryViewExists() {
 }
 
 private fun assertDeleteHistoryButtonExists() {
-    onView(withText("Clear Browsing History"))
+    onView(withText((R.string.history_clear_all)))
         .check(matches(isDisplayed()))
 }
 
