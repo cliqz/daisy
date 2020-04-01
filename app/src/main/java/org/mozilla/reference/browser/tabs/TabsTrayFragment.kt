@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_tabstray.*
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
@@ -85,7 +84,7 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler, SessionManager.Obse
             if (selectedSession != null && selectedSession.isFreshTab()) {
                 openFreshTabFragment()
             } else {
-                findNavController().navigateUp()
+                openBrowserFragment()
             }
         }
     }

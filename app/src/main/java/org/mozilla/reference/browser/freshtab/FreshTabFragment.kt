@@ -55,6 +55,7 @@ class FreshTabFragment : Fragment(), UserInteractionHandler {
                 requireComponents.core.sessionManager,
                 fresh_tab_toolbar)
                 .addToolbarFeature(freshTabInteractor, lifecycleScope)
+                .addTabsToolbarFeature(freshTabInteractor)
                 .addNewsFeature(
                     newsView,
                     lifecycleScope,
