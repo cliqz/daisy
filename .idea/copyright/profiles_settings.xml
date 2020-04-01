@@ -1,0 +1,13 @@
+<component name="CopyrightManager">
+  <settings>
+    <module2copyright>
+      <element module="Project Source Files" copyright="Mozilla" />
+    </module2copyright>
+    <LanguageOptions name="Kotlin">
+      <option name="relativeBefore" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="__TEMPLATE__">
+      <option name="addBlankAfter" value="true" />
+    </LanguageOptions>
+  </settings>
+</component>

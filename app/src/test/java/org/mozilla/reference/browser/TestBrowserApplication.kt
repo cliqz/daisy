@@ -49,16 +49,18 @@ class TestBrowserApplication : BrowserApplication() {
         whenever(it.settings).thenReturn(settings)
     }
 
-    private val core = mock<Core>().also {
-        val client = mock<Client>()
-        doReturnMock<AddonManager>().`when`(it).addonManager
-        doReturnMock<DefaultAddonUpdater>().`when`(it).addonUpdater
-        doReturn(engine).whenever(it).engine
-        doReturn(SessionManager(engine)).`when`(it).sessionManager
-        doReturn(client).whenever(it).client
-        doReturn(BrowserStore()).whenever(it).store
-        doReturnMock<BrowserIcons>().whenever(it).icons
-        doReturnMock<HistoryDatabase>().whenever(it).historyStorage
+    private val core by lazy {
+        mock<Core>().also {
+            val client = mock<Client>()
+            doReturnMock<AddonManager>().`when`(it).addonManager
+            doReturnMock<DefaultAddonUpdater>().`when`(it).addonUpdater
+            doReturn(engine).whenever(it).engine
+            doReturn(SessionManager(engine)).`when`(it).sessionManager
+            doReturn(client).whenever(it).client
+            doReturn(BrowserStore()).whenever(it).store
+            doReturnMock<BrowserIcons>().whenever(it).icons
+            doReturn(HistoryDatabase(this)).whenever(it).historyStorage
+        }
     }
 
     private val backgroundServices = mock<BackgroundServices>().also {
@@ -106,7 +108,7 @@ class TestBrowserApplication : BrowserApplication() {
     }
 
     override val components: Components
-    get() = mockedComponents
+        get() = mockedComponents
 
     override fun onCreate() {
         // RustLog has a static instance that crash if instantiated multiple times, we disable it
