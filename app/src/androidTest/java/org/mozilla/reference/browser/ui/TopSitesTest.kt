@@ -63,6 +63,16 @@ class TopSitesTest {
         freshTab {
         }.openTopSiteInNewTab(title) {
             verifyPageContent(defaultWebPage.content)
+        }.openNavigationToolbar {
+        }.openThreeDotMenu {
+            verifyThreeDotMenuExists()
+        }.openNewTab {
+        }
+
+        // hide the top site from new tab
+        freshTab {
+        }.removeTopSite(title) {
+            verifyTopSiteDoesNotExist(title)
         }
     }
 

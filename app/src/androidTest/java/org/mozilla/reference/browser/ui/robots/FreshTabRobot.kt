@@ -7,14 +7,14 @@ package org.mozilla.reference.browser.ui.robots
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.Until
+import org.hamcrest.Matchers
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.waitAndInteract
 import org.mozilla.reference.browser.topsites.ui.TopSitesViewHolder
 
 /**
@@ -23,6 +23,7 @@ import org.mozilla.reference.browser.topsites.ui.TopSitesViewHolder
 class FreshTabRobot {
 
     fun verifyTopSite(title: String) = assertTopSiteText(title)
+    fun verifyTopSiteDoesNotExist(title: String) = assertTopSiteTextDoesNotExist(title)
 
     class Transition {
 
@@ -45,6 +46,16 @@ class FreshTabRobot {
             BrowserRobot().interact()
             return BrowserRobot.Transition()
         }
+
+        fun removeTopSite(title: String, interact: FreshTabRobot.() -> Unit): FreshTabRobot.Transition {
+            topSitesView()
+                .perform(RecyclerViewActions.actionOnItem<TopSitesViewHolder>(
+                    hasDescendant(withText(title)), longClick()))
+            removeFromTopSitesMenuButton().perform(click())
+
+            FreshTabRobot().interact()
+            return FreshTabRobot.Transition()
+        }
     }
 }
 
@@ -55,7 +66,10 @@ fun freshTab(interact: FreshTabRobot.() -> Unit): FreshTabRobot.Transition {
 
 private fun topSitesView() = onView(withId(R.id.topSitesView))
 private fun openInNewTabButton() = onView(withId(R.id.open_in_new_tab))
+private fun removeFromTopSitesMenuButton() = onView(withId(R.id.remove_from_top_site))
 
-private fun assertTopSiteText(url: String) {
-    mDevice.waitAndInteract(Until.findObject(By.textContains(url))) {}
-}
+private fun assertTopSiteText(url: String) =
+    onView(withText(url)).check(matches(isDisplayed()))
+
+private fun assertTopSiteTextDoesNotExist(url: String) =
+    onView(withText(url)).check(matches(Matchers.not(isDisplayed())))
