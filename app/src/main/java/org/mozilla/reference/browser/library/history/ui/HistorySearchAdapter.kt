@@ -17,7 +17,7 @@ class HistorySearchAdapter(
     private val browserIcons: BrowserIcons
 ) : RecyclerView.Adapter<HistorySearchAdapter.ViewHolder>() {
 
-    var searchResults: List<SearchResult> = listOf()
+    private var searchResults: List<SearchResult> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.two_line_list_item_layout))

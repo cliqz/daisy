@@ -1,4 +1,4 @@
-package org.mozilla.reference.browser.storage
+package org.mozilla.reference.browser.concepts
 
 import mozilla.components.concept.storage.HistoryStorage
 import org.mozilla.reference.browser.storage.model.TopSite

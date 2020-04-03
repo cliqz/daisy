@@ -8,20 +8,17 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.component_history.view.empty_view
-import kotlinx.android.synthetic.main.component_history.view.history_list
-import kotlinx.android.synthetic.main.component_history.view.history_search_list
-import kotlinx.android.synthetic.main.component_history.view.toolbar
+import kotlinx.android.synthetic.main.component_history.view.*
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.distinct
 import org.mozilla.reference.browser.ext.getQuantityString
 import org.mozilla.reference.browser.library.LibraryPageView
+import org.mozilla.reference.browser.library.LibraryToolbar
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 /**
@@ -47,85 +44,35 @@ class HistoryView(
     init {
         view.history_list.adapter = historyAdapter
         view.history_search_list.adapter = historySearchAdapter
-        createToolbarMenu()
-        setupToolbarListeners()
-        update(ViewMode.Normal, emptySet())
-    }
-
-    private fun createToolbarMenu() {
-        val layout = when (historyViewModel.viewMode) {
-            ViewMode.Normal -> R.menu.history_menu
-            ViewMode.Editing -> R.menu.history_multi_select_menu
-        }
-        view.toolbar.menu.clear()
-        view.toolbar.inflateMenu(layout)
-    }
-
-    @Suppress("PrivateResource", "ComplexMethod")
-    private fun setupToolbarListeners() {
-        view.toolbar.setNavigationIcon(R.drawable.mozac_ic_back)
-        view.toolbar.setNavigationContentDescription(R.string.abc_action_bar_up_description)
-        view.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.close -> {
-                    if (view.history_search_list.visibility == View.VISIBLE) {
-                        view.history_search_list.visibility = View.GONE
-                        searchItem?.collapseActionView()
-                    } else {
-                        interactor.exitView()
-                    }
-                    true
-                }
-                R.id.delete -> {
-                    historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
-                    historyViewModel.viewMode = ViewMode.Normal
-                    true
-                }
-                R.id.history_search -> {
-                    false
-                }
-                else -> throw IllegalArgumentException("Invalid menu item")
-            }
-        }
-        view.toolbar.setNavigationOnClickListener {
-            interactor.exitEditingMode()
-        }
-        searchItem = view.toolbar.menu.findItem(R.id.history_search)
-        searchItem?.let {
-            val searchView = it.actionView as SearchView
-            searchView.setOnCloseListener {
-                view.history_search_list.visibility = View.GONE
-                true
-            }
-            searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    return true
-                }
-
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+        view.toolbar.register(object : LibraryToolbar.Observer {
+            override fun close() {
+                if (view.history_search_list.visibility == View.VISIBLE) {
                     view.history_search_list.visibility = View.GONE
-                    return true
+                    searchItem?.collapseActionView()
+                } else {
+                    interactor.exitView()
                 }
-            })
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
+            }
 
-                override fun onQueryTextChange(query: String?): Boolean {
-                    if (query.isNullOrBlank()) return true
-                    view.history_search_list.visibility = View.VISIBLE
-                    historySearchAdapter.setData(historyViewModel.searchHistory(query))
-                    return true
-                }
-            })
-        }
-    }
+            override fun delete() {
+                historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
+                historyViewModel.viewMode = ViewMode.Normal
+            }
 
-    private fun onModeSwitched() {
-        view.toolbar.invalidate()
-        createToolbarMenu()
-        setupToolbarListeners()
+            override fun searchOpened() {
+            }
+
+            override fun searchClosed() {
+                view.history_search_list.visibility = View.GONE
+            }
+
+            override fun searchQueryChanged(query: String) {
+                if (query.isBlank()) return
+                view.history_search_list.visibility = View.VISIBLE
+                historySearchAdapter.setData(historyViewModel.searchHistory(query))
+            }
+        })
+        update(ViewMode.Normal, emptySet())
     }
 
     fun submitList(pagedList: PagedList<HistoryItem>?) {
@@ -134,7 +81,6 @@ class HistoryView(
 
     fun update(newViewMode: ViewMode, newSelectedItems: Set<HistoryItem>) {
         if (viewMode != newViewMode) {
-            onModeSwitched()
             historyAdapter.updateViewMode(newViewMode)
 
             // Deselect all the previously selected items
@@ -173,12 +119,12 @@ class HistoryView(
     }
 
     override fun onBackPressed(): Boolean {
-        if (view.history_search_list.visibility == View.VISIBLE) {
+        return if (view.history_search_list.visibility == View.VISIBLE) {
             view.history_search_list.visibility = View.GONE
             searchItem?.collapseActionView()
-            return true
+            true
         } else {
-            return interactor.onBackPressed()
+            interactor.onBackPressed()
         }
     }
 

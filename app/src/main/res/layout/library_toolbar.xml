@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="com.google.android.material.appbar.AppBarLayout"
+    tools:background="@color/white"
+    tools:layout_height="@dimen/toolbar_height"
+    android:elevation="@dimen/toolbar_elevation">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/inner_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            tools:text="@string/history_screen_title" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_white_corners"
+            android:backgroundTint="@color/dark_grey_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageButton
+            android:id="@+id/close_search"
+            android:layout_width="@dimen/mozac_browser_toolbar_browseraction_size"
+            android:layout_height="@dimen/mozac_browser_toolbar_browseraction_size"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@null"
+            android:contentDescription="@string/history_close_search"
+            android:src="@drawable/mozac_ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/clear_search"
+            android:layout_width="@dimen/mozac_browser_toolbar_browseraction_size"
+            android:layout_height="@dimen/mozac_browser_toolbar_browseraction_size"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginTop="4dp"
+            android:background="@null"
+            android:contentDescription="@string/history_clear_search"
+            android:src="@drawable/mozac_ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:background="@null"
+            android:hint="@string/history_search_hint"
+            android:inputType="text"
+            android:lines="1"
+            app:layout_constraintEnd_toStartOf="@+id/clear_search"
+            app:layout_constraintStart_toEndOf="@+id/close_search" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

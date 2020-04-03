@@ -11,7 +11,7 @@ private object Versions {
     const val mockk = "1.9.3"
 
     const val workmanager = "2.0.0"
-    const val google_material = "1.2.0-alpha03"
+    const val google_material = "1.2.0-alpha02"
 
     const val android_gradle_plugin = "3.6.0"
     const val mozilla_android_components = "29.0.0"

@@ -6,8 +6,7 @@
         android:id="@+id/history_search"
         android:icon="@drawable/mozac_ic_search"
         android:title="@string/search_widget_text_short"
-        app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.widget.SearchView"/>
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/close"
         android:icon="@drawable/mozac_ic_close"
