@@ -41,7 +41,7 @@ class DefaultSearchController(
                 searchTermOrUrl = url,
                 newTab = session == null,
                 from = BrowserDirection.FromSearch,
-                private = false,
+                private = session?.private ?: false,
                 engine = context.components.search.searchEngineManager.defaultSearchEngine
             )
         }

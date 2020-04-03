@@ -51,12 +51,12 @@ class ToolbarIntegration(
     toolbar: BrowserToolbar,
     coroutineScope: LifecycleCoroutineScope,
     historyStorage: HistoryStorage,
-    sessionManager: SessionManager,
+    private val sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
     searchUseCases: SearchUseCases,
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
-    private val sessionId: String? = null,
+    sessionId: String? = null,
     private val navController: NavController
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
@@ -282,7 +282,9 @@ class ToolbarIntegration(
     }
 
     private fun openSearchFragment() {
-        val direction = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(sessionId)
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
+            sessionId = sessionManager.selectedSession?.id
+        )
         navController.nav(R.id.browserFragment, direction)
     }
 }
