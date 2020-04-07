@@ -22,7 +22,6 @@ import mozilla.components.support.test.whenever
 import org.mockito.Mockito
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.spy
-import org.mozilla.reference.browser.components.Analytics
 import org.mozilla.reference.browser.components.BackgroundServices
 import org.mozilla.reference.browser.components.Core
 import org.mozilla.reference.browser.components.News
@@ -100,7 +99,6 @@ class TestBrowserApplication : BrowserApplication() {
             whenever(it.news).thenReturn(realNews)
             whenever(it.useCases).thenReturn(realUseCases)
             whenever(it.backgroundServices).thenReturn(backgroundServices)
-            doReturnMock<Analytics>().whenever(it).analytics
             whenever(it.utils).thenReturn(realUtils)
             whenever(it.services).thenReturn(realServices)
             whenever(it.clipboardHandler).thenReturn(realClipboardHandler)

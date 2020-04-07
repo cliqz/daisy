@@ -120,12 +120,6 @@
     <string name="pair_preferences">Pairing</string>
     <string name="pair_instructions">Open firefox.com/pair in Firefox Desktop for your pairing code</string>
 
-    <!-- Snackbar message when a non fatal crash happen-->
-    <string name="crash_report_non_fatal_message">Sorry. We crashed</string>
-
-    <!-- Snackbar action button when a non fatal crash happen-->
-    <string name="crash_report_non_fatal_action">Report</string>
-
     <!-- Private Browsing -->
     <string name="private_browsing_title">Private Browsing</string>
     <string name="private_browsing_body"><![CDATA[
@@ -195,6 +189,8 @@
     <string name="history_today">Today \u2013 %s </string>
     <string name="history_yesterday">Yesterday \u2013 %s</string>
     <string name="history_search_hint">Search in History</string>
+    <string name="history_close_search">Close History Search</string>
+    <string name="history_clear_search">Clear Search</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>
@@ -237,6 +233,4 @@
     <string name="fxa_tab_received_notification_name">Tab Received</string>
     <!-- %s is the device name -->
     <string name="fxa_tab_received_from_notification_name">Tab from %s</string>
-    <string name="history_close_search">Close History Search</string>
-    <string name="history_clear_search">Clear Search</string>
 </resources>
