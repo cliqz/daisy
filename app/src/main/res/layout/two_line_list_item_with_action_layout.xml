@@ -33,8 +33,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
+            android:layout_margin="2dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:cardElevation="1dp"
             app:cardCornerRadius="@dimen/favicon_corner_radius">
 
             <ImageView
