@@ -23,7 +23,8 @@ RUN mkdir -p /tmp "$ANDROID_SDK_ROOT" && \
         "build-tools;28.0.3" \
         "platform-tools" \
         "platforms;android-28" \
-        "platforms;android-29"
+        "platforms;android-29" \
+        "ndk;21.0.6113669"
 RUN gem install bundler
 
 ARG UID=1000
