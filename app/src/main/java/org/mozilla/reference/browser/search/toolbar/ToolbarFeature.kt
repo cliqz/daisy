@@ -91,7 +91,10 @@ class ToolbarFeature(
     }
 
     fun updateText(query: String) {
-        browserToolbar.url = query
+        browserToolbar.apply {
+            url = query
+            editMode()
+        }
     }
 
     companion object {
