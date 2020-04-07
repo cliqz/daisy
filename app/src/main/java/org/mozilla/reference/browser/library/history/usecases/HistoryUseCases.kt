@@ -13,7 +13,7 @@ import org.mozilla.reference.browser.storage.model.TopSite
 import org.mozilla.reference.browser.library.history.data.HistoryDataSourceFactory
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.data.PagedHistoryProvider
-import org.mozilla.reference.browser.storage.HistoryStorage
+import org.mozilla.reference.browser.concepts.HistoryStorage
 
 class HistoryUseCases(historyStorage: HistoryStorage) {
 

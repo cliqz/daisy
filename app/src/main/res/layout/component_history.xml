@@ -4,30 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="android.widget.FrameLayout">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            app:titleMarginEnd="16dp"
-            app:titleMarginStart="16dp">
-
-            <!-- This is temporary as we have to replace the Toolbar in order to implement search design -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/toolbar_title"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif"
-                style="@style/TextAppearance.AppCompat.Title"
-                tools:text="@string/history_screen_title" />
-
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+   <org.mozilla.reference.browser.library.LibraryToolbar
+       android:id="@+id/toolbar"
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/toolbar_height"
+       android:background="?android:attr/windowBackground" />
 
     <TextView
         android:id="@+id/empty_view"

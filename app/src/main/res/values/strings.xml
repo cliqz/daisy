@@ -187,13 +187,14 @@
     <string name="no_history_available">No history to show</string>
     <string name="history_screen_title">History</string>
     <plurals name="history_items_selected">
-        <item quantity="one">%1$d item selected</item>
-        <item quantity="other">%1$d items selected</item>
+        <item quantity="one">%1$d selected</item>
+        <item quantity="other">%1$d selected</item>
     </plurals>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
     <string name="history_today">Today \u2013 %s </string>
     <string name="history_yesterday">Yesterday \u2013 %s</string>
+    <string name="history_search_hint">Search in History</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>
@@ -236,4 +237,6 @@
     <string name="fxa_tab_received_notification_name">Tab Received</string>
     <!-- %s is the device name -->
     <string name="fxa_tab_received_from_notification_name">Tab from %s</string>
+    <string name="history_close_search">Close History Search</string>
+    <string name="history_clear_search">Clear Search</string>
 </resources>

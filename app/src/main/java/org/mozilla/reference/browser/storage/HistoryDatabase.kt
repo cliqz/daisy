@@ -25,6 +25,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.storage.model.TopSite
 import java.net.URI
 import java.util.Locale

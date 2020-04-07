@@ -36,7 +36,7 @@ import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_norma
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
 import org.mozilla.reference.browser.storage.HistoryDatabase
 import org.mozilla.reference.browser.ext.getPreferenceKey
-import org.mozilla.reference.browser.storage.HistoryStorage
+import org.mozilla.reference.browser.concepts.HistoryStorage
 import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L

@@ -11,22 +11,27 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.longClick
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import mozilla.components.concept.storage.SearchResult
 import mozilla.components.concept.storage.VisitType
 import mozilla.components.support.test.any
 import mozilla.components.support.test.mock
+import mozilla.components.support.test.robolectric.testContext
 import mozilla.components.support.test.whenever
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.startsWith
@@ -34,11 +39,15 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.spy
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.matchers.atPosition
+import org.mozilla.reference.browser.assertions.hasItemsCount
 import org.mozilla.reference.browser.assertions.isGone
 import org.mozilla.reference.browser.assertions.isVisible
+import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.library.history.data.HistoryItem
+import org.mozilla.reference.browser.matchers.atPosition
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -70,20 +79,18 @@ class HistoryFragmentTest {
 
     @Before
     fun setUp() {
-        historyViewModel = mock()
-        val selectedHistoryItem = mock<MutableLiveData<MutableSet<HistoryItem>>>()
-        whenever(historyViewModel.viewMode).thenReturn(ViewMode.Normal)
-        whenever(historyViewModel.selectedItemsLiveData).thenReturn(selectedHistoryItem)
+        testContext.components.useCases.apply {
+            historyViewModel = spy(HistoryViewModel(historyUseCases, sessionUseCases))
+        }
     }
 
     @Test
     fun `the empty history message should be visible`() {
         setHistoryItems(listOf())
 
-        launchFragmentInContainer(themeResId = R.style.Theme_AppCompat) {
-            HistoryFragment(historyViewModel)
-        }
+        launchFragment()
 
+        onView(withId(R.id.toolbar_title)).check(matches(withText(R.string.history_screen_title)))
         onView(withId(R.id.empty_view)).check(isVisible())
         onView(withId(R.id.history_list)).check(isGone())
         onView(withId(R.id.history_search_list)).check(isGone())
@@ -92,18 +99,9 @@ class HistoryFragmentTest {
     @Test
     fun `should display today, yesterday and date`() {
         SystemClock.setCurrentTimeMillis(Dates.Now.dateTime.time)
+        setupTestData()
 
-        setHistoryItems(
-            TestData.values().zip(Dates.values().drop(1)) // Zip the TestData with the Dates skipping Dates.Now
-                .mapIndexed { index, (data, date) ->
-                    HistoryItem(1000 - index, data.title, data.url, date.dateTime.time, VisitType.TYPED)
-                }
-                .toList()
-        )
-
-        launchFragmentInContainer(themeResId = R.style.Theme_AppCompat) {
-            HistoryFragment(historyViewModel)
-        }
+        launchFragment()
 
         onView(withId(R.id.empty_view)).check(isGone())
         onView(withId(R.id.history_list)).check(isVisible())
@@ -134,9 +132,61 @@ class HistoryFragmentTest {
             ))))
     }
 
+    @Test
+    fun `should switch to edit mode`() {
+        setupTestData()
+
+        launchFragment()
+
+        onView(withText(TestData.Cliqz.title))
+            .perform(longClick())
+        onView(withId(R.id.toolbar_title))
+            .check(matches(withText("1 selected")))
+    }
+
+    @Test
+    fun `should search`() {
+        setupTestData()
+
+        launchFragment()
+
+        onView(withContentDescription(R.string.search_widget_text_short)).perform(click())
+        onView(withId(R.id.clear_search)).check(isVisible())
+        onView(withId(R.id.close_search)).check(isVisible())
+        onView(withId(R.id.search))
+            .check(isVisible())
+            .perform(typeText(TestData.Cliqz.title))
+        onView(withId(R.id.history_search_list))
+            .check(isVisible())
+            .check(hasItemsCount(1))
+    }
+
+    private fun setupTestData() = setHistoryItems(
+        TestData.values()
+            .zip(Dates.values().drop(1)) // Zip the TestData with the Dates skipping Dates.Now
+            .mapIndexed { index, (data, date) ->
+                HistoryItem(1000 - index, data.title, data.url, date.dateTime.time, VisitType.TYPED)
+            }
+            .toList()
+    )
+
     private fun setHistoryItems(items: List<HistoryItem>) {
         val data = items.asHistoryObservable() // Must be done outside a `theReturn`
         whenever(historyViewModel.historyItems).thenReturn(data)
+        whenever(historyViewModel.searchHistory(anyString())).then { invocation ->
+            val query = invocation.arguments[0] as String
+            return@then items
+                .filter {
+                    it.title.contains(query) || it.url.contains(query)
+                }
+                .map {
+                    SearchResult(it.id.toString(), it.url, 1000, it.url)
+                }
+        }
+    }
+
+    private fun launchFragment() = launchFragmentInContainer(themeResId = R.style.Theme_AppCompat) {
+        HistoryFragment(historyViewModel)
     }
 }
 
