@@ -14,29 +14,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.state.WebExtensionState
-import org.mozilla.reference.browser.tabstray.BrowserTabsTray
 import mozilla.components.concept.engine.EngineView
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.feature.intent.ext.EXTRA_SESSION_ID
-import mozilla.components.lib.crash.Crash
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.kotlin.isUrl
 import mozilla.components.support.ktx.kotlin.toNormalizedUrl
 import mozilla.components.support.utils.SafeIntent
+import mozilla.components.support.webextensions.WebExtensionPopupFeature
 import org.mozilla.reference.browser.R.color.navigationBarColor
 import org.mozilla.reference.browser.R.color.statusBarColor
-import mozilla.components.support.webextensions.WebExtensionPopupFeature
 import org.mozilla.reference.browser.addons.WebExtensionActionPopupActivity
 import org.mozilla.reference.browser.browser.BrowserFragment
-import org.mozilla.reference.browser.browser.CrashIntegration
 import org.mozilla.reference.browser.ext.alreadyOnDestination
 import org.mozilla.reference.browser.ext.components
-import org.mozilla.reference.browser.ext.isCrashReportActive
 import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.setSystemBarsTheme
@@ -44,14 +38,13 @@ import org.mozilla.reference.browser.freshtab.FreshTabFragmentDirections
 import org.mozilla.reference.browser.library.history.ui.HistoryFragmentDirections
 import org.mozilla.reference.browser.search.SearchFragmentDirections
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
+import org.mozilla.reference.browser.tabstray.BrowserTabsTray
 
 /**
  * Activity that holds the [BrowserFragment].
  */
 @Suppress("TooManyFunctions")
 open class BrowserActivity : AppCompatActivity() {
-
-    private lateinit var crashIntegration: CrashIntegration
 
     private val sessionId: String?
         get() = SafeIntent(intent).getStringExtra(EXTRA_SESSION_ID)
@@ -102,13 +95,6 @@ open class BrowserActivity : AppCompatActivity() {
                     components.useCases.tabsUseCases.addTab.invoke("")
                 }
             }
-        }
-
-        if (isCrashReportActive) {
-            crashIntegration = CrashIntegration(this, components.analytics.crashReporter) { crash ->
-                onNonFatalCrash(crash)
-            }
-            lifecycle.addObserver(crashIntegration)
         }
 
         NotificationManager.checkAndNotifyPolicy(this)
@@ -185,13 +171,6 @@ open class BrowserActivity : AppCompatActivity() {
             }
             else -> super.onCreateView(parent, name, context, attrs)
         }
-
-    private fun onNonFatalCrash(crash: Crash) {
-        Snackbar.make(findViewById(android.R.id.content), R.string.crash_report_non_fatal_message, LENGTH_LONG)
-            .setAction(R.string.crash_report_non_fatal_action) {
-                crashIntegration.sendCrashReport(crash)
-            }.show()
-    }
 
     private fun openPopup(webExtensionState: WebExtensionState) {
         val intent = Intent(this, WebExtensionActionPopupActivity::class.java)
