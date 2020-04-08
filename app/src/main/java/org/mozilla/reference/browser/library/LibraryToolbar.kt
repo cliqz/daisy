@@ -75,6 +75,8 @@ class LibraryToolbar @JvmOverloads constructor(
         clearSearch = view.findViewById(R.id.clear_search)
         searchContainer = view.findViewById(R.id.search_container)
 
+        clearSearch.isEnabled = false
+
         sceneA = Scene(this, toolbar)
         sceneB = Scene(this, searchContainer)
 
