@@ -16,7 +16,9 @@ node('master'){
                 withCredentials([
                         file(credentialsId: '263e59fb-e9de-4e51-962c-0237c6ee167b', variable: 'ANDROID_STORE_FILE'),
                         string(credentialsId: '60354bba-8ed0-4df9-8f8e-5be7454c1680', variable: 'ANDROID_STORE_PWD'),
-                        file(credentialsId: '2939d2e1-dd9a-4097-adc2-430e3d67157a', variable: 'PLAY_STORE_CERT')]) {
+                        file(credentialsId: '2939d2e1-dd9a-4097-adc2-430e3d67157a', variable: 'PLAY_STORE_CERT'),
+                        file(credentialsId: 'sentry_dsn_daisy', variable: 'SENTRY_DSN_FILE')
+                ]) {
                     stage('Compile and Upload') {
                         sh '''#!/bin/bash -l
                             set -x

@@ -18,7 +18,7 @@ private object Versions {
 
     const val glide = "4.11.0"
 
-    const val thirdparty_sentry = "1.7.10"
+    const val thirdparty_sentry = "2.0.2"
 
     const val mockwebserver = "3.10.0"
     const val orchestrator = "1.1.1"
