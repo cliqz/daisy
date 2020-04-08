@@ -69,19 +69,8 @@ class NewsRemoteDataSource(private val client: Client) : NewsDataSource {
         }
         sb.append("&edition=").append(newsEdition)
 
-        /* Get country based result.
-        val country: String?
-        country = preferenceManager.getCountryChoice().countryCode
-        if (country != null) {
-            sb.append("&country=").append(country)
-        } */
         sb.append("&count=").append(Int.MAX_VALUE)
         sb.append("&platform=1")
-        /* Get location based result.
-        if (locationCache.getLastLocation() != null) {
-            sb.append("&loc=").append(locationCache.getLastLocation().getLatitude()).append(",")
-                    .append(locationCache.getLastLocation().getLongitude())
-        }*/
         return sb.toString()
     }
 
