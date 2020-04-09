@@ -59,6 +59,10 @@ class HistoryView(
                 historyViewModel.viewMode = ViewMode.Normal
             }
 
+            override fun openAll(private: Boolean) {
+                interactor.open(historyViewModel.selectedItems, private)
+            }
+
             override fun searchOpened() {
             }
 

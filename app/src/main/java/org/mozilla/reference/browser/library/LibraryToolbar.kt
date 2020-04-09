@@ -42,6 +42,8 @@ class LibraryToolbar @JvmOverloads constructor(
 
         fun delete()
 
+        fun openAll(private: Boolean)
+
         fun searchOpened()
 
         fun searchClosed()
@@ -98,6 +100,14 @@ class LibraryToolbar @JvmOverloads constructor(
                     notifyObservers { searchOpened() }
                     search.showKeyboard()
                     setSearchMode()
+                    true
+                }
+                R.id.open_in_new_tab -> {
+                    notifyObservers { openAll(false) }
+                    true
+                }
+                R.id.open_in_private_tab -> {
+                    notifyObservers { openAll(true) }
                     true
                 }
                 else -> throw IllegalArgumentException("Invalid menu item")

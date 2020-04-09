@@ -44,7 +44,7 @@ class HistoryFragment @JvmOverloads constructor(
 
         historyInteractor = HistoryInteractor(
                 historyViewModel,
-                ::openHistoryItem,
+                ::openHistoryItems,
                 ::deleteAll,
                 ::onBackPressed
         )
@@ -100,13 +100,15 @@ class HistoryFragment @JvmOverloads constructor(
         return super.onOptionsItemSelected(item)
     }
 
-    private fun openHistoryItem(item: HistoryItem) {
-        context?.openToBrowserAndLoad(
-            searchTermOrUrl = item.url,
-            newTab = false,
-            from = BrowserDirection.FromHistory,
-            private = false
-        )
+    private fun openHistoryItems(items: Set<HistoryItem>, private: Boolean) {
+        items.forEach { historyItem ->
+            context?.openToBrowserAndLoad(
+                searchTermOrUrl = historyItem.url,
+                newTab = items.size != 1, // Load in the current tab
+                from = BrowserDirection.FromHistory,
+                private = private
+            )
+        }
     }
 
     private fun showClearAllHistoryDialog() {
