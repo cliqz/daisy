@@ -33,7 +33,7 @@ class AboutFragment : Fragment() {
     }
 
     private fun getVersionFromExtensionManifest(path: String): String {
-        val stream = context?.assets?.open("${path}/manifest.json")
+        val stream = context?.assets?.open("$path/manifest.json")
         val reader = JsonReader(stream?.bufferedReader())
         reader.beginObject()
         try {
