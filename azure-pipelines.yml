@@ -66,7 +66,7 @@ jobs:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
-        options: '--console plain'
+        options: '--console plain -Pcoverage=true'
         tasks: 'testDebug'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
@@ -74,3 +74,8 @@ jobs:
         jdkVersionOption: '1.8'
         gradleOptions: '-Xmx3072m'
         sonarQubeRunAnalysis: false
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: 'JaCoCo'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+        pathToSources: '$(System.DefaultWorkingDirectory)/app/src/main/java'
