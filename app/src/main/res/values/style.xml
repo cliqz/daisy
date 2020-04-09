@@ -3,10 +3,31 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <resources>
+    <style name="DialogButtonBarStyle">
+        <item name="android:textColor">@color/dark_grey_6</item>
+    </style>
+
+    <style name="RedButtonBarStyle">
+        <item name="android:textColor">@color/venetian_red</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <!-- item name="android:windowTitleStyle"></item -->
+        <item name="android:colorAccent">@color/dark_grey_5</item>
+        <item name="android:textColor">@color/dark_grey_6</item>
+        <item name="android:textColorPrimary">@color/dark_grey_5</item>
+        <item name="buttonBarButtonStyle">@style/DialogButtonBarStyle</item>
+    </style>
+
+    <style name="HistoryAlertDialogTheme" parent="AlertDialogTheme">
+        <item name="buttonBarPositiveButtonStyle">@style/RedButtonBarStyle</item>
+    </style>
+
     <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
+        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
     <style name="AppThemeNoActionBar" parent="AppTheme">

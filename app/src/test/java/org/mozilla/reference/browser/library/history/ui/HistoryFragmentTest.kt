@@ -6,6 +6,7 @@
 
 package org.mozilla.reference.browser.library.history.ui
 
+import android.os.Build
 import android.os.SystemClock
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -35,6 +36,8 @@ import mozilla.components.support.test.robolectric.testContext
 import mozilla.components.support.test.whenever
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.startsWith
+import org.junit.Assert.assertTrue
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,6 +51,7 @@ import org.mozilla.reference.browser.assertions.isVisible
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.matchers.atPosition
+import org.robolectric.shadows.ShadowAlertDialog
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -159,6 +163,19 @@ class HistoryFragmentTest {
         onView(withId(R.id.history_search_list))
             .check(isVisible())
             .check(hasItemsCount(1))
+    }
+
+    @Test
+    fun `should display a dialog when deleting the history`() {
+        Assume.assumeTrue("This runs only in robolectric", "robolectric" == Build.FINGERPRINT)
+        setupTestData()
+
+        launchFragment()
+
+        onView(withText(R.string.history_clear_all))
+            .perform(click())
+
+        assertTrue(ShadowAlertDialog.getLatestDialog().isShowing)
     }
 
     private fun setupTestData() = setHistoryItems(
