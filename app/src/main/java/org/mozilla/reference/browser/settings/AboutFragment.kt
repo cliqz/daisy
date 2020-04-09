@@ -11,6 +11,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.JsonReader
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,26 @@ import org.mozilla.reference.browser.R
 class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_about, container, false)
+    }
+
+    private fun getVersionFromExtensionManifest(path: String): String {
+        val stream = context?.assets?.open("${path}/manifest.json")
+        val reader = JsonReader(stream?.bufferedReader())
+        reader.beginObject()
+        try {
+            while (reader.hasNext()) {
+                val name = reader.nextName()
+                if (name == "version") {
+                    return reader.nextString()
+                }
+                reader.skipValue()
+            }
+            reader.endObject()
+            return ""
+        } finally {
+            reader.close()
+            stream?.close()
+        }
     }
 
     @Suppress("DEPRECATION")
@@ -52,11 +73,13 @@ class AboutFragment : Fragment() {
         }
 
         val versionInfo = String.format(
-            "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s",
-            aboutText,
-            Build.version,
-            Build.gitHash,
-            Build.applicationServicesVersion
+                "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s\nCliqz: %s\nDat: %s",
+                aboutText,
+                Build.version,
+                Build.gitHash,
+                Build.applicationServicesVersion,
+                getVersionFromExtensionManifest("extensions/cliqz"),
+                getVersionFromExtensionManifest("extensions/dat")
         )
         val content = HtmlCompat.fromHtml(
             resources.getString(R.string.about_content, appName),
