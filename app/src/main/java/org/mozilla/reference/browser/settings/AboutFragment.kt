@@ -21,22 +21,26 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.fragment_about.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import mozilla.components.Build
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
 import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
 import org.mozilla.reference.browser.R
 
 class AboutFragment : Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_about, container, false)
     }
 
-    private fun getVersionFromExtensionManifest(path: String): String {
-        val stream = context?.assets?.open("$path/manifest.json")
-        val reader = JsonReader(stream?.bufferedReader())
-        reader.beginObject()
-        try {
+    private fun getVersionFromExtensionManifest(path: String): String =
+        context?.assets?.open("$path/manifest.json")?.bufferedReader()?.use {
+            val reader = JsonReader(it)
+            reader.beginObject()
             while (reader.hasNext()) {
                 val name = reader.nextName()
                 if (name == "version") {
@@ -46,11 +50,7 @@ class AboutFragment : Fragment() {
             }
             reader.endObject()
             return ""
-        } finally {
-            reader.close()
-            stream?.close()
-        }
-    }
+        }.orEmpty()
 
     @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,29 +72,38 @@ class AboutFragment : Fragment() {
             ""
         }
 
-        val versionInfo = String.format(
+        lifecycleScope.launch {
+            val cliqzVersion = async(Dispatchers.IO) {
+                getVersionFromExtensionManifest("extensions/cliqz")
+            }
+            val datVersion = async(Dispatchers.IO) {
+                getVersionFromExtensionManifest("extensions/dat")
+            }
+
+            val versionInfo = String.format(
                 "%s \uD83D\uDCE6: %s, %s\n\uD83D\uDEA2: %s\nCliqz: %s\nDat: %s",
                 aboutText,
                 Build.version,
                 Build.gitHash,
                 Build.applicationServicesVersion,
-                getVersionFromExtensionManifest("extensions/cliqz"),
-                getVersionFromExtensionManifest("extensions/dat")
-        )
-        val content = HtmlCompat.fromHtml(
-            resources.getString(R.string.about_content, appName),
-            FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
-        )
+                cliqzVersion.await(),
+                datVersion.await()
+            )
+            val content = HtmlCompat.fromHtml(
+                resources.getString(R.string.about_content, appName),
+                FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
+            )
 
-        about_content.text = content
-        version_info.text = versionInfo
+            about_content.text = content
+            version_info.text = versionInfo
 
-        version_info.setOnTouchListener { _, _ ->
-            val clipBoard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipBoard.primaryClip = ClipData.newPlainText(versionInfo, versionInfo)
+            version_info.setOnTouchListener { _, _ ->
+                val clipBoard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipBoard.primaryClip = ClipData.newPlainText(versionInfo, versionInfo)
 
-            Toast.makeText(requireContext(), getString(R.string.toast_copied), Toast.LENGTH_SHORT).show()
-            true
+                Toast.makeText(requireContext(), getString(R.string.toast_copied), Toast.LENGTH_SHORT).show()
+                true
+            }
         }
     }
 }
