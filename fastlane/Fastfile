@@ -30,6 +30,7 @@ platform :android do
             print_command: true,
             properties: {
                 "versionName" => version,
+                "crashReportEnabled" => "true",
                 "android.injected.signing.store.file" => ENV["ANDROID_STORE_FILE"] || "",
                 "android.injected.signing.store.password" => ENV["ANDROID_STORE_PWD"] || "",
                 "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"] || "",

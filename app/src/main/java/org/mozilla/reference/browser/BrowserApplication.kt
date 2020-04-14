@@ -7,6 +7,7 @@ package org.mozilla.reference.browser
 import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import io.sentry.android.core.SentryAndroid
 import mozilla.components.browser.session.Session
 import mozilla.components.concept.push.PushProcessor
 import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
@@ -17,6 +18,7 @@ import mozilla.components.support.ktx.android.content.runOnlyInMainProcess
 import mozilla.components.support.rusthttp.RustHttpConfig
 import mozilla.components.support.rustlog.RustLog
 import mozilla.components.support.webextensions.WebExtensionSupport
+import org.mozilla.reference.browser.ext.isCrashReportActive
 
 open class BrowserApplication : Application() {
 
@@ -24,6 +26,8 @@ open class BrowserApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        setupSentry(this)
 
         RustHttpConfig.setClient(lazy { components.core.client })
         setupLogging()
@@ -88,4 +92,11 @@ private fun setupLogging() {
     // We want the log messages of all builds to go to Android logcat
     Log.addSink(AndroidLogSink())
     RustLog.enable()
+}
+
+private fun setupSentry(application: BrowserApplication) {
+    if (isCrashReportActive) {
+        // Set options here if needed
+        SentryAndroid.init(application)
+    }
 }

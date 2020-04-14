@@ -96,6 +96,20 @@ def baseVersionCode = generatedVersionCode
 android.applicationVariants.all { variant ->
 
 // -------------------------------------------------------------------------------------------------
+// Sentry: Read token from local file if it exists (Only release builds)
+// -------------------------------------------------------------------------------------------------
+    print("Sentry DSN:  "+ variant.name)
+    try {
+        def dsnPath = System.getenv('SENTRY_DSN_FILE').toString()
+        def token = new File(dsnPath).text.trim()
+        resValue "string", "sentry_dsn", '"' + token + '"'
+        println "(Added from .sentry_dsn file)"
+    } catch (FileNotFoundException ignored) {
+        resValue "string", "sentry_dsn", '""'
+        println(" :( ")
+    }
+
+// -------------------------------------------------------------------------------------------------
 // Activating crash reports with command line parameter.
 // -------------------------------------------------------------------------------------------------
     if (project.hasProperty("crashReportEnabled") && project.property("crashReportEnabled") == "true") {
