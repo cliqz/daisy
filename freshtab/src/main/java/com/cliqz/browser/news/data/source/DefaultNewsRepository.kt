@@ -53,7 +53,7 @@ class DefaultNewsRepository(
 
     @VisibleForTesting
     fun hasCacheExpired(): Boolean {
-        return lastCachedOn != 0L && (System.currentTimeMillis() - lastCachedOn) > CACHE_PERIOD
+        return lastCachedOn != 0L && System.currentTimeMillis() - lastCachedOn > CACHE_PERIOD
     }
 
     private suspend fun refreshLocalDataSource(news: List<NewsItem>) {
