@@ -113,7 +113,8 @@ class HistoryFragment @JvmOverloads constructor(
 
     private fun showClearAllHistoryDialog() {
         context?.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.HistoryAlertDialogTheme)
+                .setTitle(R.string.history_clear_all_dialog_title)
                 .setMessage(R.string.history_clear_all_dialog_msg)
                 .setPositiveButton(R.string.history_clear_all_dialog_positive_btn) { dialog, _ ->
                     historyViewModel.clearAllHistory()

@@ -27,4 +27,7 @@
     <color name="light_grey_5">#2C2C2C</color>
     <color name="light_grey_6">#1C1C1C</color>
     <color name="light_grey_7">#000000</color>
+
+    <!-- Used in Delete Browser History dialog -->
+    <color name="venetian_red">#D0021B</color>
 </resources>

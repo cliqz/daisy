@@ -175,8 +175,9 @@
     <!-- History -->
     <string name="history_title_untitled">Untitled</string>
     <string name="history_clear_all">Delete Browsing History</string>
-    <string name="history_clear_all_dialog_msg">Are you sure you want to clear history?</string>
-    <string name="history_clear_all_dialog_positive_btn">Clear</string>
+    <string name="history_clear_all_dialog_title">Delete History?</string>
+    <string name="history_clear_all_dialog_msg">You are about to delete your history. The action will also delete most visited pages on the new tab.</string>
+    <string name="history_clear_all_dialog_positive_btn">Delete</string>
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
     <string name="no_history_available">No history to show</string>
     <string name="history_screen_title">History</string>
