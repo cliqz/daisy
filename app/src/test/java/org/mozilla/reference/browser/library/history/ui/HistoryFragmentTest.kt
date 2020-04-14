@@ -43,7 +43,9 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.spy
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.assertions.hasItemsCount
+import org.mozilla.reference.browser.assertions.isEnabled
 import org.mozilla.reference.browser.assertions.isGone
+import org.mozilla.reference.browser.assertions.isNotEnabled
 import org.mozilla.reference.browser.assertions.isVisible
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.library.history.data.HistoryItem
@@ -151,11 +153,12 @@ class HistoryFragmentTest {
         launchFragment()
 
         onView(withContentDescription(R.string.search_widget_text_short)).perform(click())
-        onView(withId(R.id.clear_search)).check(isVisible())
+        onView(withId(R.id.clear_search)).check(isVisible()).check(isNotEnabled())
         onView(withId(R.id.close_search)).check(isVisible())
         onView(withId(R.id.search))
             .check(isVisible())
             .perform(typeText(TestData.Cliqz.title))
+        onView(withId(R.id.clear_search)).check(isEnabled())
         onView(withId(R.id.history_search_list))
             .check(isVisible())
             .check(hasItemsCount(1))

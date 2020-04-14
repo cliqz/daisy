@@ -71,6 +71,7 @@
             android:layout_marginTop="4dp"
             android:background="@null"
             android:contentDescription="@string/history_clear_search"
+            android:tint="@color/stateful_tint"
             android:src="@drawable/mozac_ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

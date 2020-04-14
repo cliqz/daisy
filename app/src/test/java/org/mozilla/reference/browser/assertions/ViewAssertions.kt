@@ -10,13 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 
 // Visibility
 fun isVisible() = matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))
 fun isInvisible() = matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE))
 fun isGone() = matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE))
+
+// Enabled/Disabled
+fun isEnabled() = matches(ViewMatchers.isEnabled())
+fun isNotEnabled() = matches(not(ViewMatchers.isEnabled()))
 
 // RecyclerView
 fun hasItemsCount(count: Int) = ViewAssertion { view, noViewFoundException ->
