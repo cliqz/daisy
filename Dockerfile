@@ -2,15 +2,15 @@ FROM ubuntu:18.04
 
 ENV ANDROID_SDK_ROOT=/sdk/android-sdk
 RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install \
+    apt-get -y --no-install-recommends install \
         build-essential \
         openjdk-8-jdk-headless \
         curl \
         unzip \
         ruby-full \
         locales && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 RUN locale-gen en_US en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
@@ -25,7 +25,7 @@ RUN mkdir -p /tmp "$ANDROID_SDK_ROOT" && \
         "platforms;android-28" \
         "platforms;android-29" \
         "ndk;21.0.6113669"
-RUN gem install bundler
+RUN gem install bundler:1.17
 
 ARG UID=1000
 ARG GID=1000

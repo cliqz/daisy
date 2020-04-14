@@ -25,4 +25,4 @@ class ContentPanelRobot {
     }
 }
 
-private fun shareContentPanel() = onView((ViewMatchers.withText("Share")))
+private fun shareContentPanel() = onView(ViewMatchers.withText("Share"))

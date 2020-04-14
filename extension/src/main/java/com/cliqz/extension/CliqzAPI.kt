@@ -52,7 +52,7 @@ class CliqzAPI(val extension: CliqzExtensionFeature, private val scope: Coroutin
     suspend fun getBlockingStats(period: StatsPeriod): BlockingStats? {
         return extension.callActionAsync(scope, "insights", "getDashboardStats",
                 period.period).await()
-                .let { (it as JSONObject) }
+                .let { it as JSONObject }
                 .let { res ->
                     BlockingStats(
                             res.optInt("adsBlocked", 0),

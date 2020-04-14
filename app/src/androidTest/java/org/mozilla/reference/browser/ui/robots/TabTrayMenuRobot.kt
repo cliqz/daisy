@@ -96,7 +96,7 @@ private fun menuButton() = onView(ViewMatchers.withContentDescription("More opti
 private fun closeTabButtonTabTray() = onView(last(withId(R.id.mozac_browser_tabstray_close)))
 
 // In Daisy, "about:blank" never appear in the url bar
-private fun regularTabs() = onView((ViewMatchers.withText("about:blank")))
+private fun regularTabs() = onView(ViewMatchers.withText("about:blank"))
 
 private fun assertRegularBrowsingButton() = regularBrowsingButton()
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
