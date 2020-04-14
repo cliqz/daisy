@@ -186,6 +186,8 @@
     </plurals>
     <string name="history_menu_delete_button">Delete</string>
     <string name="history_menu_close_button">Close</string>
+    <string name="history_menu_open_in_new_tab">Open in New tab</string>
+    <string name="history_menu_open_in_private_tab">Open in Private tab</string>
     <string name="history_today">Today \u2013 %s </string>
     <string name="history_yesterday">Yesterday \u2013 %s</string>
     <string name="history_search_hint">Search in History</string>

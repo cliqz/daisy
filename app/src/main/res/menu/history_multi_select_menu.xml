@@ -6,4 +6,13 @@
         android:icon="@drawable/mozac_ic_delete"
         android:title="@string/history_menu_delete_button"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/open_in_new_tab"
+        android:title="@string/history_menu_open_in_new_tab"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/open_in_private_tab"
+        android:title="@string/history_menu_open_in_private_tab"
+        app:showAsAction="never" />
 </menu>
