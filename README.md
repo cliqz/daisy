@@ -1,5 +1,11 @@
 #  Daisy
 
+![Azure DevOps builds](https://img.shields.io/azure-devops/build/cliqz-ci/cliqz-daisy/19)
+![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/cliqz-ci/cliqz-daisy/19)
+![GitHub](https://img.shields.io/github/license/cliqz/daisy)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/cliqz/daisy)
+[![CodeFactor](https://www.codefactor.io/repository/github/cliqz/daisy/badge/master)](https://www.codefactor.io/repository/github/cliqz/daisy/overview/master)
+
 Daisy is the new Android browser from [Cliqz](https://cliqz.com/). Daisy is currently under development and _is not yet a production ready product!_
 
 This project is based on Mozilla's [Reference Browser](https://github.com/mozilla-mobile/reference-browser/)
