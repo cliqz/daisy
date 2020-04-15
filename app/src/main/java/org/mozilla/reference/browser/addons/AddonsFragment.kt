@@ -107,7 +107,7 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
     }
 
     private fun findPreviousDialogFragment(): PermissionsDialogFragment? {
-        return fragmentManager?.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
+        return parentFragmentManager.findFragmentByTag(PERMISSIONS_DIALOG_FRAGMENT_TAG) as? PermissionsDialogFragment
     }
 
     private fun showPermissionDialog(addon: Addon) {
@@ -116,8 +116,8 @@ class AddonsFragment : Fragment(), AddonsManagerAdapterDelegate {
             onPositiveButtonClicked = onPositiveButtonClicked
         )
 
-        if (!isAlreadyADialogCreated() && fragmentManager != null) {
-            dialog.show(requireFragmentManager(), PERMISSIONS_DIALOG_FRAGMENT_TAG)
+        if (!isAlreadyADialogCreated()) {
+            dialog.show(parentFragmentManager, PERMISSIONS_DIALOG_FRAGMENT_TAG)
         }
     }
 
