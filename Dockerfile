@@ -32,4 +32,5 @@ ARG GID=1000
 RUN getent group $GID || groupadd user --gid $GID
 RUN getent passwd $UID || useradd --create-home --shell /bin/bash user --uid $UID --gid $GID
 USER user
+RUN mkdir /home/user/bundle && bundle config path /home/user/bundle
 
