@@ -79,7 +79,7 @@ class AssetsDownloader : Plugin<Project> {
                     val destFile = File(downloadTaskDir, extension.filename!!)
                     src(extension.url)
                     dest(destFile)
-                    enabled = !destFile.isFile
+                    onlyIfModified(true)
                 }
 
                 val unzipTask = tasks.register<Copy>("unzip${flavorName}Assets")

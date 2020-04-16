@@ -10,6 +10,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
+import io.sentry.core.Sentry
+import org.mozilla.reference.browser.BuildConfig
 
 // This file is from the Fenix project.
 
@@ -55,8 +57,8 @@ fun NavController.alreadyOnDestination(@IdRes destId: Int?): Boolean {
 }
 
 fun recordIdException(actual: Int?, expected: Int?) {
-//    DO NOT REMOVE THIS BLOCK, IT WILL BE RESTORED AS SOON AS WE INTEGRATE THE NEW SENTRY
-//    if (!BuildConfig.SENTRY_TOKEN.isNullOrEmpty()) {
-//        Sentry.capture("Fragment id $actual did not match expected $expected")
-//    }
+    @Suppress("ConstantConditionIf")
+    if (BuildConfig.TELEMETRY_ENABLED) {
+        Sentry.captureMessage("Fragment id $actual did not match expected $expected")
+    }
 }

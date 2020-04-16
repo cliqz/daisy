@@ -22,7 +22,7 @@ import org.mozilla.reference.browser.ext.loadIntoView
  */
 
 interface MultiSelectionInteractor<T> {
-    fun open(item: Set<T>, private: Boolean)
+    fun open(items: Set<T>, private: Boolean)
 
     fun select(item: T)
 
