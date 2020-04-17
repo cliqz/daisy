@@ -10,40 +10,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="android.widget.FrameLayout">
 
-   <org.mozilla.reference.browser.library.LibraryToolbar
-       android:id="@+id/toolbar"
-       android:layout_width="match_parent"
-       android:layout_height="@dimen/toolbar_height"
-       android:background="?android:attr/windowBackground" />
+    <org.mozilla.reference.browser.library.LibraryToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?android:attr/windowBackground" />
 
     <TextView
         android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableTop="@drawable/bookmark_view_empty_icon"
+        android:drawablePadding="@dimen/margin_padding_size_xlarge"
         android:gravity="center"
-        android:text="@string/no_history_available"
-        android:layout_marginTop="56dp" />
+        android:text="@string/bookmark_view_empty_text"
+        android:textAlignment="center"
+        android:textColor="@color/dark_grey_5" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="56dp">
+        android:layout_marginTop="@dimen/toolbar_height"
+        tools:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/history_list"
+            android:id="@+id/bookmarks_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?android:attr/windowBackground"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/two_line_list_item_with_action_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/history_search_list"
+            android:id="@+id/bookmark_search_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/two_line_list_item_with_action_layout"
             android:background="?android:attr/windowBackground"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/two_line_list_item_with_action_layout" />
     </FrameLayout>
 
 </merge>

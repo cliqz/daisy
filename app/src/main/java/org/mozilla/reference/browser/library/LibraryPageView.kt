@@ -27,7 +27,7 @@ open class LibraryPageView(
         toolbar.setNormalMode()
         toolbar.title = title
         libraryList.children.forEach {
-            it.meta_btn?.visibility = View.VISIBLE
+            it.action_btn?.visibility = View.VISIBLE
         }
     }
 
@@ -35,7 +35,7 @@ open class LibraryPageView(
         toolbar.setEditingMode()
         toolbar.title = title
         libraryList.children.forEach {
-            it.meta_btn?.visibility = View.INVISIBLE
+            it.action_btn?.visibility = View.INVISIBLE
         }
     }
 }

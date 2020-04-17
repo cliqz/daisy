@@ -555,6 +555,16 @@ class HistoryDatabase(context: Context) :
         cursor.close()
     }
 
+    override suspend fun getBookmarks() = favorites
+
+    override suspend fun addBookmark(url: String, title: String) {
+        setFavorites(url, title, System.currentTimeMillis(), true)
+    }
+
+    override suspend fun getBookmark(url: String): Boolean {
+        return isFavorite(url)
+    }
+
     /**
      * Delete an history point. If the history point is the last one for a given url and the url is
      * not favorite, the method will delete the url from the urls table also

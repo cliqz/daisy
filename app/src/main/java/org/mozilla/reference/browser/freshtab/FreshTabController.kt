@@ -18,6 +18,7 @@ import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
 
+@Suppress("TooManyFunctions")
 interface FreshTabController {
     fun handleSearchBarClicked()
     fun handleTabsCounterClicked()
@@ -27,10 +28,12 @@ interface FreshTabController {
     fun handleMenuReportIssueClicked()
     fun handleMenuSettingsClicked()
     fun handleMenuHistoryClicked()
+    fun handleBookmarksClicked()
     fun handleMenuClearDataClicked()
     fun handleNewsItemClicked(url: String)
 }
 
+@Suppress("TooManyFunctions")
 class DefaultFreshTabController(
     private val context: Context,
     private val sessionManager: SessionManager,
@@ -84,6 +87,11 @@ class DefaultFreshTabController(
 
     override fun handleMenuHistoryClicked() {
         val direction = FreshTabFragmentDirections.actionFreshTabFragmentToHistoryFragment()
+        navController.nav(R.id.freshTabFragment, direction)
+    }
+
+    override fun handleBookmarksClicked() {
+        val direction = FreshTabFragmentDirections.actionFreshTabFragmentToBookmarkFragment()
         navController.nav(R.id.freshTabFragment, direction)
     }
 

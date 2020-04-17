@@ -9,6 +9,7 @@ import org.mozilla.reference.browser.freshtab.toolbar.SearchBarInteractor
 import org.mozilla.reference.browser.freshtab.toolbar.TabsToolbarInteractor
 import org.mozilla.reference.browser.freshtab.toolbar.ToolbarMenuInteractor
 
+@Suppress("TooManyFunctions")
 class FreshTabInteractor(
     private val freshTabController: FreshTabController
 ) : ToolbarMenuInteractor, SearchBarInteractor, NewsInteractor, TabsToolbarInteractor {
@@ -39,6 +40,10 @@ class FreshTabInteractor(
 
     override fun onHistoryClicked() {
         freshTabController.handleMenuHistoryClicked()
+    }
+
+    override fun onBookmarksClicked() {
+        freshTabController.handleBookmarksClicked()
     }
 
     override fun onClearDataClicked() {
