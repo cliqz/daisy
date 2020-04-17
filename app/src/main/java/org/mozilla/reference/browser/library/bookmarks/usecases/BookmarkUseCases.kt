@@ -25,7 +25,7 @@ class BookmarkUseCases(historyStorage: HistoryStorage) {
                     guid = "",
                     parentGuid = null,
                     url = item.tryGetString(HistoryKeys.URL),
-                    title = item.tryGetString(HistoryKeys.TIME),
+                    title = item.tryGetString(HistoryKeys.TITLE),
                     position = null,
                     children = null))
             }
@@ -35,13 +35,15 @@ class BookmarkUseCases(historyStorage: HistoryStorage) {
 
     class DeleteBookmarkUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(bookmarkItem: BookmarkNode) {
-            // Delete bookmark
+            bookmarkItem.url?.let { historyStorage.deleteBookmark(it) }
         }
     }
 
     class DeleteMultipleBookmarkUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(bookmarkItemList: Set<BookmarkNode>) {
-            // Delete bookmark items
+            bookmarkItemList.forEach { bookmarkItem ->
+                bookmarkItem.url?.let { historyStorage.deleteBookmark(it) }
+            }
         }
     }
 

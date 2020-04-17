@@ -156,6 +156,8 @@
     <string name="toolbar_menu_item_forward">Forward</string>
     <string name="toolbar_menu_item_refresh">Refresh</string>
     <string name="toolbar_menu_item_stop">Stop</string>
+    <string name="toolbar_menu_item_bookmark">Bookmark</string>
+    <string name="toolbar_menu_item_remove_bookmark">Remove bookmark</string>
     <string name="toolbar_menu_item_new_tab">New Tab</string>
     <string name="toolbar_menu_item_forget_tab">New Forget Tab</string>
     <string name="toolbar_menu_item_share">Share</string>

@@ -561,8 +561,12 @@ class HistoryDatabase(context: Context) :
         setFavorites(url, title, System.currentTimeMillis(), true)
     }
 
-    override suspend fun getBookmark(url: String): Boolean {
+    override suspend fun isBookmark(url: String): Boolean {
         return isFavorite(url)
+    }
+
+    override suspend fun deleteBookmark(url: String) {
+        setFavorites(url, null, System.currentTimeMillis(), false)
     }
 
     /**

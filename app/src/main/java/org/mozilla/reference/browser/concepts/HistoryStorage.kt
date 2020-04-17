@@ -32,5 +32,7 @@ interface HistoryStorage : HistoryStorage {
 
     suspend fun addBookmark(url: String, title: String)
 
-    suspend fun getBookmark(url: String): Boolean
+    suspend fun isBookmark(url: String): Boolean
+
+    suspend fun deleteBookmark(url: String)
 }
