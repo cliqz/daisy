@@ -28,7 +28,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
         qrFeature.set(
             feature = QrFeature(
                 requireContext(),
-                fragmentManager = fragmentManager!!,
+                fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_CAMERA_PERMISSIONS)
                 },
@@ -58,7 +58,7 @@ class PairSettingsFragment : Fragment(), UserInteractionHandler {
 
     override fun onBackPressed(): Boolean {
         qrFeature.onBackPressed()
-        fragmentManager?.popBackStack()
+        parentFragmentManager.popBackStack()
         return true
     }
 }

@@ -71,9 +71,6 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
     protected val sessionId: String?
         get() = arguments?.getString(SESSION_ID)
 
-    private val openToSearch: Boolean
-        get() = arguments?.getBoolean(OPEN_TO_SEARCH) ?: false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -114,7 +111,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         contextMenuIntegration.set(
             feature = ContextMenuIntegration(
                 requireContext(),
-                requireFragmentManager(),
+                parentFragmentManager,
                 requireComponents.core.store,
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.contextMenuUseCases,
@@ -144,7 +141,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireContext(),
                 sessionManager = requireComponents.core.sessionManager,
                 sessionId = sessionId,
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 launchInApp = {
                     prefs.getBoolean(requireContext().getPreferenceKey(R.string.pref_key_launch_external_app), false)
                 }
@@ -158,7 +155,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 fragment = this,
                 store = requireComponents.core.store,
                 customTabId = sessionId,
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 onNeedToRequestPermissions = { permissions ->
                     requestPermissions(permissions, REQUEST_CODE_PROMPT_PERMISSIONS)
                 }),
@@ -193,7 +190,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
         sitePermissionFeature.set(
             feature = SitePermissionsFeature(
                 context = requireContext(),
-                fragmentManager = requireFragmentManager(),
+                fragmentManager = parentFragmentManager,
                 sessionManager = requireComponents.core.sessionManager,
                 sessionId = sessionId
             ) { permissions ->
