@@ -34,6 +34,8 @@ interface ToolbarMenuInteractor {
 
     fun onHistoryClicked()
 
+    fun onBookmarksClicked()
+
     fun onClearDataClicked()
 }
 
@@ -100,6 +102,10 @@ class ToolbarFeature(
 
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_history)) {
                 toolbarMenuInteractor.onHistoryClicked()
+            },
+
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_bookmarks)) {
+                toolbarMenuInteractor.onBookmarksClicked()
             },
 
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_clear_data)) {

@@ -86,7 +86,7 @@ class HistoryFragmentTest {
     @Before
     fun setUp() {
         testContext.components.useCases.apply {
-            historyViewModel = spy(HistoryViewModel(historyUseCases, sessionUseCases))
+            historyViewModel = spy(HistoryViewModel(historyUseCases))
         }
     }
 

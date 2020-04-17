@@ -7,9 +7,6 @@ package org.mozilla.reference.browser.library.history.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -38,8 +35,7 @@ class HistoryFragment @JvmOverloads constructor(
         super.onAttach(context)
 
         historyViewModel = initialHistoryViewModel ?: HistoryViewModel(
-                context.components.useCases.historyUseCases,
-                context.components.useCases.sessionUseCases
+                context.components.useCases.historyUseCases
         )
 
         historyInteractor = HistoryInteractor(
@@ -75,29 +71,6 @@ class HistoryFragment @JvmOverloads constructor(
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         historyView = HistoryView(view.history_layout, historyViewModel, historyInteractor)
         return view
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        val layout = when (historyViewModel.viewMode) {
-            ViewMode.Normal -> R.menu.history_menu
-            ViewMode.Editing -> R.menu.history_multi_select_menu
-        }
-        inflater.inflate(layout, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home, R.id.close -> {
-                onBackPressed()
-                return true
-            }
-            R.id.delete -> {
-                historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
-                historyViewModel.viewMode = ViewMode.Normal
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun openHistoryItems(items: Set<HistoryItem>, private: Boolean) {

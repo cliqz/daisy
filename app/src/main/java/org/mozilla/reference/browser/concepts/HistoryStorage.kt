@@ -1,11 +1,12 @@
 package org.mozilla.reference.browser.concepts
 
 import mozilla.components.concept.storage.HistoryStorage
+import org.json.JSONArray
 import org.mozilla.reference.browser.storage.model.TopSite
 
 /**
- * An interface which extends the components HistoryStorage with the specific top sites support
- * methods
+ * An interface which extends the components HistoryStorage with the specific top sites and bookmarks
+ * support methods
  */
 interface HistoryStorage : HistoryStorage {
 
@@ -26,4 +27,10 @@ interface HistoryStorage : HistoryStorage {
      * Remove domains from the 'block list' which are blocked from top sites.
      */
     fun restoreTopSites()
+
+    suspend fun getBookmarks(): JSONArray
+
+    suspend fun addBookmark(url: String, title: String)
+
+    suspend fun getBookmark(url: String): Boolean
 }

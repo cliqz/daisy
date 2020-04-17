@@ -145,6 +145,10 @@ class ToolbarIntegration(
                 openHistoryFragment()
             },
 
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_bookmarks)) {
+                openBookmarkFragment()
+            },
+
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_clear_data)) {
                 val deleteBrowsingData = DeleteBrowsingData(
                     context,
@@ -273,6 +277,11 @@ class ToolbarIntegration(
 
     private fun openHistoryFragment() {
         val direction = BrowserFragmentDirections.actionBrowserFragmentToHistoryFragment()
+        navController.nav(R.id.browserFragment, direction)
+    }
+
+    private fun openBookmarkFragment() {
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToBookmarkFragment()
         navController.nav(R.id.browserFragment, direction)
     }
 

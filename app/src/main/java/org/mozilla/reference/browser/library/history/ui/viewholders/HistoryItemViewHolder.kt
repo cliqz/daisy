@@ -51,15 +51,15 @@ class HistoryItemViewHolder(
 
             setSelectionInteractor(historyItem, selectionHolder, selectionInteractor)
 
-            val deleteButton = metaButton
+            val deleteButton = actionButton
             deleteButton.setOnClickListener {
                 selectionInteractor.delete(historyItem)
             }
 
             loadFavicon(historyItem.url)
 
-            toggleMetaButton(showMetaButton = viewMode != ViewMode.Editing)
-            toggleIconView(showCheckMark = isSelected)
+            toggleActionButton(showActionButton = viewMode != ViewMode.Editing)
+            changeSelected(isSelected = isSelected)
         }
 
         val headerText = timeGroup?.humanReadable(itemView.context, historyItem.visitTime)

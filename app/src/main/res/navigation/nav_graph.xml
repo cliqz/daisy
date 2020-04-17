@@ -45,6 +45,10 @@
             android:id="@+id/action_freshTabFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
 
+        <action
+            android:id="@+id/action_freshTabFragment_to_bookmarkFragment"
+            app:destination="@id/bookmarkFragment" />
+
     </fragment>
 
     <fragment
@@ -89,6 +93,10 @@
             android:id="@+id/action_browserFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
 
+        <action
+            android:id="@+id/action_browserFragment_to_bookmarkFragment"
+            app:destination="@id/bookmarkFragment" />
+
         <argument
             android:name="session_id"
             app:argType="string"
@@ -121,6 +129,18 @@
 
         <action
             android:id="@+id/action_historyFragment_to_browserFragment"
+            app:destination="@id/browserFragment"
+            app:popUpTo="@id/freshTabFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookmarkFragment"
+        android:name="org.mozilla.reference.browser.library.bookmarks.ui.BookmarkFragment"
+        tools:layout="@layout/fragment_bookmark">
+
+        <action
+            android:id="@+id/action_bookmarkFragment_to_browserFragment"
             app:destination="@id/browserFragment"
             app:popUpTo="@id/freshTabFragment" />
 

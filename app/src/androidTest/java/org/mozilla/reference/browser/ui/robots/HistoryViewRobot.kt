@@ -45,7 +45,7 @@ class HistoryViewRobot {
 
     fun clickHistoryItemDelete() {
         mDevice.waitAndInteract(
-            Until.findObject(By.res("com.cliqz.browser.daisy.debug:id/meta_btn"))) {}
+            Until.findObject(By.res("com.cliqz.browser.daisy.debug:id/action_btn"))) {}
         historyItemDeleteButton().click()
     }
 
@@ -69,7 +69,7 @@ private fun historyItemUrl(url: String) = onView(withText(url))
 
 private fun historyDeleteButton() = onView(withId(R.id.clear_history))
 
-private fun historyItemDeleteButton() = onView(withId(R.id.meta_btn))
+private fun historyItemDeleteButton() = onView(withId(R.id.action_btn))
 
 private fun assertHistoryViewExists() {
     onView(withText("History"))
