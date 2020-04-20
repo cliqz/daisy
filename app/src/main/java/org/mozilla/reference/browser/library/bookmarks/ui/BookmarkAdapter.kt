@@ -18,15 +18,14 @@ import org.mozilla.reference.browser.library.bookmarks.ui.viewholders.BookmarkIt
 import org.mozilla.reference.browser.library.bookmarks.ui.viewholders.BookmarkNodeViewHolder
 
 class BookmarkAdapter(
-    private val bookmarkInteractor: BookmarkViewInteractor,
-    private val bookmarkViewModel: BookmarkViewModel
+    private val bookmarkInteractor: BookmarkViewInteractor
 ) : RecyclerView.Adapter<BookmarkNodeViewHolder>(), SelectionHolder<BookmarkNode> {
 
     private var viewMode = ViewMode.Normal
 
     private var bookmarkList: List<BookmarkNode> = listOf()
 
-    override val selectedItems: Set<BookmarkNode> get() = bookmarkViewModel.selectedItems
+    override var selectedItems: Set<BookmarkNode> = setOf()
 
     fun updateData(
         bookmarkList: List<BookmarkNode>,
@@ -46,6 +45,7 @@ class BookmarkAdapter(
 
         this.bookmarkList = bookmarkList
         this.viewMode = viewMode
+        this.selectedItems = HashSet(selectedItems)
 
         diffUtil.dispatchUpdatesTo(this)
     }
@@ -59,7 +59,7 @@ class BookmarkAdapter(
         val newSelectedItems: Set<BookmarkNode>
     ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            old[oldItemPosition].guid == new[newItemPosition].guid
+            old[oldItemPosition].url == new[newItemPosition].url
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
             oldMode == newMode &&

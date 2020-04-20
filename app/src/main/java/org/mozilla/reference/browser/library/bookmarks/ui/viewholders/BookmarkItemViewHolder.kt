@@ -22,7 +22,7 @@ class BookmarkItemViewHolder(
 
     override fun bind(item: BookmarkNode) {
         containerView.toggleActionButton(
-            showActionButton = selectionHolder.selectedItems.isNotEmpty()
+            showActionButton = selectionHolder.selectedItems.isEmpty()
         )
         setupMenu(item)
         containerView.titleView.text = if (item.title.isNullOrBlank()) item.url else item.title

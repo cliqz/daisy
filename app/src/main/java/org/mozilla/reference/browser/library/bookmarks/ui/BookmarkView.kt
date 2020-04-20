@@ -29,13 +29,10 @@ class BookmarkView(
     private val interactor: BookmarkViewInteractor
 ) : LibraryPageView(containerView), UserInteractionHandler {
 
-    private var viewMode = ViewMode.Normal
-    private var selectedItems = setOf<BookmarkNode>()
-
     val view: View = LayoutInflater.from(containerView.context)
             .inflate(R.layout.component_bookmark, containerView, true)
 
-    private val bookmarkAdapter: BookmarkAdapter = BookmarkAdapter(interactor, bookmarkViewModel)
+    private val bookmarkAdapter: BookmarkAdapter = BookmarkAdapter(interactor)
 
     private val bookmarkSearchAdapter: BookmarkSearchAdapter = BookmarkSearchAdapter(
         containerView.context.components.core.icons)
@@ -96,8 +93,6 @@ class BookmarkView(
                 view.toolbar
             )
         }
-        viewMode = newViewMode
-        selectedItems = newSelectedItems.toSet()
     }
 
     override fun onBackPressed(): Boolean {

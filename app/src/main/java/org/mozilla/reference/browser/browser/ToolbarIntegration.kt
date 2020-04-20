@@ -320,7 +320,6 @@ class ToolbarIntegration(
     private suspend fun bookmarkTapped(session: Session) = withContext(Dispatchers.IO) {
         val isExistingBookmark = historyStorage.isBookmark(session.url)
         if (isExistingBookmark) {
-            // to-do: Remove existing bookmark
             historyStorage.deleteBookmark(session.url)
         } else {
             // Save bookmark
