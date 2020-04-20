@@ -12,6 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,7 +27,8 @@ import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 class HistoryFragment @JvmOverloads constructor(
-    private val initialHistoryViewModel: HistoryViewModel? = null
+    private val initialHistoryViewModel: HistoryViewModel? = null,
+    private val initialHistoryInteractor: HistoryInteractor? = null
 ) : Fragment(), UserInteractionHandler {
 
     private lateinit var historyViewModel: HistoryViewModel
@@ -42,7 +44,7 @@ class HistoryFragment @JvmOverloads constructor(
                 context.components.useCases.sessionUseCases
         )
 
-        historyInteractor = HistoryInteractor(
+        historyInteractor = initialHistoryInteractor ?: HistoryInteractor(
                 historyViewModel,
                 ::openHistoryItems,
                 ::deleteAll,
@@ -128,7 +130,8 @@ class HistoryFragment @JvmOverloads constructor(
         }
     }
 
-    private fun deleteAll() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun deleteAll() {
         showClearAllHistoryDialog()
     }
 
