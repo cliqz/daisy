@@ -38,7 +38,9 @@ class HistoryView(
 
     private val historyAdapter: HistoryAdapter = HistoryAdapter(interactor, historyViewModel)
     private val historySearchAdapter: HistorySearchAdapter = HistorySearchAdapter(
-        containerView.context.components.core.icons)
+        interactor,
+        containerView.context.components.core.icons
+    )
     private var searchItem: MenuItem? = null
 
     init {
