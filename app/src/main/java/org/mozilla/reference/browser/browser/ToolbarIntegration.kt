@@ -64,6 +64,10 @@ class ToolbarIntegration(
         it.initialize(context)
     }
 
+    private fun hasSessionAndUrl() =
+        sessionManager.selectedSession != null &&
+            !sessionManager.selectedSession!!.isFreshTab()
+
     private val menuToolbar by lazy {
         val forward = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
@@ -80,6 +84,15 @@ class ToolbarIntegration(
             sessionUseCases.reload.invoke()
         }
 
+        val share = BrowserMenuItemToolbar.Button(
+            mozilla.components.ui.icons.R.drawable.mozac_ic_share,
+            iconTintColorResource = R.color.icons,
+            contentDescription = context.getString(R.string.toolbar_menu_item_share),
+            isEnabled = ::hasSessionAndUrl) {
+            val url = sessionManager.selectedSession?.url ?: ""
+            context.share(url)
+        }
+
         val stop = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
             iconTintColorResource = R.color.icons,
@@ -87,14 +100,10 @@ class ToolbarIntegration(
             sessionUseCases.stopLoading.invoke()
         }
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, stop))
+        BrowserMenuItemToolbar(listOf(forward, refresh, share, stop))
     }
 
     private val menuItems: List<BrowserMenuItem> by lazy {
-        val hasSessionAndUrl = {
-            sessionManager.selectedSession != null &&
-                    !sessionManager.selectedSession!!.isFreshTab()
-        }
         listOf(
             menuToolbar,
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_new_tab)) {
@@ -104,18 +113,12 @@ class ToolbarIntegration(
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_forget_tab)) {
                 tabsUseCases.addPrivateTab.invoke("about:privatebrowsing", selectTab = true)
             },
-            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_share)) {
-                val url = sessionManager.selectedSession?.url ?: ""
-                context.share(url)
-            }.apply {
-                visible = hasSessionAndUrl
-            },
             BrowserMenuSwitch(context.getString(R.string.toolbar_menu_item_request_desktop_site), {
                 sessionManager.selectedSessionOrThrow.desktopMode
             }) { checked ->
                 sessionUseCases.requestDesktopSite.invoke(checked)
             }.apply {
-                visible = hasSessionAndUrl
+                visible = ::hasSessionAndUrl
             },
 
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_add_to_homescreen)) {
@@ -129,7 +132,7 @@ class ToolbarIntegration(
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_find_in_page)) {
                 FindInPageIntegration.launch?.invoke()
             }.apply {
-                visible = hasSessionAndUrl
+                visible = ::hasSessionAndUrl
             },
 
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_report_issue)) {
