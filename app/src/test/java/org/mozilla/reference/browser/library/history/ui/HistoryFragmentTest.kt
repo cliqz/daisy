@@ -20,6 +20,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -43,7 +44,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.spy
+import org.mockito.Mockito.verify
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.assertions.hasItemsCount
 import org.mozilla.reference.browser.assertions.isEnabled
@@ -82,12 +85,14 @@ enum class Dates(val dateTime: Date) {
 class HistoryFragmentTest {
 
     private lateinit var historyViewModel: HistoryViewModel
+    private lateinit var historyInteractor: HistoryInteractor
 
     @Before
     fun setUp() {
-        testContext.components.useCases.apply {
+        with(testContext.components.useCases) {
             historyViewModel = spy(HistoryViewModel(historyUseCases))
         }
+        historyInteractor = mock()
     }
 
     @Test
@@ -146,6 +151,8 @@ class HistoryFragmentTest {
 
         onView(withText(TestData.Cliqz.title))
             .perform(longClick())
+
+        verify(historyInteractor).select(any())
         onView(withId(R.id.toolbar_title))
             .check(matches(withText("1 selected")))
     }
@@ -169,6 +176,21 @@ class HistoryFragmentTest {
     }
 
     @Test
+    fun `should be able to open a search result`() {
+        setupTestData()
+
+        launchFragment()
+
+        onView(withContentDescription(R.string.search_widget_text_short)).perform(click())
+        onView(withId(R.id.search)).perform(typeText("Face"))
+
+        onView(withId(R.id.history_search_list))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
+
+        verify(historyInteractor).open(any(), eq(false))
+    }
+
+    @Test
     fun `should display a dialog when deleting the history`() {
         Assume.assumeTrue("This runs only in robolectric", "robolectric" == Build.FINGERPRINT)
         setupTestData()
@@ -178,6 +200,7 @@ class HistoryFragmentTest {
         onView(withText(R.string.history_clear_all))
             .perform(click())
 
+        verify(historyInteractor).onDeleteAll()
         assertTrue(ShadowAlertDialog.getLatestDialog().isShowing)
     }
 
@@ -200,13 +223,24 @@ class HistoryFragmentTest {
                     it.title.contains(query) || it.url.contains(query)
                 }
                 .map {
-                    SearchResult(it.id.toString(), it.url, 1000, it.url)
+                    SearchResult(it.id.toString(), it.url, 1000, it.title)
                 }
         }
     }
 
-    private fun launchFragment() = launchFragmentInContainer(themeResId = R.style.Theme_AppCompat) {
-        HistoryFragment(historyViewModel)
+    private fun launchFragment() {
+        val scenario = launchFragmentInContainer(themeResId = R.style.Theme_AppCompat) {
+            HistoryFragment(historyViewModel, historyInteractor)
+        }
+
+        // Making the mocked interactor perform some real operation in order to check ui elements
+        // and dialogs visibility
+        scenario.onFragment { fragment ->
+            whenever(historyInteractor.onDeleteAll()).then { fragment.deleteAll() }
+            whenever(historyInteractor.select(any())).then {
+                historyViewModel.addToSelectedItems(it.arguments[0] as HistoryItem)
+            }
+        }
     }
 }
 

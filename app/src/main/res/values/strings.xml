@@ -177,7 +177,7 @@
     <string name="history_clear_all_dialog_msg">You are about to delete your history. The action will also delete most visited pages on the new tab.</string>
     <string name="history_clear_all_dialog_positive_btn">Delete</string>
     <string name="history_clear_all_dialog_negative_btn">Cancel</string>
-    <string name="no_history_available">No history to show</string>
+    <string name="no_history_available">You have no history.\nTip: Websites visited in Forget mode\nwill never be saved in History.</string>
     <string name="history_screen_title">History</string>
     <plurals name="history_items_selected">
         <item quantity="one">%1$d selected</item>
