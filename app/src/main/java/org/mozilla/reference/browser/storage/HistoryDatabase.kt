@@ -569,6 +569,26 @@ class HistoryDatabase(context: Context) :
         setFavorites(url, null, System.currentTimeMillis(), false)
     }
 
+    override fun searchBookmarks(query: String): List<SearchResult> {
+        val db = dbHandler.database ?: return listOf()
+        val formattedSearch = String.format("%%%s%%", query)
+        val selectQuery = res.getString(R.string.search_favorite_query)
+        val cursor = db.rawQuery(selectQuery, arrayOf(formattedSearch, formattedSearch))
+
+        val bookmarkSuggestions = mutableListOf<SearchResult>()
+        if (cursor.moveToFirst()) {
+            do {
+                val url = cursor.getString(cursor.getColumnIndex(UrlsTable.URL))
+                val title = cursor.getString(cursor.getColumnIndex(UrlsTable.TITLE))
+                // The bookmark query we use does not return any 'score' attribute column
+                val bookmarkSuggestion = SearchResult(url, url, 0, title)
+                bookmarkSuggestions.add(bookmarkSuggestion)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return bookmarkSuggestions
+    }
+
     /**
      * Delete an history point. If the history point is the last one for a given url and the url is
      * not favorite, the method will delete the url from the urls table also

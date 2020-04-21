@@ -8,6 +8,7 @@ package org.mozilla.reference.browser.library.bookmarks.usecases
 
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.BookmarkNodeType
+import mozilla.components.concept.storage.SearchResult
 import mozilla.components.support.ktx.android.org.json.tryGetString
 import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.storage.HistoryDatabase.HistoryKeys
@@ -48,10 +49,8 @@ class BookmarkUseCases(historyStorage: HistoryStorage) {
     }
 
     class SearchBookmarksUseCase(private val historyStorage: HistoryStorage) {
-        operator fun invoke(query: String): List<BookmarkNode> {
-            val bookmarkList = mutableListOf<BookmarkNode>()
-            // Create search query for bookmark
-            return bookmarkList
+        operator fun invoke(query: String): List<SearchResult> {
+            return historyStorage.searchBookmarks(query)
         }
     }
 

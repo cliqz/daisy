@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.concept.storage.BookmarkNode
+import mozilla.components.concept.storage.SearchResult
 import org.mozilla.reference.browser.library.bookmarks.usecases.BookmarkUseCases
 
 class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewModel() {
@@ -70,7 +71,7 @@ class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewMo
         }
     }
 
-    fun searchBookmarks(query: String?): List<BookmarkNode> {
+    fun searchBookmarks(query: String?): List<SearchResult> {
         return bookmarkUseCases.searchBookmarks(query ?: "")
     }
 

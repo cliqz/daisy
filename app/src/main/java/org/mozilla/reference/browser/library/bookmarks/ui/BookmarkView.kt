@@ -35,6 +35,7 @@ class BookmarkView(
     private val bookmarkAdapter: BookmarkAdapter = BookmarkAdapter(interactor)
 
     private val bookmarkSearchAdapter: BookmarkSearchAdapter = BookmarkSearchAdapter(
+        interactor,
         containerView.context.components.core.icons)
     private var searchItem: MenuItem? = null
 

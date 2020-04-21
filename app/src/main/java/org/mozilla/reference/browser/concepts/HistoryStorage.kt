@@ -1,6 +1,7 @@
 package org.mozilla.reference.browser.concepts
 
 import mozilla.components.concept.storage.HistoryStorage
+import mozilla.components.concept.storage.SearchResult
 import org.json.JSONArray
 import org.mozilla.reference.browser.storage.model.TopSite
 
@@ -35,4 +36,6 @@ interface HistoryStorage : HistoryStorage {
     suspend fun isBookmark(url: String): Boolean
 
     suspend fun deleteBookmark(url: String)
+
+    fun searchBookmarks(query: String): List<SearchResult>
 }
