@@ -12,13 +12,13 @@ import org.mozilla.reference.browser.library.MultiSelectionInteractor
  */
 class HistoryInteractor(
     private val historyViewModel: HistoryViewModel,
-    private val openAll: (items: Set<HistoryItem>, private: Boolean) -> Unit,
+    private val openAll: (items: Set<HistoryItem>, newTab: Boolean, private: Boolean) -> Unit,
     private val deleteAll: () -> Unit,
     private val onBackPressed: () -> Boolean
 ) : MultiSelectionInteractor<HistoryItem> {
 
-    override fun open(items: Set<HistoryItem>, private: Boolean) {
-        openAll.invoke(items, private)
+    override fun open(items: Set<HistoryItem>, newTab: Boolean, private: Boolean) {
+        openAll.invoke(items, newTab, private)
     }
 
     override fun select(item: HistoryItem) {

@@ -187,7 +187,7 @@ class HistoryFragmentTest {
         onView(withId(R.id.history_search_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
 
-        verify(historyInteractor).open(any(), eq(false))
+        verify(historyInteractor).open(any(), eq(false), eq(false))
     }
 
     @Test

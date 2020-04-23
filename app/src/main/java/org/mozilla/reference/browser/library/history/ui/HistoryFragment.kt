@@ -7,9 +7,6 @@ package org.mozilla.reference.browser.library.history.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
@@ -79,34 +76,11 @@ class HistoryFragment @JvmOverloads constructor(
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        val layout = when (historyViewModel.viewMode) {
-            ViewMode.Normal -> R.menu.history_menu
-            ViewMode.Editing -> R.menu.history_multi_select_menu
-        }
-        inflater.inflate(layout, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home, R.id.close -> {
-                onBackPressed()
-                return true
-            }
-            R.id.delete -> {
-                historyViewModel.deleteMultipleHistoryItem(historyViewModel.selectedItems)
-                historyViewModel.viewMode = ViewMode.Normal
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun openHistoryItems(items: Set<HistoryItem>, private: Boolean) {
+    private fun openHistoryItems(items: Set<HistoryItem>, newTab: Boolean, private: Boolean) {
         items.forEach { historyItem ->
             context?.openToBrowserAndLoad(
                 searchTermOrUrl = historyItem.url,
-                newTab = items.size != 1, // Load in the current tab
+                newTab = newTab,
                 from = BrowserDirection.FromHistory,
                 private = private
             )
