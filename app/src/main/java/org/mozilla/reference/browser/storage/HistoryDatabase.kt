@@ -26,6 +26,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.concepts.HistoryStorage
+import org.mozilla.reference.browser.ext.beginTransaction
 import org.mozilla.reference.browser.storage.model.TopSite
 import java.net.URI
 import java.util.Locale
@@ -68,6 +69,7 @@ class HistoryDatabase(context: Context) :
 
         val searchSuggestions = mutableListOf<SearchResult>()
         val resultCount = 0
+
         if (cursor.moveToFirst()) {
             do {
                 val url = cursor.getString(cursor.getColumnIndex(UrlsTable.URL))
@@ -81,16 +83,63 @@ class HistoryDatabase(context: Context) :
         return searchSuggestions
     }
 
-    override suspend fun getVisited(): List<String> {
-        return listOf()
-    }
+    @Suppress("NestedBlockDepth")
+    override suspend fun getVisited(): List<String> = dbHandler.database?.let { db ->
+        val result = mutableListOf<String>()
+        db.query(
+            UrlsTable.TABLE_NAME,
+            arrayOf(UrlsTable.URL),
+            null, null, null, null, null)
+        .use {
+            if (it.moveToFirst()) {
+                val index = it.getColumnIndex(UrlsTable.URL)
+                do {
+                    result.add(it.getString(index))
+                } while (it.moveToNext())
+            }
+        }
+        result
+    } ?: listOf()
 
     override suspend fun getVisited(uris: List<String>): List<Boolean> {
-        return listOf()
+        return uris.map { isVisited(it) }
     }
 
+    private fun isVisited(uri: String): Boolean = dbHandler.database?.let { db ->
+        db
+            .query(
+                UrlsTable.TABLE_NAME,
+                arrayOf(UrlsTable.URL),
+                "${UrlsTable.URL} = ?",
+                arrayOf(uri),
+                null, null, null
+            ).use {
+                it.moveToFirst()
+            }
+    } ?: false
+
+    @Synchronized
     override suspend fun getVisitsPaginated(offset: Long, count: Long, excludeTypes: List<VisitType>): List<VisitInfo> {
-        return getHistoryItems(offset, count)
+        val results: MutableList<VisitInfo> = ArrayList()
+        val db = dbHandler.database ?: return results
+        val cursor = db.rawQuery(res.getString(R.string.get_history_query_v5), arrayOf(
+            count.toString(),
+            offset.toString()
+        ))
+        if (cursor.moveToFirst()) {
+            val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
+            val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
+            val timeIndex = cursor.getColumnIndex(HistoryTable.TIME)
+            do {
+                val item = VisitInfo(
+                    cursor.getString(urlIndex),
+                    cursor.getString(titleIndex),
+                    cursor.getLong(timeIndex), VisitType.LINK)
+                results.add(item)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return results
     }
 
     override suspend fun prune() {
@@ -166,12 +215,8 @@ class HistoryDatabase(context: Context) :
 
     // Creating Tables
     override fun onCreate(db: SQLiteDatabase) {
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             createV9DB(db)
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
@@ -257,8 +302,7 @@ class HistoryDatabase(context: Context) :
     // Upgrading database
     @Suppress("ComplexMethod")
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             if (oldVersion < V3) upgradeV2toV3(db)
             if (oldVersion < V4) upgradeV3toV4(db)
             if (oldVersion < V5) upgradeV4toV5(db)
@@ -267,16 +311,13 @@ class HistoryDatabase(context: Context) :
             if (oldVersion < V8) upgradeV7toV8(db)
             if (oldVersion < V9) upgradeV8toV9(db)
             else {
-                db.execSQL("DROP TABLE IF EXISTS " + UrlsTable.TABLE_NAME)
-                db.execSQL("DROP TABLE IF EXISTS " + HistoryTable.TABLE_NAME)
-                db.execSQL("DROP TABLE IF EXISTS " + BlockedTopSitesTable.TABLE_NAME)
-                db.execSQL("DROP TABLE IF EXISTS " + QueriesTable.TABLE_NAME)
+                execSQL("DROP TABLE IF EXISTS " + UrlsTable.TABLE_NAME)
+                execSQL("DROP TABLE IF EXISTS " + HistoryTable.TABLE_NAME)
+                execSQL("DROP TABLE IF EXISTS " + BlockedTopSitesTable.TABLE_NAME)
+                execSQL("DROP TABLE IF EXISTS " + QueriesTable.TABLE_NAME)
                 // Create tables again
-                createV9DB(db)
+                createV9DB(this)
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
@@ -296,28 +337,26 @@ class HistoryDatabase(context: Context) :
         urlsValues.put(UrlsTable.URL, url)
         urlsValues.put(UrlsTable.DOMAIN, domain)
         urlsValues.put(UrlsTable.TITLE, title)
-        db.beginTransaction()
-        try {
-            val urlId: Long
-            if (q.count > 0) {
-                q.moveToFirst()
-                val idIndex = q.getColumnIndex(UrlsTable.ID)
-                val visitsIndex = q.getColumnIndex(UrlsTable.VISITS)
-                val timeIndex = q.getColumnIndex(UrlsTable.TIME)
-                urlId = q.getLong(idIndex)
-                val visits = q.getLong(visitsIndex)
-                urlsValues.put(UrlsTable.VISITS, visits)
-                urlsValues.put(UrlsTable.TIME, q.getLong(timeIndex))
-                db.update(UrlsTable.TABLE_NAME, urlsValues, UrlsTable.ID + " = ?",
-                    arrayOf(urlId.toString()))
+        db.beginTransaction(
+            transaction = {
+                if (q.count > 0) {
+                    q.moveToFirst()
+                    val idIndex = q.getColumnIndex(UrlsTable.ID)
+                    val visitsIndex = q.getColumnIndex(UrlsTable.VISITS)
+                    val timeIndex = q.getColumnIndex(UrlsTable.TIME)
+                    val urlId = q.getLong(idIndex)
+                    val visits = q.getLong(visitsIndex)
+                    urlsValues.put(UrlsTable.VISITS, visits)
+                    urlsValues.put(UrlsTable.TIME, q.getLong(timeIndex))
+                    update(UrlsTable.TABLE_NAME, urlsValues, UrlsTable.ID + " = ?",
+                        arrayOf(urlId.toString()))
+                }
+                q.close()
+            },
+            catchBlock = {
+                Log.e("HistoryDatabase", "Error updating meta data", it)
             }
-            q.close()
-            db.setTransactionSuccessful()
-        } catch (e: Exception) { // We do not want to crash if we can't update history
-            Log.e("HistoryDatabase", "Error updating meta data", e)
-        } finally {
-            db.endTransaction()
-        }
+        )
     }
 
     /**
@@ -340,35 +379,35 @@ class HistoryDatabase(context: Context) :
         urlsValues.put(UrlsTable.TITLE, title)
         urlsValues.put(UrlsTable.VISITS, 1L)
         urlsValues.put(UrlsTable.TIME, time)
-        db.beginTransaction()
-        val historyID: Long
-        try {
-            val urlId: Long
-            if (q.count > 0) {
-                q.moveToFirst()
-                val idIndex = q.getColumnIndex(UrlsTable.ID)
-                val visitsIndex = q.getColumnIndex(UrlsTable.VISITS)
-                urlId = q.getLong(idIndex)
-                val visits = q.getLong(visitsIndex)
-                urlsValues.put(UrlsTable.VISITS, visits + 1L)
-                db.update(UrlsTable.TABLE_NAME, urlsValues, UrlsTable.ID + " = ?",
-                    arrayOf(urlId.toString()))
-            } else {
-                urlId = db.insert(UrlsTable.TABLE_NAME, null, urlsValues)
+        return db.beginTransaction(
+            transaction = {
+                val historyID: Long
+                val urlId: Long
+                if (q.count > 0) {
+                    q.moveToFirst()
+                    val idIndex = q.getColumnIndex(UrlsTable.ID)
+                    val visitsIndex = q.getColumnIndex(UrlsTable.VISITS)
+                    urlId = q.getLong(idIndex)
+                    val visits = q.getLong(visitsIndex)
+                    urlsValues.put(UrlsTable.VISITS, visits + 1L)
+                    db.update(UrlsTable.TABLE_NAME, urlsValues, UrlsTable.ID + " = ?",
+                        arrayOf(urlId.toString()))
+                } else {
+                    urlId = db.insert(UrlsTable.TABLE_NAME, null, urlsValues)
+                }
+                q.close()
+                val historyValues = ContentValues()
+                historyValues.put(HistoryTable.URL_ID, urlId)
+                historyValues.put(HistoryTable.TIME, time)
+                historyID = db.insert(HistoryTable.TABLE_NAME, null, historyValues)
+                db.setTransactionSuccessful()
+                historyID
+            },
+            catchBlock = {
+                Log.e("HistoryDatabase", "Error updating history", it)
+                -1
             }
-            q.close()
-            val historyValues = ContentValues()
-            historyValues.put(HistoryTable.URL_ID, urlId)
-            historyValues.put(HistoryTable.TIME, time)
-            historyID = db.insert(HistoryTable.TABLE_NAME, null, historyValues)
-            db.setTransactionSuccessful()
-            return historyID
-        } catch (e: Exception) { // We do not want to crash if we can't update history
-            Log.e("HistoryDatabase", "Error updating history", e)
-        } finally {
-            db.endTransaction()
-        }
-        return -1
+        )
     }
 
     /**
@@ -467,30 +506,6 @@ class HistoryDatabase(context: Context) :
             return result
         }
 
-    @Synchronized
-    fun getHistoryItems(offset: Long, limit: Long): List<VisitInfo> {
-        val results: MutableList<VisitInfo> = ArrayList()
-        val db = dbHandler.database ?: return results
-        val cursor = db.rawQuery(res.getString(R.string.get_history_query_v5), arrayOf(
-            limit.toString(),
-            offset.toString()
-        ))
-        if (cursor.moveToFirst()) {
-            val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
-            val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
-            val timeIndex = cursor.getColumnIndex(HistoryTable.TIME)
-            do {
-                val item = VisitInfo(
-                    cursor.getString(urlIndex),
-                    cursor.getString(titleIndex),
-                    cursor.getLong(timeIndex), VisitType.LINK)
-                results.add(item)
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        return results
-    }
-
     // Ignore this org.json weirdness
     @Suppress("unused")
     @get:Synchronized
@@ -538,19 +553,15 @@ class HistoryDatabase(context: Context) :
         values.put(UrlsTable.FAVORITE, isFavorite)
         values.put(UrlsTable.FAV_TIME, favTime)
         val cursor = db.rawQuery(res.getString(R.string.search_url_v5), arrayOf(url))
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             if (cursor.count > 0) {
-                db.update(UrlsTable.TABLE_NAME, values, "url = ?", arrayOf(url))
+                update(UrlsTable.TABLE_NAME, values, "url = ?", arrayOf(url))
             } else {
                 values.put(UrlsTable.URL, url)
                 values.put(UrlsTable.TITLE, title)
                 values.put(UrlsTable.VISITS, 0)
-                db.insert(UrlsTable.TABLE_NAME, null, values)
+                insert(UrlsTable.TABLE_NAME, null, values)
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
         cursor.close()
     }
@@ -611,19 +622,15 @@ class HistoryDatabase(context: Context) :
             val uid = cursor.getLong(cursor.getColumnIndex(UrlsTable.ID))
             val visits = cursor.getLong(cursor.getColumnIndex(UrlsTable.VISITS)) - 1
             val favorite = cursor.getInt(cursor.getColumnIndex(UrlsTable.FAVORITE)) > 0
-            db.beginTransaction()
-            try {
-                db.delete(HistoryTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
+            db.beginTransaction {
+                delete(HistoryTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
                 if (visits <= 0 && !favorite) {
-                    db.delete(UrlsTable.TABLE_NAME, "id=?", arrayOf(uid.toString()))
+                    delete(UrlsTable.TABLE_NAME, "id=?", arrayOf(uid.toString()))
                 } else {
                     val value = ContentValues()
                     value.put(UrlsTable.VISITS, if (visits < 0) 0 else visits)
-                    db.update(UrlsTable.TABLE_NAME, value, "id=?", arrayOf(uid.toString()))
+                    update(UrlsTable.TABLE_NAME, value, "id=?", arrayOf(uid.toString()))
                 }
-                db.setTransactionSuccessful()
-            } finally {
-                db.endTransaction()
             }
         }
         cursor.close()
@@ -637,40 +644,36 @@ class HistoryDatabase(context: Context) :
     @Synchronized
     fun clearHistory(deleteFavorites: Boolean) {
         val db = dbHandler.database ?: return
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             if (deleteFavorites) { // mark all entries in urls table as favorite = false
                 val contentValues = ContentValues()
                 contentValues.put(UrlsTable.FAVORITE, false)
-                db.update(UrlsTable.TABLE_NAME, contentValues, null, null)
+                update(UrlsTable.TABLE_NAME, contentValues, null, null)
                 // delete all entries with visits = 0;
-                db.delete(UrlsTable.TABLE_NAME, "visits=0", null)
+                delete(UrlsTable.TABLE_NAME, "visits=0", null)
             } else { // empty history table
-                db.delete(HistoryTable.TABLE_NAME, null, null)
+                delete(HistoryTable.TABLE_NAME, null, null)
                 // delete rows where favorite != 1
-                db.delete(UrlsTable.TABLE_NAME, "favorite<1", null)
+                delete(UrlsTable.TABLE_NAME, "favorite<1", null)
                 // update "visits" of remaining rows to 0
                 val contentValues = ContentValues()
                 contentValues.put(UrlsTable.VISITS, 0)
-                db.update(UrlsTable.TABLE_NAME, contentValues, null, null)
+                update(UrlsTable.TABLE_NAME, contentValues, null, null)
             }
-            db.delete(QueriesTable.TABLE_NAME, null, null)
+            delete(QueriesTable.TABLE_NAME, null, null)
             // way to flush ghost entries on older sqlite version
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                db.execSQL(res.getString(R.string.create_temp_urls_table_v6))
-                db.execSQL("INSERT into urls_temp SELECT * from urls")
-                db.execSQL("drop table urls")
-                db.execSQL("drop table queries")
-                db.execSQL(res.getString(R.string.create_urls_table_v6))
-                db.execSQL(res.getString(R.string.create_queries_table_v7))
-                db.execSQL(res.getString(R.string.create_urls_index_v5))
-                db.execSQL(res.getString(R.string.create_visits_index_v5))
-                db.execSQL("INSERT into urls SELECT * from urls_temp")
-                db.execSQL("drop table urls_temp")
+                execSQL(res.getString(R.string.create_temp_urls_table_v6))
+                execSQL("INSERT into urls_temp SELECT * from urls")
+                execSQL("drop table urls")
+                execSQL("drop table queries")
+                execSQL(res.getString(R.string.create_urls_table_v6))
+                execSQL(res.getString(R.string.create_queries_table_v7))
+                execSQL(res.getString(R.string.create_urls_index_v5))
+                execSQL(res.getString(R.string.create_visits_index_v5))
+                execSQL("INSERT into urls SELECT * from urls_temp")
+                execSQL("drop table urls_temp")
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
@@ -680,16 +683,12 @@ class HistoryDatabase(context: Context) :
             return
         }
         val db = dbHandler.database ?: return
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             for (domain in domains) {
                 val values = ContentValues()
                 values.put(BlockedTopSitesTable.DOMAIN, domain)
-                db.insert(BlockedTopSitesTable.TABLE_NAME, null, values)
+                insert(BlockedTopSitesTable.TABLE_NAME, null, values)
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
@@ -702,13 +701,9 @@ class HistoryDatabase(context: Context) :
     @Suppress("unused")
     fun removeDomainFromBlockedTopSites(domain: String) {
         val db = dbHandler.database ?: return
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             val whereClause = BlockedTopSitesTable.DOMAIN + "=?"
-            db.delete(BlockedTopSitesTable.TABLE_NAME, whereClause, arrayOf(domain))
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
+            delete(BlockedTopSitesTable.TABLE_NAME, whereClause, arrayOf(domain))
         }
     }
 
@@ -716,14 +711,10 @@ class HistoryDatabase(context: Context) :
     @Synchronized
     fun removeBlockedTopSites() {
         val db = dbHandler.database ?: return
-        db.beginTransaction()
-        try {
+        db.beginTransaction {
             if (historyItemsCount > 0) {
-                db.delete(BlockedTopSitesTable.TABLE_NAME, null, null)
+                delete(BlockedTopSitesTable.TABLE_NAME, null, null)
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
     }
 
@@ -734,30 +725,22 @@ class HistoryDatabase(context: Context) :
         val contentValues = ContentValues()
         contentValues.put(QueriesTable.QUERY, query)
         contentValues.put(QueriesTable.TIME, System.currentTimeMillis())
-        db.beginTransaction()
-        try {
-            db.insert(QueriesTable.TABLE_NAME, null, contentValues)
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
+        db.beginTransaction {
+            insert(QueriesTable.TABLE_NAME, null, contentValues)
         }
     }
 
     @Suppress("unused")
     fun deleteQuery(id: Long) {
         val db = dbHandler.database ?: return
-        db.beginTransaction()
-        try {
-            db.delete(QueriesTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
+        db.beginTransaction {
+            delete(QueriesTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
         }
     }
 
     companion object {
         // All Static variables
-// Database Version
+        // Database Version
         private const val V3 = 3
         private const val V4 = 4
         private const val V5 = 5
@@ -769,7 +752,7 @@ class HistoryDatabase(context: Context) :
         private const val DATABASE_VERSION = 9
         private const val DOMAIN_START_INDEX = 4
         // Database Name
-        private const val DATABASE_NAME = "historyManager"
+        const val DATABASE_NAME = "historyManager"
 
         private fun extractDomainFrom(url: String): String? {
             try {
