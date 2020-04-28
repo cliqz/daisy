@@ -17,6 +17,7 @@ import mozilla.components.browser.session.Session
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.support.base.observer.Observable
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.tabstray.thumbnail.TabThumbnailView
 
 /**
@@ -42,13 +43,14 @@ class TabViewHolder(
     /**
      * Displays the data of the given session and notifies the given observable about events.
      */
+    @Suppress("ComplexMethod")
     fun bind(session: Session, isSelected: Boolean, observable: Observable<TabsTray.Observer>) {
         this.session = session.also { it.register(this) }
 
-        val title = if (session.title.isNotEmpty()) {
-            session.title
-        } else {
-            session.url
+        val title = when {
+            session.title.isNotEmpty() -> session.title
+            !session.isFreshTab() -> session.url
+            else -> tabView.context.getString(R.string.freshtab_title)
         }
 
         tabView.text = title
@@ -72,14 +74,21 @@ class TabViewHolder(
         }
 
         thumbnailJob?.cancel()
-        if (session.thumbnail == null) {
-            thumbnailJob = tabsTray.thumbnailsRepository.loadIntoView(thumbnailView, session)
-        } else {
-            thumbnailView.setImageBitmap(session.thumbnail)
+        when {
+            session.isFreshTab() -> thumbnailView.setImageResource(R.drawable.placeholder_freshtab)
+            session.thumbnail != null -> thumbnailView.setImageBitmap(session.thumbnail)
+            else -> thumbnailJob = tabsTray.thumbnailsRepository.loadIntoView(
+                view = thumbnailView,
+                session = session,
+                placeholder = thumbnailView.context.getDrawable(R.drawable.placeholder_freshtab))
         }
 
         iconJob?.cancel()
-        iconJob = tabsTray.icons.loadIntoView(iconView, IconRequest(session.url))
+        if (session.isFreshTab()) {
+            iconView.setImageResource(R.mipmap.ic_launcher)
+        } else {
+            iconJob = tabsTray.icons.loadIntoView(iconView, IconRequest(session.url))
+        }
     }
 
     /**
