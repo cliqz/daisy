@@ -28,9 +28,11 @@ class ThreeDotMenuRobot {
     fun verifyThreeDotMenuExists() = threeDotMenuRecyclerViewExists()
 
     fun verifyHistoryButton() = assertHistoryButton()
+    fun verifyBookmarksButton() = assertBookmarksButton()
     fun verifyForwardButtonExists() = assertForwardButton()
     fun verifyReloadButtonExists() = assertRefreshButton()
     fun verifyStopButtonExists() = assertStopButton()
+    fun verifyAddBookmarkButtonExists() = assertAddBookmarkButton()
     fun verifyShareButtonExists() = assertShareButton()
     fun verifyRequestDesktopSiteToggleExists() = assertRequestDesktopSiteToggle()
     fun verifyFindInPageButtonExists() = assertFindInPageButton()
@@ -60,6 +62,13 @@ class ThreeDotMenuRobot {
             stopButton().click()
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
+        }
+
+        fun addToBookmark(interact: BrowserRobot.() -> Unit): BrowserRobot.Transition {
+            mDevice.waitAndInteract(Until.findObject(By.desc("Bookmark"))) { }
+            addBookmarkButton().click()
+            BrowserRobot().interact()
+            return BrowserRobot.Transition()
         }
 
         fun openShare(interact: ContentPanelRobot.() -> Unit): ContentPanelRobot.Transition {
@@ -102,6 +111,12 @@ class ThreeDotMenuRobot {
             return HistoryViewRobot.Transition()
         }
 
+        fun openBookmarks(interact: BookmarkViewRobot.() -> Unit): BookmarkViewRobot.Transition {
+            bookmarksButton().click()
+            BookmarkViewRobot().interact()
+            return BookmarkViewRobot.Transition()
+        }
+
         fun openNewTab(interact: FreshTabRobot.() -> Unit): FreshTabRobot.Transition {
             newTabButton().click()
             FreshTabRobot().interact()
@@ -130,12 +145,15 @@ private fun threeDotMenuRecyclerViewExists() {
 private fun forwardButton() = onView(ViewMatchers.withContentDescription("Forward"))
 private fun refreshButton() = onView(ViewMatchers.withContentDescription("Refresh"))
 private fun stopButton() = onView(ViewMatchers.withContentDescription("Stop"))
+private fun addBookmarkButton() = onView(ViewMatchers.withContentDescription("Bookmark"))
+private fun removeBookmarkButton() = onView(ViewMatchers.withContentDescription("Remove bookmark"))
 private fun shareButton() = onView(ViewMatchers.withText("Share"))
 private fun requestDesktopSiteToggle() = onView(ViewMatchers.withText("Request desktop site"))
 private fun findInPageButton() = onView(ViewMatchers.withText("Find in Page"))
 private fun reportIssueButton() = onView(ViewMatchers.withText("Report issue"))
 private fun settingsButton() = onView(ViewMatchers.withText("Settings"))
 private fun historyButton() = onView(ViewMatchers.withText("History"))
+private fun bookmarksButton() = onView(ViewMatchers.withText("Bookmarks"))
 private fun newTabButton() = onView(ViewMatchers.withText("New Tab"))
 private fun clearDataButton() = onView(ViewMatchers.withText("Clear Data"))
 private fun newForgetTabButton() = onView(ViewMatchers.withText("New Forget Tab"))
@@ -148,11 +166,15 @@ private fun assertNewForgetTabButton() = newForgetTabButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertHistoryButton() = historyButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertBookmarksButton() = bookmarksButton()
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertForwardButton() = forwardButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertRefreshButton() = refreshButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertStopButton() = stopButton()
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+private fun assertAddBookmarkButton() = addBookmarkButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 private fun assertShareButton() = shareButton()
         .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))

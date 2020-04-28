@@ -254,4 +254,13 @@ class ThreeDotMenuTest {
             verifyHistoryViewExists()
         }
     }
+
+    @Test
+    fun openBookmarksTest() {
+        navigationToolbar {
+        }.openThreeDotMenu {
+        }.openBookmarks {
+            verifyBookmarkViewExists()
+        }
+    }
 }

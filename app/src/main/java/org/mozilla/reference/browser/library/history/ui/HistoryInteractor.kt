@@ -33,14 +33,6 @@ class HistoryInteractor(
         historyViewModel.deleteMultipleHistoryItem(items)
     }
 
-    fun exitEditingMode(): Boolean {
-        if (historyViewModel.viewMode == ViewMode.Editing) {
-            historyViewModel.clearSelectedItems()
-            return true
-        }
-        return exitView()
-    }
-
     override fun onBackPressed(): Boolean {
         if (historyViewModel.viewMode == ViewMode.Editing) {
             historyViewModel.clearSelectedItems()

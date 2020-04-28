@@ -34,6 +34,7 @@ class BookmarkViewInteractor(
     override fun onBackPressed(): Boolean {
         if (bookmarkViewModel.viewMode == ViewMode.Editing) {
             bookmarkViewModel.clearSelectedItems()
+            return true
         }
         return false
     }

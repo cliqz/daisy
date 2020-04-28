@@ -28,12 +28,28 @@ class LibraryMultipleSelectionToolbarRobot {
     fun verifyCloseToolbarButton() = assertCloseToolbarButton()
 
     class Transition {
+
+        fun closeToolbarReturnToBookmarks(interact: BookmarkViewRobot.() -> Unit): BookmarkViewRobot.Transition {
+            closeToolbarButton().click()
+
+            BookmarkViewRobot().interact()
+            return BookmarkViewRobot.Transition()
+        }
+
         fun closeToolbarReturnToHistory(interact: HistoryViewRobot.() -> Unit): HistoryViewRobot.Transition {
             closeToolbarButton().click()
 
             HistoryViewRobot().interact()
             return HistoryViewRobot.Transition()
         }
+
+        fun clickBookmarksMultiSelectionDelete(interact: BookmarkViewRobot.() -> Unit): BookmarkViewRobot.Transition {
+            multiSelectionDeleteButton().click()
+
+            BookmarkViewRobot().interact()
+            return BookmarkViewRobot.Transition()
+        }
+
         fun clickMultiSelectionDelete(interact: HistoryViewRobot.() -> Unit): HistoryViewRobot.Transition {
             multiSelectionDeleteButton().click()
 
@@ -59,7 +75,7 @@ private fun assertMultiSelectionCheckmark() =
         .check(matches(isDisplayed()))
 
 private fun assertMultiSelectionCounter() =
-    onView(withText("1 item selected"))
+    onView(withText("1 selected"))
         .check(matches(isDisplayed()))
 
 private fun assertCloseToolbarButton() =
