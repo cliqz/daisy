@@ -62,7 +62,7 @@ class HistoryDatabase(context: Context) :
 
     override fun getSuggestions(query: String, limit: Int): List<SearchResult> {
         val db = dbHandler.database ?: return listOf()
-        val formattedSearch = String.format("%%%s%%", query)
+        val formattedSearch = String.format("%%%s%%", query.trim())
         val selectQuery = res.getString(R.string.seach_history_query_v5)
         val cursor = db.rawQuery(selectQuery, arrayOf(formattedSearch, formattedSearch, limit.toString()))
 
