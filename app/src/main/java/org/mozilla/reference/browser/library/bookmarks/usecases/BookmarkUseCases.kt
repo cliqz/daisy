@@ -7,31 +7,13 @@
 package org.mozilla.reference.browser.library.bookmarks.usecases
 
 import mozilla.components.concept.storage.BookmarkNode
-import mozilla.components.concept.storage.BookmarkNodeType
 import mozilla.components.concept.storage.SearchResult
-import mozilla.components.support.ktx.android.org.json.tryGetString
 import org.mozilla.reference.browser.concepts.HistoryStorage
-import org.mozilla.reference.browser.storage.HistoryDatabase.HistoryKeys
 
 class BookmarkUseCases(historyStorage: HistoryStorage) {
 
     class GetBookmarksUseCase(private val historyStorage: HistoryStorage) {
-        suspend operator fun invoke(): List<BookmarkNode> {
-            val bookmarkList = mutableListOf<BookmarkNode>()
-            val result = historyStorage.getBookmarks()
-            for (i in 0 until result.length()) {
-                val item = result.getJSONObject(i)
-                bookmarkList.add(BookmarkNode(
-                    type = BookmarkNodeType.ITEM,
-                    guid = "",
-                    parentGuid = null,
-                    url = item.tryGetString(HistoryKeys.URL),
-                    title = item.tryGetString(HistoryKeys.TITLE),
-                    position = null,
-                    children = null))
-            }
-            return bookmarkList
-        }
+        suspend operator fun invoke(): List<BookmarkNode> = historyStorage.getBookmarks()
     }
 
     class DeleteBookmarkUseCase(private val historyStorage: HistoryStorage) {

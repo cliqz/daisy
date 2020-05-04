@@ -15,15 +15,14 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.util.Log
+import mozilla.components.concept.storage.BookmarkNode
+import mozilla.components.concept.storage.BookmarkNodeType
 import mozilla.components.concept.storage.HistoryAutocompleteResult
 import mozilla.components.concept.storage.PageObservation
 import mozilla.components.concept.storage.PageVisit
 import mozilla.components.concept.storage.SearchResult
 import mozilla.components.concept.storage.VisitInfo
 import mozilla.components.concept.storage.VisitType
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.ext.beginTransaction
@@ -460,41 +459,6 @@ class HistoryDatabase(context: Context) :
         return topSites
     }
 
-    @Deprecated("")
-    @Synchronized
-    fun findItemsContaining(search: String?, limit: Int): JSONArray {
-        require(limit > 0) { "limit must be greater than 0" }
-        val itemList = JSONArray()
-        if (search == null) {
-            return itemList
-        }
-        val mDatabase = dbHandler.database ?: return itemList
-        val formattedSearch = String.format("%%%s%%", search)
-        val selectQuery = res.getString(R.string.seach_history_query_v5)
-        val cursor = mDatabase.rawQuery(selectQuery, arrayOf(
-            formattedSearch,
-            formattedSearch,
-            limit.toString()
-        ))
-        var n = 0
-        if (cursor.moveToFirst()) { // final int idIndex = cursor.getColumnIndex(UrlsTable.ID);
-            val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
-            val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
-            do {
-                try {
-                    val item = JSONObject()
-                    item.put(HistoryKeys.URL, cursor.getString(urlIndex))
-                    item.put(HistoryKeys.TITLE, cursor.getString(titleIndex))
-                    itemList.put(item)
-                    n++
-                } catch (e: JSONException) { // Ignore this org.json weirdness
-                }
-            } while (cursor.moveToNext() && n < limit)
-        }
-        cursor.close()
-        return itemList
-    }
-
     @get:Synchronized
     val historyItemsCount: Int
         get() {
@@ -506,30 +470,29 @@ class HistoryDatabase(context: Context) :
             return result
         }
 
-    // Ignore this org.json weirdness
-    @Suppress("unused")
     @get:Synchronized
-    val favorites: JSONArray
+    val favorites: List<BookmarkNode>
         get() {
-            val results = JSONArray()
+            val results = mutableListOf<BookmarkNode>()
             val db = dbHandler.database ?: return results
             val cursor = db.rawQuery(res.getString(R.string.get_favorite_query_v5), null)
-            if (cursor.moveToFirst()) {
-                val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
-                val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
-                val favTimeIndex = cursor.getColumnIndex(UrlsTable.FAV_TIME)
-                do {
-                    try {
-                        val item = JSONObject()
-                        item.put(HistoryKeys.URL, cursor.getString(urlIndex))
-                        item.put(HistoryKeys.TITLE, cursor.getString(titleIndex))
-                        item.put(HistoryKeys.TIME, cursor.getLong(favTimeIndex))
-                        results.put(item)
-                    } catch (e: JSONException) { // Ignore this org.json weirdness
-                    }
-                } while (cursor.moveToNext())
+            cursor.use {
+                if (cursor.moveToFirst()) {
+                    val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
+                    val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
+                    do {
+                        results.add(BookmarkNode(
+                            type = BookmarkNodeType.ITEM,
+                            guid = "", // We need to fetch the id from the DB
+                            parentGuid = null,
+                            title = cursor.getString(titleIndex),
+                            url = cursor.getString(urlIndex),
+                            position = null,
+                            children = null
+                        ))
+                    } while (cursor.moveToNext())
+                }
             }
-            cursor.close()
             return results
         }
 

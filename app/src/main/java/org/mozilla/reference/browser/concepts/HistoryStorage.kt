@@ -1,8 +1,8 @@
 package org.mozilla.reference.browser.concepts
 
+import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.concept.storage.SearchResult
-import org.json.JSONArray
 import org.mozilla.reference.browser.storage.model.TopSite
 
 /**
@@ -29,7 +29,7 @@ interface HistoryStorage : HistoryStorage {
      */
     fun restoreTopSites()
 
-    suspend fun getBookmarks(): JSONArray
+    suspend fun getBookmarks(): List<BookmarkNode>
 
     suspend fun addBookmark(url: String, title: String)
 
