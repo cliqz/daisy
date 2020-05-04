@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.tabstray.thumbnail
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatImageView
@@ -14,6 +15,13 @@ class TabThumbnailView(context: Context, attrs: AttributeSet) : AppCompatImageVi
 
     init {
         scaleType = ScaleType.MATRIX
+    }
+
+    override fun setImageDrawable(drawable: Drawable?) {
+        super.setImageDrawable(drawable)
+        if (drawable != null) {
+            setMatrix()
+        }
     }
 
     override fun setImageBitmap(bm: Bitmap?) {
