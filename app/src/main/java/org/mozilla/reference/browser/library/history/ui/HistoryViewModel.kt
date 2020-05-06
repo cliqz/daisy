@@ -23,8 +23,9 @@ class HistoryViewModel(
     private val sessionUseCases: SessionUseCases
 ) : ViewModel() {
 
-    var historyItems: LiveData<PagedList<HistoryItem>> = historyUseCases.getPagedHistory()
-        private set
+    val historyItems: LiveData<PagedList<HistoryItem>> by lazy {
+            historyUseCases.getPagedHistory()
+    }
 
     var viewMode = ViewMode.Normal
 
