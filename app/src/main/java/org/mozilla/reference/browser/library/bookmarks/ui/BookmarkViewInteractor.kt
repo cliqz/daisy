@@ -15,8 +15,8 @@ class BookmarkViewInteractor(
     private val onBackPressed: () -> Boolean
 ) : MultiSelectionInteractor<BookmarkNode> {
 
-    override fun open(items: Set<BookmarkNode>, private: Boolean) {
-        openToBrowser.invoke(items, false)
+    override fun open(items: Set<BookmarkNode>, newTab: Boolean, private: Boolean) {
+        openToBrowser.invoke(items, private)
     }
 
     override fun select(item: BookmarkNode) {

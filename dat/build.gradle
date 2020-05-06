@@ -33,7 +33,7 @@ android {
 }
 
 assetsDownloader {
-    url = "https://s3.amazonaws.com/cdncliqz/update/dat_protocol_pre/dat%40cliqz.com/dat_protocol-0.1.5.zip"
+    url = "https://s3.amazonaws.com/cdncliqz/update/dat_protocol_pre/dat%40cliqz.com/dat_protocol-0.2.1.zip"
     filename = "dat@cliqz.com.zip"
     path = "extensions/dat"
 }

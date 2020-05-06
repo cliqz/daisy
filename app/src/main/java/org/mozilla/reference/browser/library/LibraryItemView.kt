@@ -23,7 +23,8 @@ import org.mozilla.reference.browser.ext.loadIntoView
  */
 
 interface MultiSelectionInteractor<T> {
-    fun open(items: Set<T>, private: Boolean = false)
+
+    fun open(items: Set<T>, newTab: Boolean = false, private: Boolean = false)
 
     fun select(item: T)
 
@@ -88,7 +89,7 @@ class LibraryItemView @JvmOverloads constructor(
         setOnClickListener {
             val selected = holder.selectedItems
             when {
-                selected.isEmpty() -> interactor.open(setOf(item), false)
+                selected.isEmpty() -> interactor.open(setOf(item))
                 item in selected -> interactor.deselect(item)
                 else -> interactor.select(item)
             }

@@ -57,8 +57,8 @@ class BookmarkView(
                 bookmarkViewModel.viewMode = ViewMode.Normal
             }
 
-            override fun openAll(private: Boolean) {
-                interactor.open(bookmarkViewModel.selectedItems, private)
+            override fun openAll(newTab: Boolean, private: Boolean) {
+                interactor.open(bookmarkViewModel.selectedItems, newTab, private)
             }
 
             override fun searchOpened() {
