@@ -52,6 +52,7 @@ jobs:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
+        options: '-x ":app:stripDebugDebugSymbols"'
         tasks: 'assembleDebug'
         publishJUnitResults: false
         javaHomeOption: 'JDKVersion'
