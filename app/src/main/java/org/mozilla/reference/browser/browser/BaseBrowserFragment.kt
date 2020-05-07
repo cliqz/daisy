@@ -105,6 +105,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
+                view,
                 findNavController()),
             owner = this,
             view = view)

@@ -194,6 +194,8 @@
     <string name="history_clear_search">Clear Search</string>
 
     <!-- Bookmark -->
+    <string name="bookmark_added_snackbar_text">Bookmark added</string>
+    <string name="bookmark_added_snackbar_edit_action">EDIT</string>
     <string name="bookmark_view_empty_text">Tip: When you visit a website\nyou can easily bookmark it by tapping\nthe star icon in the three dots menu.</string>
     <string name="bookmark_screen_title">Bookmarks</string>
     <plurals name="bookmark_items_selected">

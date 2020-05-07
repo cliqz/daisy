@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -50,10 +51,11 @@ import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
+import org.mozilla.reference.browser.view.DaisySnackbar
 
 @Suppress("TooManyFunctions")
 class ToolbarIntegration(
-    context: Context,
+    private val context: Context,
     toolbar: BrowserToolbar,
     private val lifecycleScope: LifecycleCoroutineScope,
     private val lifecycleOwner: LifecycleOwner,
@@ -64,6 +66,7 @@ class ToolbarIntegration(
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
+    private val parentView: View,
     private val navController: NavController
 ) : LifecycleAwareFeature, UserInteractionHandler {
 
@@ -327,12 +330,31 @@ class ToolbarIntegration(
         } else {
             // Save bookmark
             historyStorage.addBookmark(session.url, session.title)
-            // to-do: Show edit bookmark snackbar and take to user to edit bookmark screen.
+            withContext(Dispatchers.Main) {
+                showBookmarkAddedSnackbar()
+            }
         }
     }
+
+    private fun showBookmarkAddedSnackbar() {
+        DaisySnackbar.make(
+            view = parentView,
+            duration = DaisySnackbar.LENGTH_LONG
+        )
+            .setText(context.getString(R.string.bookmark_added_snackbar_text))
+            .setAction(context.getString(R.string.bookmark_added_snackbar_edit_action)) {
+                openBookmarkEditFragment()
+            }
+            .show()
+    }
+
     private fun openSettingsActivity(context: Context) {
         val intent = Intent(context, SettingsActivity::class.java)
         context.startActivity(intent)
+    }
+
+    private fun openBookmarkEditFragment() {
+        // to-do go to bookmark edit fragment
     }
 
     private fun openHistoryFragment() {
