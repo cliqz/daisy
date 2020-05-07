@@ -16,14 +16,15 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_history.view.*
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.ViewModelFactory
+import org.mozilla.reference.browser.ext.application
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
-import org.mozilla.reference.browser.ext.components
-
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 
 class HistoryFragment @JvmOverloads constructor(
@@ -39,15 +40,14 @@ class HistoryFragment @JvmOverloads constructor(
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        historyViewModel = initialHistoryViewModel ?: HistoryViewModel(
-                context.components.useCases.historyUseCases
-        )
+        historyViewModel = initialHistoryViewModel ?: ViewModelProviders.of(this,
+            ViewModelFactory.getInstance(context.application)).get(HistoryViewModel::class.java)
 
         historyInteractor = initialHistoryInteractor ?: HistoryInteractor(
-                historyViewModel,
-                ::openHistoryItems,
-                ::deleteAll,
-                ::onBackPressed
+            historyViewModel,
+            ::openHistoryItems,
+            ::deleteAll,
+            ::onBackPressed
         )
     }
 
