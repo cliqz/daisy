@@ -12,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.Matchers.allOf
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.helpers.click
@@ -74,9 +75,11 @@ private fun assertMultiSelectionCheckmark() =
     onView(allOf(withId(R.id.checkmark), withEffectiveVisibility(Visibility.VISIBLE)))
         .check(matches(isDisplayed()))
 
-private fun assertMultiSelectionCounter() =
-    onView(withText("1 selected"))
+private fun assertMultiSelectionCounter() {
+    val resources = InstrumentationRegistry.getInstrumentation().context.resources
+    onView(withText(resources.getQuantityString(R.plurals.bookmark_items_selected, 1, 1)))
         .check(matches(isDisplayed()))
+}
 
 private fun assertCloseToolbarButton() =
     closeToolbarButton().check(matches(isDisplayed()))

@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.ContentViewCallback
@@ -17,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.daisy_snackbar.view.snackbar_btn
 import kotlinx.android.synthetic.main.daisy_snackbar.view.snackbar_text
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.findSuitableParent
 
 class DaisySnackbar private constructor(
     val parent: ViewGroup,
@@ -103,4 +104,35 @@ private class DaisySnackbarCallback(
         private const val animateInDuration = 200L
         private const val animateOutDuration = 150L
     }
+}
+
+// Implementation is from the default `Snackbar`
+@Suppress("ComplexMethod")
+internal fun View?.findSuitableParent(): ViewGroup? {
+    var view = this
+    var fallback: ViewGroup? = null
+    do {
+        if (view is CoordinatorLayout) {
+            // We've found a CoordinatorLayout, use it
+            return view
+        } else if (view is FrameLayout) {
+            if (view.id == android.R.id.content) {
+                // If we've hit the decor content view, then we didn't find a CoL in the
+                // hierarchy, so use it.
+                return view
+            } else {
+                // It's not the content view but we'll use it as our fallback
+                fallback = view
+            }
+        }
+
+        if (view != null) {
+            // Else, we will loop and crawl up the view hierarchy and try to find a parent
+            val parent = view.parent
+            view = if (parent is View) parent else null
+        }
+    } while (view != null)
+
+    // If we reach here then we didn't find a CoL or a suitable content view so we'll fallback
+    return fallback
 }
