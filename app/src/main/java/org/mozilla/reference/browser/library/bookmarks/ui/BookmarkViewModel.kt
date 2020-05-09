@@ -6,6 +6,7 @@
 
 package org.mozilla.reference.browser.library.bookmarks.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,44 +15,47 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.SearchResult
+import org.mozilla.reference.browser.ext.notifyObserver
 import org.mozilla.reference.browser.library.bookmarks.usecases.BookmarkUseCases
 
 class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewModel() {
 
-    var bookmarkList = listOf<BookmarkNode>()
-    val bookmarkItemsLiveData = MutableLiveData<List<BookmarkNode>>()
+    private val _bookmarkList = MutableLiveData<List<BookmarkNode>>()
+    val bookmarkList: LiveData<List<BookmarkNode>> = _bookmarkList
 
     var viewMode = ViewMode.Normal
 
-    val selectedItems = mutableSetOf<BookmarkNode>()
-    val selectedItemsLiveData = MutableLiveData<MutableSet<BookmarkNode>>()
+    private val _selectedItems = MutableLiveData<MutableSet<BookmarkNode>>()
+    val selectedItems: LiveData<MutableSet<BookmarkNode>> = _selectedItems
 
     init {
+        _bookmarkList.value = listOf()
+        _selectedItems.value = mutableSetOf()
         fetchBookmarks()
     }
 
     private fun fetchBookmarks() {
         viewModelScope.launch(Dispatchers.IO) {
-            bookmarkList = bookmarkUseCases.getBookmarks()
+            val bookmarkList = bookmarkUseCases.getBookmarks()
             withContext(Dispatchers.Main) {
-                bookmarkItemsLiveData.value = bookmarkList
+                _bookmarkList.value = bookmarkList
             }
         }
     }
 
     fun addToSelectedItems(item: BookmarkNode) {
-        selectedItems.add(item)
-        selectedItemsLiveData.value = selectedItems
+        _selectedItems.value?.add(item)
+        _selectedItems.notifyObserver()
     }
 
     fun removeFromSelectedItems(item: BookmarkNode) {
-        selectedItems.remove(item)
-        selectedItemsLiveData.value = selectedItems
+        _selectedItems.value?.remove(item)
+        _selectedItems.notifyObserver()
     }
 
     fun clearSelectedItems() {
-        selectedItems.clear()
-        selectedItemsLiveData.value = selectedItems
+        _selectedItems.value?.clear()
+        _selectedItems.notifyObserver()
     }
 
     fun deleteBookmarkItem(item: BookmarkNode) {

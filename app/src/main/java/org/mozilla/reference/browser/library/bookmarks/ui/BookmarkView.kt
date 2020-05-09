@@ -53,12 +53,12 @@ class BookmarkView(
             }
 
             override fun delete() {
-                interactor.onDeleteSome(bookmarkViewModel.selectedItems)
+                interactor.onDeleteSome(bookmarkViewModel.selectedItems.value!!)
                 bookmarkViewModel.viewMode = ViewMode.Normal
             }
 
             override fun openAll(newTab: Boolean, private: Boolean) {
-                interactor.open(bookmarkViewModel.selectedItems, newTab, private)
+                interactor.open(bookmarkViewModel.selectedItems.value!!, newTab, private)
             }
 
             override fun searchOpened() {
@@ -75,11 +75,15 @@ class BookmarkView(
                 bookmarkSearchAdapter.setData(bookmarkViewModel.searchBookmarks(query))
             }
         })
-        update(ViewMode.Normal, emptyList(), emptySet())
+        update(ViewMode.Normal)
     }
 
-    fun update(newViewMode: ViewMode, bookmarkList: List<BookmarkNode>, newSelectedItems: Set<BookmarkNode>) {
-        bookmarkAdapter.updateData(bookmarkList, newViewMode, newSelectedItems)
+    fun update(
+        newViewMode: ViewMode,
+        newBookmarkList: List<BookmarkNode> = listOf(),
+        newSelectedItems: Set<BookmarkNode> = setOf()
+    ) {
+        bookmarkAdapter.updateData(newBookmarkList, newViewMode, newSelectedItems)
 
         if (newViewMode == ViewMode.Normal) {
             setUiForNormalMode(context.getString(R.string.bookmark_screen_title), view.bookmarks_list, view.toolbar)

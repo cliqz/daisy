@@ -13,13 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_bookmark.view.*
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.components
+import org.mozilla.reference.browser.ViewModelFactory
+import org.mozilla.reference.browser.ext.application
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 
 class BookmarkFragment @JvmOverloads constructor(
@@ -34,9 +36,8 @@ class BookmarkFragment @JvmOverloads constructor(
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        bookmarkViewModel = initialBookmarkViewModel ?: BookmarkViewModel(
-            context.components.useCases.bookmarkUseCases
-        )
+        bookmarkViewModel = initialBookmarkViewModel ?: ViewModelProviders.of(this,
+            ViewModelFactory.getInstance(context.application)).get(BookmarkViewModel::class.java)
 
         bookmarkInteractor = BookmarkViewInteractor(
             bookmarkViewModel,
@@ -47,18 +48,24 @@ class BookmarkFragment @JvmOverloads constructor(
 
     override fun onResume() {
         super.onResume()
-        bookmarkViewModel.bookmarkItemsLiveData.observe(this, Observer { bookmarkList ->
+        bookmarkViewModel.bookmarkList.observe(this, Observer { bookmarkList ->
             bookmarkView.updateEmptyState(userHasBookmarks = bookmarkList.isNotEmpty())
-            bookmarkView.update(bookmarkViewModel.viewMode, bookmarkList, bookmarkViewModel.selectedItems)
+            bookmarkView.update(
+                newViewMode = bookmarkViewModel.viewMode,
+                newBookmarkList = bookmarkList,
+                newSelectedItems = bookmarkViewModel.selectedItems.value!!)
         })
 
-        bookmarkViewModel.selectedItemsLiveData.observe(this, Observer { selectedItems ->
+        bookmarkViewModel.selectedItems.observe(this, Observer { selectedItems ->
             if (selectedItems.isEmpty() && bookmarkViewModel.viewMode == ViewMode.Editing) {
                 bookmarkViewModel.viewMode = ViewMode.Normal
             } else if (selectedItems.isNotEmpty() && bookmarkViewModel.viewMode == ViewMode.Normal) {
                 bookmarkViewModel.viewMode = ViewMode.Editing
             }
-            bookmarkView.update(bookmarkViewModel.viewMode, bookmarkViewModel.bookmarkList, selectedItems)
+            bookmarkView.update(
+                newViewMode = bookmarkViewModel.viewMode,
+                newSelectedItems = selectedItems,
+                newBookmarkList = bookmarkViewModel.bookmarkList.value!!)
         })
     }
 
