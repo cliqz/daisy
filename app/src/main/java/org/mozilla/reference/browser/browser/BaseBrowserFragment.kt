@@ -97,6 +97,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireContext(),
                 toolbar,
                 lifecycleScope,
+                viewLifecycleOwner,
                 requireComponents.core.historyStorage,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,
@@ -104,6 +105,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 requireComponents.useCases.tabsUseCases,
                 requireComponents.useCases.webAppUseCases,
                 sessionId,
+                view,
                 findNavController()),
             owner = this,
             view = view)

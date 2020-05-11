@@ -18,5 +18,6 @@ import androidx.annotation.IdRes
 enum class BrowserDirection(@IdRes val fragmentId: Int) {
     FromFreshTab(R.id.freshTabFragment),
     FromSearch(R.id.searchFragment),
-    FromHistory(R.id.historyFragment)
+    FromHistory(R.id.historyFragment),
+    FromBookmark(R.id.bookmarkFragment)
 }

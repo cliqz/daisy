@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewSwitcher
+import mozilla.components.browser.menu.BrowserMenuBuilder
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.loadIntoView
@@ -38,6 +39,10 @@ interface SelectionHolder<T> {
     val selectedItems: Set<T>
 }
 
+interface LibraryItemMenu {
+    val menuBuilder: BrowserMenuBuilder
+}
+
 class LibraryItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -46,7 +51,7 @@ class LibraryItemView @JvmOverloads constructor(
 
     val titleView: TextView
     val urlView: TextView
-    val metaButton: ImageButton
+    val actionButton: ImageButton
 
     private val iconView: ViewSwitcher
     private val favicon: ImageView
@@ -57,7 +62,7 @@ class LibraryItemView @JvmOverloads constructor(
         urlView = findViewById(R.id.url_view)
         iconView = findViewById(R.id.icon_view)
         favicon = findViewById(R.id.favicon)
-        metaButton = findViewById(R.id.meta_btn)
+        actionButton = findViewById(R.id.action_btn)
         clipToPadding = false
     }
 
@@ -65,12 +70,12 @@ class LibraryItemView @JvmOverloads constructor(
         context.components.core.icons.loadIntoView(favicon, url)
     }
 
-    fun toggleMetaButton(showMetaButton: Boolean) {
-        metaButton.visibility = if (showMetaButton) View.VISIBLE else View.INVISIBLE
+    fun toggleActionButton(showActionButton: Boolean) {
+        actionButton.visibility = if (showActionButton) View.VISIBLE else View.INVISIBLE
     }
 
-    fun toggleIconView(showCheckMark: Boolean) {
-        val changedIconType = if (showCheckMark) ICON_TYPE_CHECK_MARK else ICON_TYPE_FAVICON
+    fun changeSelected(isSelected: Boolean) {
+        val changedIconType = if (isSelected) ICON_TYPE_CHECK_MARK else ICON_TYPE_FAVICON
         if (iconView.displayedChild != changedIconType) {
             iconView.displayedChild = changedIconType
         }
@@ -98,6 +103,10 @@ class LibraryItemView @JvmOverloads constructor(
             }
             true
         }
+    }
+
+    enum class ItemType {
+        SITE, FOLDER
     }
 
     companion object {

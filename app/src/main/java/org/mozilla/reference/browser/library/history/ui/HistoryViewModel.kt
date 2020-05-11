@@ -13,14 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.concept.storage.SearchResult
-import mozilla.components.feature.session.SessionUseCases
 import org.mozilla.reference.browser.library.history.data.HistoryItem
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 @Suppress("TooManyFunctions")
 class HistoryViewModel(
-    private val historyUseCases: HistoryUseCases,
-    private val sessionUseCases: SessionUseCases
+    private val historyUseCases: HistoryUseCases
 ) : ViewModel() {
 
     val historyItems: LiveData<PagedList<HistoryItem>> by lazy {
@@ -45,10 +43,6 @@ class HistoryViewModel(
     fun clearSelectedItems() {
         selectedItems.clear()
         selectedItemsLiveData.value = selectedItems
-    }
-
-    fun openHistoryItem(item: HistoryItem) {
-        sessionUseCases.loadUrl(item.url)
     }
 
     fun deleteMultipleHistoryItem(itemList: Set<HistoryItem>) {

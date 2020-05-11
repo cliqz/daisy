@@ -54,6 +54,7 @@ class FirstRunTest {
             verifyForwardButtonExists()
             verifyReloadButtonExists()
             verifyStopButtonExists()
+            verifyAddBookmarkButtonExists()
             verifyClearDataButtonExist()
             verifyNewForgetTabButtonExists()
 

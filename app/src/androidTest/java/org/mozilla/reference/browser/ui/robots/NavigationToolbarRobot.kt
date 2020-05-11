@@ -35,6 +35,14 @@ class NavigationToolbarRobot {
     fun checkNumberOfTabsTabCounter(numTabs: String) = numberOfOpenTabsTabCounter.check(matches(withText(numTabs)))
     fun verifyUrlBarNotFocused() = assertUrlBarNotFocused()
 
+    fun createBookmark(url: Uri) {
+        navigationToolbar {
+        }.freshTabEnterUrlAndEnterToBrowser(url) {
+        }.openThreeDotMenu {
+        }.addToBookmark {
+        }
+    }
+
     class Transition {
 
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

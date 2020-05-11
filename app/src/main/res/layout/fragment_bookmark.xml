@@ -6,6 +6,6 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/history_layout"
+    android:id="@+id/bookmark_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

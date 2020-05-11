@@ -20,6 +20,7 @@ import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 import org.mozilla.reference.browser.concepts.HistoryStorage
+import org.mozilla.reference.browser.library.bookmarks.usecases.BookmarkUseCases
 
 /**
  * Component group for all use cases. Use cases are provided by feature
@@ -69,6 +70,11 @@ class UseCases(
      * Uses cases that provides history integration
      */
     val historyUseCases by lazy { HistoryUseCases(historyStorage) }
+
+    /**
+     * Use cases that provides bookmark management
+     */
+    val bookmarkUseCases by lazy { BookmarkUseCases(historyStorage) }
 
     val getNewsUseCase: GetNewsUseCase by lazy { GetNewsUseCase(newsRepository) }
 }

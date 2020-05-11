@@ -35,6 +35,7 @@ import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.setSystemBarsTheme
 import org.mozilla.reference.browser.freshtab.FreshTabFragmentDirections
+import org.mozilla.reference.browser.library.bookmarks.ui.BookmarkFragmentDirections
 import org.mozilla.reference.browser.library.history.ui.HistoryFragmentDirections
 import org.mozilla.reference.browser.search.SearchFragmentDirections
 import org.mozilla.reference.browser.tabs.TabsTouchHelper
@@ -215,6 +216,8 @@ open class BrowserActivity : AppCompatActivity() {
             SearchFragmentDirections.actionSearchFragmentToBrowserFragment(sessionId)
         BrowserDirection.FromHistory ->
             HistoryFragmentDirections.actionHistoryFragmentToBrowserFragment(sessionId)
+        BrowserDirection.FromBookmark ->
+            BookmarkFragmentDirections.actionBookmarkFragmentToBrowserFragment(sessionId)
     }
 
     private fun load(

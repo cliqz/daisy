@@ -9,26 +9,31 @@ import android.content.Context
 import android.content.Intent
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mozilla.components.browser.domains.autocomplete.ShippedDomainsProvider
 import mozilla.components.browser.menu.BrowserMenuBuilder
 import mozilla.components.browser.menu.BrowserMenuItem
 import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.BrowserMenuSwitch
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
+import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
-import mozilla.components.concept.storage.HistoryStorage
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -39,26 +44,34 @@ import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.UserInteractionHandler
 import mozilla.components.support.ktx.kotlin.isUrl
 import org.mozilla.reference.browser.R
+import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
+import org.mozilla.reference.browser.view.DaisySnackbar
 
+@Suppress("TooManyFunctions")
 class ToolbarIntegration(
-    context: Context,
+    private val context: Context,
     toolbar: BrowserToolbar,
-    coroutineScope: LifecycleCoroutineScope,
-    historyStorage: HistoryStorage,
+    private val lifecycleScope: LifecycleCoroutineScope,
+    private val lifecycleOwner: LifecycleOwner,
+    private val historyStorage: HistoryStorage,
     private val sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
     searchUseCases: SearchUseCases,
     tabsUseCases: TabsUseCases,
     webAppUseCases: WebAppUseCases,
     sessionId: String? = null,
+    private val parentView: View,
     private val navController: NavController
 ) : LifecycleAwareFeature, UserInteractionHandler {
+
+    private var isCurrentUrlBookmarked = false
+    private var isBookmarkedJob: Job? = null
 
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
@@ -100,7 +113,25 @@ class ToolbarIntegration(
             sessionUseCases.stopLoading.invoke()
         }
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, share, stop))
+        registerSessionForBookmarkUpdates()
+        val bookmark = BrowserMenuItemToolbar.TwoStateButton(
+            primaryImageResource = R.drawable.ic_bookmark,
+            primaryImageTintResource = R.color.icons,
+            primaryContentDescription = context.getString(R.string.toolbar_menu_item_bookmark),
+            isInPrimaryState = { !isCurrentUrlBookmarked },
+            secondaryImageResource = R.drawable.ic_bookmarked,
+            secondaryImageTintResource = -1,
+            secondaryContentDescription = context.getString(R.string.toolbar_menu_item_remove_bookmark)
+        ) {
+            sessionManager.selectedSession?.let {
+                lifecycleScope.launch {
+                    isCurrentUrlBookmarked = !isCurrentUrlBookmarked
+                    bookmarkTapped(it)
+                }
+            }
+        }
+
+        BrowserMenuItemToolbar(listOf(forward, refresh, share, stop, bookmark))
     }
 
     private val menuItems: List<BrowserMenuItem> by lazy {
@@ -148,10 +179,14 @@ class ToolbarIntegration(
                 openHistoryFragment()
             },
 
+            SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_bookmarks)) {
+                openBookmarkFragment()
+            },
+
             SimpleBrowserMenuItem(context.getString(R.string.toolbar_menu_item_clear_data)) {
                 val deleteBrowsingData = DeleteBrowsingData(
                     context,
-                    coroutineScope,
+                    lifecycleScope,
                     tabsUseCases,
                     sessionManager,
                     ::openFreshTabFragment)
@@ -269,13 +304,66 @@ class ToolbarIntegration(
         return toolbarFeature.onBackPressed()
     }
 
+    private fun registerSessionForBookmarkUpdates() {
+        val observer = object : Session.Observer {
+            override fun onUrlChanged(session: Session, url: String) {
+                isCurrentUrlBookmarked = false
+                updateIsCurrentUrlBookmarked(url)
+            }
+        }
+
+        sessionManager.selectedSession?.url?.let { updateIsCurrentUrlBookmarked(it) }
+        sessionManager.selectedSession?.register(observer, lifecycleOwner)
+    }
+
+    private fun updateIsCurrentUrlBookmarked(url: String) {
+        isBookmarkedJob?.cancel()
+        isBookmarkedJob = lifecycleScope.launch {
+            isCurrentUrlBookmarked = historyStorage.isBookmark(url)
+        }
+    }
+
+    private suspend fun bookmarkTapped(session: Session) = withContext(Dispatchers.IO) {
+        val isExistingBookmark = historyStorage.isBookmark(session.url)
+        if (isExistingBookmark) {
+            historyStorage.deleteBookmark(session.url)
+        } else {
+            // Save bookmark
+            historyStorage.addBookmark(session.url, session.title)
+            withContext(Dispatchers.Main) {
+                showBookmarkAddedSnackbar()
+            }
+        }
+    }
+
+    private fun showBookmarkAddedSnackbar() {
+        DaisySnackbar.make(
+            view = parentView,
+            duration = DaisySnackbar.LENGTH_LONG
+        )
+            .setText(context.getString(R.string.bookmark_added_snackbar_text))
+            .setAction(context.getString(R.string.bookmark_added_snackbar_edit_action)) {
+                openBookmarkEditFragment()
+            }
+            .show()
+    }
+
     private fun openSettingsActivity(context: Context) {
         val intent = Intent(context, SettingsActivity::class.java)
         context.startActivity(intent)
     }
 
+    private fun openBookmarkEditFragment() {
+        // to-do go to bookmark edit fragment
+    }
+
     private fun openHistoryFragment() {
         val direction = BrowserFragmentDirections.actionBrowserFragmentToHistoryFragment()
+        navController.nav(R.id.browserFragment, direction)
+    }
+
+    private fun openBookmarkFragment() {
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToBookmarkFragment()
         navController.nav(R.id.browserFragment, direction)
     }
 

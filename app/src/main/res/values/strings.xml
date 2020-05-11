@@ -156,6 +156,8 @@
     <string name="toolbar_menu_item_forward">Forward</string>
     <string name="toolbar_menu_item_refresh">Refresh</string>
     <string name="toolbar_menu_item_stop">Stop</string>
+    <string name="toolbar_menu_item_bookmark">Bookmark</string>
+    <string name="toolbar_menu_item_remove_bookmark">Remove bookmark</string>
     <string name="toolbar_menu_item_new_tab">New Tab</string>
     <string name="toolbar_menu_item_forget_tab">New Forget Tab</string>
     <string name="toolbar_menu_item_share">Share</string>
@@ -165,6 +167,7 @@
     <string name="toolbar_menu_item_report_issue">Report issue</string>
     <string name="toolbar_menu_item_settings">Settings</string>
     <string name="toolbar_menu_item_history">History</string>
+    <string name="toolbar_menu_item_bookmarks">Bookmarks</string>
     <string name="toolbar_menu_item_clear_data">Clear Data</string>
 
     <!-- History -->
@@ -189,6 +192,20 @@
     <string name="history_search_hint">Search in History</string>
     <string name="history_close_search">Close History Search</string>
     <string name="history_clear_search">Clear Search</string>
+
+    <!-- Bookmark -->
+    <string name="bookmark_added_snackbar_text">Bookmark added</string>
+    <string name="bookmark_added_snackbar_edit_action">EDIT</string>
+    <string name="bookmark_view_empty_text">Tip: When you visit a website\nyou can easily bookmark it by tapping\nthe star icon in the three dots menu.</string>
+    <string name="bookmark_screen_title">Bookmarks</string>
+    <plurals name="bookmark_items_selected">
+        <item quantity="one">%1$d selected</item>
+        <item quantity="other">%1$d selected</item>
+    </plurals>
+    <string name="bookmark_menu_edit_button">Edit</string>
+    <string name="bookmark_menu_open_in_new_tab_button">Open in New Tab</string>
+    <string name="bookmark_menu_open_in_private_tab_button">Open in Private Tab</string>
+    <string name="bookmark_menu_delete_button">Delete</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>

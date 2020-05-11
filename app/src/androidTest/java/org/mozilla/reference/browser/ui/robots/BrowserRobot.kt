@@ -69,6 +69,14 @@ class BrowserRobot {
             NavigationToolbarRobot().interact()
             return NavigationToolbarRobot.Transition()
         }
+
+        fun openThreeDotMenu(interact: ThreeDotMenuRobot.() -> Unit): ThreeDotMenuRobot.Transition {
+            mDevice.waitAndInteract(Until.findObject(By.desc("Menu"))) {
+                click()
+            }
+            ThreeDotMenuRobot().interact()
+            return ThreeDotMenuRobot.Transition()
+        }
     }
 }
 
