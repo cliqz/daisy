@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.component_bookmark.view.bookmarks_list
 import kotlinx.android.synthetic.main.component_bookmark.view.bookmark_search_list
 import kotlinx.android.synthetic.main.component_bookmark.view.empty_view
 import kotlinx.android.synthetic.main.component_bookmark.view.toolbar
+import kotlinx.android.synthetic.main.library_toolbar.view.*
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
@@ -40,6 +41,7 @@ class BookmarkView(
     private var searchItem: MenuItem? = null
 
     init {
+        view.search.hint = context.getString(R.string.bookmark_search_hint)
         view.bookmarks_list.adapter = bookmarkAdapter
         view.bookmark_search_list.adapter = bookmarkSearchAdapter
         view.toolbar.register(object : LibraryToolbar.Observer {
@@ -86,7 +88,12 @@ class BookmarkView(
         bookmarkAdapter.updateData(newBookmarkList, newViewMode, newSelectedItems)
 
         if (newViewMode == ViewMode.Normal) {
-            setUiForNormalMode(context.getString(R.string.bookmark_screen_title), view.bookmarks_list, view.toolbar)
+            setUiForNormalMode(
+                context.getString(R.string.bookmark_screen_title),
+                view.bookmarks_list,
+                view.toolbar,
+                R.menu.bookmark_menu
+            )
         } else {
             setUiForEditingMode(
                 context.getQuantityString(
@@ -95,7 +102,8 @@ class BookmarkView(
                     bookmarkAdapter.selectedItems.size
                 ),
                 view.bookmarks_list,
-                view.toolbar
+                view.toolbar,
+                R.menu.library_multi_select_menu
             )
         }
     }

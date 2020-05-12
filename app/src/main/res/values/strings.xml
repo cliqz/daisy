@@ -184,7 +184,6 @@
         <item quantity="other">%1$d selected</item>
     </plurals>
     <string name="history_menu_delete_button">Delete</string>
-    <string name="history_menu_close_button">Close</string>
     <string name="history_menu_open_in_new_tab">Open in New tab</string>
     <string name="history_menu_open_in_private_tab">Open in Private tab</string>
     <string name="history_today">Today \u2013 %s </string>
@@ -198,6 +197,7 @@
     <string name="bookmark_added_snackbar_edit_action">EDIT</string>
     <string name="bookmark_view_empty_text">Tip: When you visit a website\nyou can easily bookmark it by tapping\nthe star icon in the three dots menu.</string>
     <string name="bookmark_screen_title">Bookmarks</string>
+    <string name="bookmark_search_hint">Search in Bookmark</string>
     <plurals name="bookmark_items_selected">
         <item quantity="one">%1$d selected</item>
         <item quantity="other">%1$d selected</item>

@@ -81,14 +81,14 @@ class HistoryFragment @JvmOverloads constructor(
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         val layout = when (historyViewModel.viewMode) {
             ViewMode.Normal -> R.menu.history_menu
-            ViewMode.Editing -> R.menu.history_multi_select_menu
+            ViewMode.Editing -> R.menu.library_multi_select_menu
         }
         inflater.inflate(layout, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home, R.id.close -> {
+            android.R.id.home -> {
                 onBackPressed()
                 return true
             }

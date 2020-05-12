@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.library
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.MenuRes
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
@@ -23,17 +24,25 @@ open class LibraryPageView(
     protected val context: Context inline get() = containerView.context
     protected val activity = context.asActivity()
 
-    protected fun setUiForNormalMode(title: String, libraryList: RecyclerView, toolbar: LibraryToolbar) {
-        toolbar.setNormalMode()
-        toolbar.title = title
+    protected fun setUiForNormalMode(
+        title: String,
+        libraryList: RecyclerView,
+        toolbar: LibraryToolbar,
+        @MenuRes toolbarMenuId: Int
+    ) {
+        toolbar.updateToolbar(toolbarMenuId, title)
         libraryList.children.forEach {
             it.action_btn?.visibility = View.VISIBLE
         }
     }
 
-    protected fun setUiForEditingMode(title: String, libraryList: RecyclerView, toolbar: LibraryToolbar) {
-        toolbar.setEditingMode()
-        toolbar.title = title
+    protected fun setUiForEditingMode(
+        title: String,
+        libraryList: RecyclerView,
+        toolbar: LibraryToolbar,
+        @MenuRes toolbarMenuId: Int
+    ) {
+        toolbar.updateToolbar(toolbarMenuId, title)
         libraryList.children.forEach {
             it.action_btn?.visibility = View.INVISIBLE
         }
