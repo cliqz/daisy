@@ -16,7 +16,6 @@ import mozilla.components.browser.menu.item.BrowserMenuItemToolbar
 import mozilla.components.browser.menu.item.SimpleBrowserMenuItem
 import mozilla.components.browser.session.SessionManager
 import org.mozilla.reference.browser.R
-import org.mozilla.reference.browser.ext.isFreshTab
 import org.mozilla.reference.browser.freshtab.FreshTabIntegration
 import org.mozilla.reference.browser.freshtab.FreshTabToolbar
 
@@ -54,31 +53,44 @@ class ToolbarFeature(
 ) {
 
     private val menuToolbar by lazy {
-        val forward = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-            iconTintColorResource = R.color.icons,
-            contentDescription = context.getString(R.string.toolbar_menu_item_forward),
-            isEnabled = { sessionManager.selectedSession?.isFreshTab() == false },
+
+        val forward = BrowserMenuItemToolbar.TwoStateButton(
+            primaryImageResource = mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
+            primaryImageTintResource = R.color.icons,
+            primaryContentDescription = context.getString(R.string.toolbar_menu_item_forward),
+            isInPrimaryState = {
+                sessionManager.selectedSession?.canGoForward == true
+            },
+            secondaryImageTintResource = R.color.disabled_icons,
+            disableInSecondaryState = true,
             listener = toolbarMenuInteractor::onForwardClicked
         )
 
         val refresh = BrowserMenuItemToolbar.Button(
             mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-            iconTintColorResource = R.color.icons,
+            iconTintColorResource = R.color.disabled_icons,
             contentDescription = context.getString(R.string.toolbar_menu_item_refresh),
             isEnabled = { false },
             listener = {}
         )
 
-        val stop = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-            iconTintColorResource = R.color.icons,
-            contentDescription = context.getString(R.string.toolbar_menu_item_stop),
+        val share = BrowserMenuItemToolbar.Button(
+            mozilla.components.ui.icons.R.drawable.mozac_ic_share,
+            iconTintColorResource = R.color.disabled_icons,
+            contentDescription = context.getString(R.string.toolbar_menu_item_share),
             isEnabled = { false },
             listener = {}
         )
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, stop))
+        val bookmark = BrowserMenuItemToolbar.Button(
+            R.drawable.ic_bookmark,
+            iconTintColorResource = R.color.disabled_icons,
+            contentDescription = context.getString(R.string.toolbar_menu_item_bookmark),
+            isEnabled = { false },
+            listener = {}
+        )
+
+        BrowserMenuItemToolbar(listOf(forward, refresh, bookmark, share))
     }
 
     private val menuItems: List<BrowserMenuItem> by lazy {

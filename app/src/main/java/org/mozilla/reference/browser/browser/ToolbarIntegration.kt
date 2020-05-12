@@ -73,6 +73,8 @@ class ToolbarIntegration(
     private var isCurrentUrlBookmarked = false
     private var isBookmarkedJob: Job? = null
 
+    private val session: Session? get() = sessionManager.selectedSession
+
     private val shippedDomainsProvider = ShippedDomainsProvider().also {
         it.initialize(context)
     }
@@ -82,19 +84,36 @@ class ToolbarIntegration(
             !sessionManager.selectedSession!!.isFreshTab()
 
     private val menuToolbar by lazy {
-        val forward = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
-            iconTintColorResource = R.color.icons,
-            contentDescription = context.getString(R.string.toolbar_menu_item_forward),
-            isEnabled = { sessionManager.selectedSession?.canGoForward == true }) {
+        val forward = BrowserMenuItemToolbar.TwoStateButton(
+            primaryImageResource = mozilla.components.ui.icons.R.drawable.mozac_ic_forward,
+            primaryImageTintResource = R.color.icons,
+            primaryContentDescription = context.getString(R.string.toolbar_menu_item_forward),
+            isInPrimaryState = {
+                sessionManager.selectedSession?.canGoForward == true
+            },
+            secondaryImageTintResource = R.color.disabled_icons,
+            disableInSecondaryState = true
+        ) {
             sessionUseCases.goForward.invoke()
         }
 
-        val refresh = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
-            iconTintColorResource = R.color.icons,
-            contentDescription = context.getString(R.string.toolbar_menu_item_refresh)) {
-            sessionUseCases.reload.invoke()
+        val refresh = BrowserMenuItemToolbar.TwoStateButton(
+            primaryImageResource = mozilla.components.ui.icons.R.drawable.mozac_ic_refresh,
+            primaryContentDescription = context.getString(R.string.toolbar_menu_item_refresh),
+            primaryImageTintResource = R.color.icons,
+            isInPrimaryState = {
+                session?.loading == false
+            },
+            secondaryImageResource = mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
+            secondaryContentDescription = context.getString(R.string.toolbar_menu_item_stop),
+            secondaryImageTintResource = R.color.icons,
+            disableInSecondaryState = false
+        ) {
+            if (session?.loading == true) {
+                sessionUseCases.stopLoading.invoke()
+            } else {
+                sessionUseCases.reload.invoke()
+            }
         }
 
         val share = BrowserMenuItemToolbar.Button(
@@ -104,13 +123,6 @@ class ToolbarIntegration(
             isEnabled = ::hasSessionAndUrl) {
             val url = sessionManager.selectedSession?.url ?: ""
             context.share(url)
-        }
-
-        val stop = BrowserMenuItemToolbar.Button(
-            mozilla.components.ui.icons.R.drawable.mozac_ic_stop,
-            iconTintColorResource = R.color.icons,
-            contentDescription = context.getString(R.string.toolbar_menu_item_stop)) {
-            sessionUseCases.stopLoading.invoke()
         }
 
         registerSessionForBookmarkUpdates()
@@ -131,7 +143,7 @@ class ToolbarIntegration(
             }
         }
 
-        BrowserMenuItemToolbar(listOf(forward, refresh, share, stop, bookmark))
+        BrowserMenuItemToolbar(listOf(forward, refresh, bookmark, share))
     }
 
     private val menuItems: List<BrowserMenuItem> by lazy {
