@@ -63,7 +63,7 @@ private fun assertBookmarkViewExists() {
 private fun assertEmptyBookmarkView() {
     onView(withId(R.id.empty_view)).apply {
         check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        check(matches(withText(R.string.bookmark_view_empty_text)))
+        check(matches(withText(R.string.bookmarks_view_empty_text)))
     }
 }
 

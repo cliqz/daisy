@@ -195,9 +195,9 @@
     <!-- Bookmark -->
     <string name="bookmark_added_snackbar_text">Bookmark added</string>
     <string name="bookmark_added_snackbar_edit_action">EDIT</string>
-    <string name="bookmark_view_empty_text">Tip: When you visit a website\nyou can easily bookmark it by tapping\nthe star icon in the three dots menu.</string>
-    <string name="bookmark_screen_title">Bookmarks</string>
-    <string name="bookmark_search_hint">Search in Bookmark</string>
+    <string name="bookmarks_view_empty_text">Tip: When you visit a website\nyou can easily bookmark it by tapping\nthe star icon in the three dots menu.</string>
+    <string name="bookmarks_screen_title">Bookmarks</string>
+    <string name="bookmarks_search_hint">Search in Bookmarks</string>
     <plurals name="bookmark_items_selected">
         <item quantity="one">%1$d selected</item>
         <item quantity="other">%1$d selected</item>

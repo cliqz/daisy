@@ -24,7 +24,7 @@
         android:drawableTop="@drawable/bookmark_view_empty_icon"
         android:drawablePadding="@dimen/margin_padding_size_xlarge"
         android:gravity="center"
-        android:text="@string/bookmark_view_empty_text"
+        android:text="@string/bookmarks_view_empty_text"
         android:textAlignment="center"
         android:textColor="@color/dark_grey_5" />
 

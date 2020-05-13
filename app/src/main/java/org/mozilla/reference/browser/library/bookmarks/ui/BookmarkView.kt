@@ -41,7 +41,7 @@ class BookmarkView(
     private var searchItem: MenuItem? = null
 
     init {
-        view.search.hint = context.getString(R.string.bookmark_search_hint)
+        view.search.hint = context.getString(R.string.bookmarks_search_hint)
         view.bookmarks_list.adapter = bookmarkAdapter
         view.bookmark_search_list.adapter = bookmarkSearchAdapter
         view.toolbar.register(object : LibraryToolbar.Observer {
@@ -89,7 +89,7 @@ class BookmarkView(
 
         if (newViewMode == ViewMode.Normal) {
             setUiForNormalMode(
-                context.getString(R.string.bookmark_screen_title),
+                context.getString(R.string.bookmarks_screen_title),
                 view.bookmarks_list,
                 view.toolbar,
                 R.menu.bookmark_menu
