@@ -11,6 +11,7 @@
 
     <color name="mozac_ui_icons_fill">@color/white</color>
     <color name="icons">@color/white</color>
+    <color name="disabled_icons">@color/light_grey_3</color>
 
     <color name="statusBarColor">@color/black</color>
     <color name="navigationBarColor">@color/black</color>
