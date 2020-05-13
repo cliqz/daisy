@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
 import androidx.transition.Fade
 import androidx.transition.Scene
@@ -82,23 +83,17 @@ class LibraryToolbar @JvmOverloads constructor(
         sceneA = Scene(this, toolbar)
         sceneB = Scene(this, searchContainer)
 
-        setNormalMode()
-
         // Setting up the toolbar
         toolbar.setNavigationIcon(R.drawable.mozac_ic_back)
         toolbar.setNavigationContentDescription(R.string.abc_action_bar_up_description)
         toolbar.setNavigationOnClickListener { notifyObservers { close() } }
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.close -> {
-                    notifyObservers { close() }
-                    true
-                }
                 R.id.delete -> {
                     notifyObservers { delete() }
                     true
                 }
-                R.id.history_search -> {
+                R.id.search -> {
                     notifyObservers { searchOpened() }
                     search.showKeyboard()
                     setSearchMode()
@@ -129,9 +124,11 @@ class LibraryToolbar @JvmOverloads constructor(
 
         search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                // no-op
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -143,19 +140,12 @@ class LibraryToolbar @JvmOverloads constructor(
         })
     }
 
-    fun setNormalMode() {
+    fun updateToolbar(@MenuRes menuId: Int, title: String) {
         hideSearch()
-        toolbarTitle.text = context.getString(R.string.history_screen_title)
+        this.title = title
         toolbar.invalidate()
         toolbar.menu.clear()
-        toolbar.inflateMenu(R.menu.history_menu)
-    }
-
-    fun setEditingMode() {
-        hideSearch()
-        toolbar.invalidate()
-        toolbar.menu.clear()
-        toolbar.inflateMenu(R.menu.history_multi_select_menu)
+        toolbar.inflateMenu(menuId)
     }
 
     private fun setSearchMode() = TransitionManager.go(sceneB, Fade())

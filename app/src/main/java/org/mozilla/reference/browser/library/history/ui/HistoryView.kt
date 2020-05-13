@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.component_history.view.*
+import kotlinx.android.synthetic.main.library_toolbar.view.*
 import mozilla.components.support.base.feature.UserInteractionHandler
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.components
@@ -44,6 +45,7 @@ class HistoryView(
     private var searchItem: MenuItem? = null
 
     init {
+        view.search.hint = context.getString(R.string.history_search_hint)
         view.history_list.adapter = historyAdapter
         view.history_search_list.adapter = historySearchAdapter
         view.toolbar.register(object : LibraryToolbar.Observer {
@@ -66,6 +68,7 @@ class HistoryView(
             }
 
             override fun searchOpened() {
+                // no-op
             }
 
             override fun searchClosed() {
@@ -108,7 +111,11 @@ class HistoryView(
         }
 
         if (newViewMode == ViewMode.Normal) {
-            setUiForNormalMode(context.getString(R.string.history_screen_title), view.history_list, view.toolbar)
+            setUiForNormalMode(
+                context.getString(R.string.history_screen_title),
+                view.history_list,
+                view.toolbar,
+                R.menu.history_menu)
         } else {
             setUiForEditingMode(
                 context.getQuantityString(
@@ -117,7 +124,8 @@ class HistoryView(
                     historyAdapter.selectedItems.size
                 ),
                 view.history_list,
-                view.toolbar
+                view.toolbar,
+                R.menu.library_multi_select_menu
             )
         }
         viewMode = newViewMode
