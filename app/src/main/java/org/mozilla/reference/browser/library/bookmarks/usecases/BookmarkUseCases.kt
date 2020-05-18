@@ -18,14 +18,14 @@ class BookmarkUseCases(historyStorage: HistoryStorage) {
 
     class DeleteBookmarkUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(bookmarkItem: BookmarkNode) {
-            bookmarkItem.url?.let { historyStorage.deleteBookmark(it) }
+            historyStorage.deleteBookmark(bookmarkItem.guid.toInt())
         }
     }
 
     class DeleteMultipleBookmarkUseCase(private val historyStorage: HistoryStorage) {
         suspend operator fun invoke(bookmarkItemList: Set<BookmarkNode>) {
             bookmarkItemList.forEach { bookmarkItem ->
-                bookmarkItem.url?.let { historyStorage.deleteBookmark(it) }
+                historyStorage.deleteBookmark(bookmarkItem.guid.toInt())
             }
         }
     }

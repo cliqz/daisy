@@ -331,14 +331,14 @@ class ToolbarIntegration(
     private fun updateIsCurrentUrlBookmarked(url: String) {
         isBookmarkedJob?.cancel()
         isBookmarkedJob = lifecycleScope.launch {
-            isCurrentUrlBookmarked = historyStorage.isBookmark(url)
+            isCurrentUrlBookmarked = historyStorage.getBookmarkWithUrl(url) != null
         }
     }
 
     private suspend fun bookmarkTapped(session: Session) = withContext(Dispatchers.IO) {
-        val isExistingBookmark = historyStorage.isBookmark(session.url)
-        if (isExistingBookmark) {
-            historyStorage.deleteBookmark(session.url)
+        val existingBookmark = historyStorage.getBookmarkWithUrl(session.url)
+        if (existingBookmark != null) {
+            historyStorage.deleteBookmark(existingBookmark.guid.toInt())
         } else {
             // Save bookmark
             historyStorage.addBookmark(session.url, session.title)

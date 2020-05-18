@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.util.Log
+import androidx.core.database.getStringOrNull
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.BookmarkNodeType
 import mozilla.components.concept.storage.HistoryAutocompleteResult
@@ -28,7 +29,6 @@ import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.ext.beginTransaction
 import org.mozilla.reference.browser.storage.model.TopSite
 import java.net.URI
-import java.util.Locale
 
 /**
  * Ported the class from Cliqz browser. This class implements the HistoryStorage interface
@@ -189,6 +189,16 @@ class HistoryDatabase(context: Context) :
         const val TIME = "time"
     }
 
+    private object BookmarksTable {
+        const val TABLE_NAME = "bookmarks"
+        // Columns
+        const val ID = "id"
+        const val URL = "url"
+        const val TITLE = "title"
+        const val TYPE = "type"
+        const val PARENT_ID = "parent_id"
+    }
+
     private object BlockedTopSitesTable {
         const val TABLE_NAME = "blocked_topsites"
         // Columns
@@ -239,6 +249,8 @@ class HistoryDatabase(context: Context) :
         db.execSQL(res.getString(R.string.create_queries_table_v7))
         db.execSQL(res.getString(R.string.create_history_time_index_v8))
         db.execSQL(res.getString(R.string.create_url_index_v9))
+
+        db.execSQL(res.getString(R.string.create_bookmarks_table))
     }
 
     private fun upgradeV2toV3(db: SQLiteDatabase) {
@@ -474,96 +486,118 @@ class HistoryDatabase(context: Context) :
             return result
         }
 
-    @get:Synchronized
-    val favorites: List<BookmarkNode>
-        get() {
-            val results = mutableListOf<BookmarkNode>()
-            val db = dbHandler.database ?: return results
-            val cursor = db.rawQuery(res.getString(R.string.get_favorite_query_v5), null)
-            cursor.use {
-                if (cursor.moveToFirst()) {
-                    val urlIndex = cursor.getColumnIndex(UrlsTable.URL)
-                    val titleIndex = cursor.getColumnIndex(UrlsTable.TITLE)
-                    do {
-                        results.add(BookmarkNode(
-                            type = BookmarkNodeType.ITEM,
-                            guid = "", // We need to fetch the id from the DB
-                            parentGuid = null,
-                            title = cursor.getString(titleIndex),
-                            url = cursor.getString(urlIndex),
-                            position = null,
-                            children = null
-                        ))
-                    } while (cursor.moveToNext())
-                }
-            }
-            return results
-        }
-
-    @Suppress("unused")
     @Synchronized
-    fun isFavorite(url: String): Boolean {
-        val db = dbHandler.database ?: return false
-        val cursor = db.query(UrlsTable.TABLE_NAME, arrayOf(UrlsTable.ID),
-            String.format(Locale.US, "%s=? AND %s=1", UrlsTable.URL, UrlsTable.FAVORITE), arrayOf(url),
-            null, null, null)
-        val result = cursor.count > 0
-        cursor.close()
-        return result
+    override suspend fun getBookmarks(): List<BookmarkNode> {
+        val results = mutableListOf<BookmarkNode>()
+        val db = dbHandler.database ?: return results
+        val cursor = db.rawQuery(res.getString(R.string.get_all_bookmarks), null)
+        cursor.use {
+            if (it.moveToFirst()) {
+                val idIndex = it.getColumnIndex(BookmarksTable.ID)
+                val urlIndex = it.getColumnIndex(BookmarksTable.URL)
+                val titleIndex = it.getColumnIndex(BookmarksTable.TITLE)
+                val typeIndex = it.getColumnIndex(BookmarksTable.TYPE)
+                val parentIdIndex = it.getColumnIndex(BookmarksTable.PARENT_ID)
+                do {
+                    results.add(BookmarkNode(
+                        guid = it.getInt(idIndex).toString(),
+                        type = if (it.getString(typeIndex) == "bookmark")
+                            BookmarkNodeType.ITEM else BookmarkNodeType.FOLDER,
+                        parentGuid = it.getInt(parentIdIndex).toString(),
+                        title = it.getString(titleIndex),
+                        url = it.getString(urlIndex),
+                        position = null,
+                        children = null
+                    ))
+                } while (it.moveToNext())
+            }
+        }
+        return results
     }
 
-    @Suppress("unused")
     @Synchronized
-    fun setFavorites(url: String, title: String?, favTime: Long, isFavorite: Boolean) {
-        val db = dbHandler.database ?: return
+    private fun addBookmarkNode(url: String? = null, title: String, parentId: Int, type: String): Int {
+        val db = dbHandler.database ?: return 0
         val values = ContentValues()
-        values.put(UrlsTable.FAVORITE, isFavorite)
-        values.put(UrlsTable.FAV_TIME, favTime)
-        val cursor = db.rawQuery(res.getString(R.string.search_url_v5), arrayOf(url))
+        values.put(BookmarksTable.TITLE, title)
+        url?.let {
+            values.put(BookmarksTable.URL, url)
+        }
+        values.put(BookmarksTable.PARENT_ID, parentId)
+        values.put(BookmarksTable.TYPE, type)
+        var rowId = 0
         db.beginTransaction {
-            if (cursor.count > 0) {
-                update(UrlsTable.TABLE_NAME, values, "url = ?", arrayOf(url))
-            } else {
-                values.put(UrlsTable.URL, url)
-                values.put(UrlsTable.TITLE, title)
-                values.put(UrlsTable.VISITS, 0)
-                insert(UrlsTable.TABLE_NAME, null, values)
+            rowId = insert(BookmarksTable.TABLE_NAME, null, values).toInt()
+        }
+        return rowId
+    }
+
+    override suspend fun addBookmark(url: String, title: String, parentId: Int): Int {
+        return addBookmarkNode(
+            url = url,
+            title = title,
+            parentId = parentId,
+            type = "bookmark"
+        )
+    }
+
+    override suspend fun addFolder(title: String, parentId: Int): Int {
+        return addBookmarkNode(
+            title = title,
+            parentId = parentId,
+            type = "folder"
+        )
+    }
+
+    @Synchronized
+    override suspend fun getBookmarkWithUrl(url: String): BookmarkNode? {
+        val db = dbHandler.database ?: return null
+        val query = res.getString(R.string.get_bookmark)
+        val cursor = db.rawQuery(query, arrayOf(String.format("%s", url)))
+        var bookmarkNode: BookmarkNode? = null
+        cursor.use {
+            if (it.moveToFirst()) {
+                val id = it.getString(it.getColumnIndex(BookmarksTable.ID))
+                val bookmarkedUrl = it.getString(it.getColumnIndex(BookmarksTable.URL))
+                val title = it.getString(it.getColumnIndex(BookmarksTable.TITLE))
+                val parentId = it.getString(it.getColumnIndex(BookmarksTable.PARENT_ID))
+                bookmarkNode = BookmarkNode(BookmarkNodeType.ITEM, id, parentId, 0, title, bookmarkedUrl, null)
             }
         }
-        cursor.close()
+        return bookmarkNode
     }
 
-    override suspend fun getBookmarks() = favorites
+    override suspend fun deleteBookmark(id: Int): Boolean {
+        val db = dbHandler.database ?: return false
+        val values = ContentValues()
+        values.put(BookmarksTable.ID, id)
 
-    override suspend fun addBookmark(url: String, title: String) {
-        setFavorites(url, title, System.currentTimeMillis(), true)
-    }
-
-    override suspend fun isBookmark(url: String): Boolean {
-        return isFavorite(url)
-    }
-
-    override suspend fun deleteBookmark(url: String) {
-        setFavorites(url, null, System.currentTimeMillis(), false)
+        var rowsAffected = 0
+        db.beginTransaction {
+            rowsAffected = delete(BookmarksTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
+        }
+        return rowsAffected > 0
     }
 
     override fun searchBookmarks(query: String): List<SearchResult> {
         val db = dbHandler.database ?: return listOf()
         val formattedSearch = String.format("%%%s%%", query)
-        val selectQuery = res.getString(R.string.search_favorite_query)
+        val selectQuery = res.getString(R.string.search_bookmarks)
         val cursor = db.rawQuery(selectQuery, arrayOf(formattedSearch, formattedSearch))
 
         val bookmarkSuggestions = mutableListOf<SearchResult>()
-        if (cursor.moveToFirst()) {
-            do {
-                val url = cursor.getString(cursor.getColumnIndex(UrlsTable.URL))
-                val title = cursor.getString(cursor.getColumnIndex(UrlsTable.TITLE))
-                // The bookmark query we use does not return any 'score' attribute column
-                val bookmarkSuggestion = SearchResult(url, url, 0, title)
-                bookmarkSuggestions.add(bookmarkSuggestion)
-            } while (cursor.moveToNext())
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    val id = it.getString(it.getColumnIndex(BookmarksTable.ID))
+                    val url = it.getString(it.getColumnIndex(BookmarksTable.URL))
+                    val title = it.getStringOrNull(it.getColumnIndex(BookmarksTable.TITLE))
+                    // The bookmark query we use does not return any 'score' attribute column
+                    val bookmarkSuggestion = SearchResult(id, url, 0, title)
+                    bookmarkSuggestions.add(bookmarkSuggestion)
+                } while (it.moveToNext())
+            }
         }
-        cursor.close()
         return bookmarkSuggestions
     }
 
