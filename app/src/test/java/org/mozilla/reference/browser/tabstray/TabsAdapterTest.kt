@@ -4,41 +4,33 @@
 
 package org.mozilla.reference.browser.tabstray
 
-import android.widget.LinearLayout
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineScope
-import mozilla.components.browser.icons.BrowserIcons
-import mozilla.components.browser.session.Session
+import mozilla.components.concept.tabstray.Tabs
 import mozilla.components.support.test.mock
-import mozilla.components.support.test.robolectric.testContext
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoMoreInteractions
-import org.mozilla.reference.browser.components.ThumbnailsRepository
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class TabsAdapterTest {
-
-    private val scope = TestCoroutineScope()
 
     @Test
     fun `itemCount will reflect number of sessions`() {
         val adapter = TabsAdapter()
         assertEquals(0, adapter.itemCount)
 
-        adapter.displaySessions(listOf(Session("A"), Session("B")), 0)
+        adapter.updateTabs(Tabs(listOf(
+            tabWithUrl("A"),
+            tabWithUrl("B")), 0))
         assertEquals(2, adapter.itemCount)
 
-        adapter.updateSessions(listOf(
-            Session("A"),
-            Session("B"),
-            Session("C")), 0)
+        adapter.updateTabs(Tabs(listOf(
+            tabWithUrl("A"),
+            tabWithUrl("B"),
+            tabWithUrl("C")), 0))
 
         assertEquals(3, adapter.itemCount)
     }
@@ -51,46 +43,5 @@ class TabsAdapterTest {
         adapter.onViewRecycled(holder)
 
         verify(holder).unbind()
-    }
-
-    @Test
-    fun `holders get registered and unregistered from session`() {
-        val adapter = TabsAdapter()
-        adapter.tabsTray = mockTabsTray()
-
-        val view = LinearLayout(testContext)
-
-        val holder1 = adapter.createViewHolder(view, 0)
-        val holder2 = adapter.createViewHolder(view, 0)
-
-        val session1: Session = spy(Session("A"))
-        val session2: Session = spy(Session("B"))
-        val session3: Session = spy(Session("C"))
-
-        adapter.displaySessions(listOf(session1, session2, session3), 0)
-
-        adapter.onBindViewHolder(holder1, 0)
-        adapter.onBindViewHolder(holder2, 1)
-
-        verify(session1).register(holder1)
-        verify(session2).register(holder2)
-        verifyNoMoreInteractions(session3)
-
-        adapter.unsubscribeHolders()
-
-        verify(session1).unregister(holder1)
-        verify(session2).unregister(holder2)
-        verifyNoMoreInteractions(session3)
-    }
-
-    private fun mockTabsTray(): BrowserTabsTray {
-        val styles: TabsTrayStyling = mock()
-        val icon: BrowserIcons = mock()
-
-        val tabsTray: BrowserTabsTray = mock()
-        Mockito.doReturn(styles).`when`(tabsTray).styling
-        Mockito.doReturn(ThumbnailsRepository(testContext, scope)).`when`(tabsTray).thumbnailsRepository
-        Mockito.doReturn(icon).`when`(tabsTray).icons
-        return tabsTray
     }
 }

@@ -56,7 +56,7 @@ class SearchFragment : Fragment() {
                 requireContext(),
                 requireComponents.search.searchEngineManager,
                 requireComponents.core.client)
-            .addSessionProvider(requireComponents.core.sessionManager)
+            .addSessionProvider(requireComponents.core.store)
             .addHistoryProvider(requireComponents.core.historyStorage)
             .addClipboardProvider(requireContext())
 

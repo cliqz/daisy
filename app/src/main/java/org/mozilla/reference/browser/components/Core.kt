@@ -22,9 +22,7 @@ import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.feature.downloads.DownloadsUseCases
-import mozilla.components.feature.media.MediaFeature
 import mozilla.components.feature.media.RecordingDevicesNotificationFeature
-import mozilla.components.feature.media.state.MediaStateMachine
 import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.feature.webnotifications.WebNotificationFeature
 import org.mozilla.reference.browser.AppRequestInterceptor
@@ -34,9 +32,9 @@ import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.R.string.pref_key_remote_debugging
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_normal
 import org.mozilla.reference.browser.R.string.pref_key_tracking_protection_private
-import org.mozilla.reference.browser.storage.HistoryDatabase
-import org.mozilla.reference.browser.ext.getPreferenceKey
 import org.mozilla.reference.browser.concepts.HistoryStorage
+import org.mozilla.reference.browser.ext.getPreferenceKey
+import org.mozilla.reference.browser.storage.HistoryDatabase
 import java.util.concurrent.TimeUnit
 
 private const val DAY_IN_MINUTES = 24 * 60L
@@ -62,7 +60,7 @@ class Core(private val context: Context) {
             remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
             testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
-            historyTrackingDelegate = HistoryDelegate(historyStorage)
+            historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage)
         )
         val engine = EngineProvider.createEngine(context, defaultSettings)
         DatFeature.install(engine)
@@ -76,7 +74,7 @@ class Core(private val context: Context) {
     }
 
     /**
-     * The [BrowserStore] holds the global [BrowserState].
+     * The [BrowserStore] holds the global [BrowserStore].
      */
     val store by lazy {
         BrowserStore()
@@ -111,17 +109,11 @@ class Core(private val context: Context) {
                 .whenSessionsChange()
 
             // Install the "icons" WebExtension to automatically load icons for every visited website.
-            icons.install(engine, sessionManager = this)
+            icons.install(engine, store)
 
             // Show an ongoing notification when recording devices (camera, microphone) are used by web content
             RecordingDevicesNotificationFeature(context, sessionManager = this)
                 .enable()
-
-            MediaStateMachine.start(this)
-
-            // Enable media features like showing an ongoing notification with media controls when
-            // media in web content is playing.
-            MediaFeature(context).enable()
 
             WebNotificationFeature(context, engine, icons, R.drawable.ic_notification,
                 BrowserActivity::class.java)
@@ -137,7 +129,12 @@ class Core(private val context: Context) {
      * The storage component to persist browsing history (with the exception of
      * private sessions).
      */
-    val historyStorage: HistoryStorage by lazy { HistoryDatabase(context) }
+    val lazyHistoryStorage: Lazy<HistoryStorage> = lazy { HistoryDatabase(context) }
+
+    /**
+     * A convinience accessor to [HistoryDatabase]
+     */
+    val historyStorage by lazy { lazyHistoryStorage.value }
 
     /**
      * Icons component for loading, caching and processing website icons.

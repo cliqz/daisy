@@ -10,9 +10,11 @@ import android.util.AttributeSet
 import android.view.View
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
+import mozilla.components.concept.engine.selection.SelectionActionDelegate
 
 class TestEngineView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : View(context, attrs, defStyleAttr), EngineView {
+    override var selectionActionDelegate: SelectionActionDelegate? = null
 
     override fun captureThumbnail(onFinish: (Bitmap?) -> Unit) {
     }

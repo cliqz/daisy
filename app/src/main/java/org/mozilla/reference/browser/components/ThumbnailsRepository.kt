@@ -25,6 +25,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
+import mozilla.components.concept.tabstray.Tab
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.withOutputStream
 import java.io.File
@@ -136,12 +137,12 @@ class ThumbnailsRepository(
     /**
      * Fetch the thumbnail from the disk if it exists
      *
-     * @param session the session we want the thumbnail for
+     * @param id the [Tab.id] we want the thumbnail for
      * @return a deferred optional Bitmap
      */
-    fun getThumbnailAsync(session: Session) = scope.async {
+    fun getThumbnailAsync(id: String) = scope.async {
         try {
-            getThumbnailFile(cachePath, session.id).openRead().use {
+            getThumbnailFile(cachePath, id).openRead().use {
                 BitmapFactory.decodeStream(it)
             }
         } catch (_: FileNotFoundException) {
@@ -153,25 +154,25 @@ class ThumbnailsRepository(
      * Load the thumbnail into the given view
      *
      * @param view the [ImageView] in which we set the thumbnail to
-     * @param session the [Session] for which we want to load the thumbnail
+     * @param tabId the tab id for which we want to load the thumbnail
      * @param placeholder a placeholder to display while loading, default null
      * @param error a drawable to display in case of error, default null
      */
     @MainThread
     fun loadIntoView(
         view: ImageView,
-        session: Session,
+        tabId: String,
         placeholder: Drawable? = null,
         error: Drawable? = null
     ): Job = scope.launch(Dispatchers.Main) {
-        internalLoadIntoView(WeakReference(view), session, placeholder, error)
+        internalLoadIntoView(WeakReference(view), tabId, placeholder, error)
     }
 
     // Inspired by mozilla.components.browser.icons.BrowserIcons
     @WorkerThread
     private suspend fun internalLoadIntoView(
         view: WeakReference<ImageView>,
-        session: Session,
+        tabId: String,
         placeholder: Drawable?,
         error: Drawable?
     ) {
@@ -182,7 +183,7 @@ class ThumbnailsRepository(
         view.get()?.setImageDrawable(placeholder)
 
         // Create a loading job
-        val deferredIcon = getThumbnailAsync(session)
+        val deferredIcon = getThumbnailAsync(tabId)
 
         view.get()?.setTag(R.id.mozac_browser_thumbnail_tag_job, deferredIcon)
         val onAttachStateChangeListener = CancelOnDetach(deferredIcon).also {

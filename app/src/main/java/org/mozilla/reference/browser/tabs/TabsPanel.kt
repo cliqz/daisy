@@ -101,7 +101,7 @@ class TabsPanel @JvmOverloads constructor(
         isPrivateTray = isPrivate
 
         // Update the tabs tray with our filter
-        tabsFeature?.filterTabs { it.private == isPrivate }
+        tabsFeature?.filterTabs { it.content.private == isPrivate }
 
         // Update the menu option text
         menu.findItem(R.id.closeTab).title = if (isPrivate) {

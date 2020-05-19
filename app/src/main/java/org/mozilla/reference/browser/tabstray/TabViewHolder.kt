@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Job
 import mozilla.components.browser.icons.IconRequest
 import mozilla.components.browser.session.Session
+import mozilla.components.concept.tabstray.Tab
 import mozilla.components.concept.tabstray.TabsTray
 import mozilla.components.support.base.observer.Observable
 import org.mozilla.reference.browser.R
@@ -35,7 +36,7 @@ class TabViewHolder(
     private val closeView: AppCompatImageButton = itemView.findViewById(R.id.mozac_browser_tabstray_close)
     private val thumbnailView: TabThumbnailView = itemView.findViewById(R.id.mozac_browser_tabstray_thumbnail)
 
-    internal var session: Session? = null
+    internal var tab: Tab? = null
 
     private var thumbnailJob: Job? = null
     private var iconJob: Job? = null
@@ -44,23 +45,23 @@ class TabViewHolder(
      * Displays the data of the given session and notifies the given observable about events.
      */
     @Suppress("ComplexMethod")
-    fun bind(session: Session, isSelected: Boolean, observable: Observable<TabsTray.Observer>) {
-        this.session = session.also { it.register(this) }
+    fun bind(tab: Tab, isSelected: Boolean, observable: Observable<TabsTray.Observer>) {
+        this.tab = tab
 
         val title = when {
-            session.title.isNotEmpty() -> session.title
-            !session.isFreshTab() -> session.url
+            tab.title.isNotEmpty() -> tab.title
+            !tab.isFreshTab() -> tab.url
             else -> tabView.context.getString(R.string.freshtab_title)
         }
 
         tabView.text = title
 
         itemView.setOnClickListener {
-            observable.notifyObservers { onTabSelected(session) }
+            observable.notifyObservers { onTabSelected(tab) }
         }
 
         closeView.setOnClickListener {
-            observable.notifyObservers { onTabClosed(session) }
+            observable.notifyObservers { onTabClosed(tab) }
         }
 
         if (isSelected) {
@@ -75,19 +76,19 @@ class TabViewHolder(
 
         thumbnailJob?.cancel()
         when {
-            session.isFreshTab() -> thumbnailView.setImageResource(R.drawable.placeholder_freshtab)
-            session.thumbnail != null -> thumbnailView.setImageBitmap(session.thumbnail)
+            tab.isFreshTab() -> thumbnailView.setImageResource(R.drawable.placeholder_freshtab)
+            tab.thumbnail != null -> thumbnailView.setImageBitmap(tab.thumbnail)
             else -> thumbnailJob = tabsTray.thumbnailsRepository.loadIntoView(
                 view = thumbnailView,
-                session = session,
+                tabId = tab.id,
                 placeholder = thumbnailView.context.getDrawable(R.drawable.placeholder_freshtab))
         }
 
         iconJob?.cancel()
-        if (session.isFreshTab()) {
+        if (tab.isFreshTab()) {
             iconView.setImageResource(R.mipmap.ic_launcher)
         } else {
-            iconJob = tabsTray.icons.loadIntoView(iconView, IconRequest(session.url))
+            iconJob = tabsTray.icons.loadIntoView(iconView, IconRequest(tab.url))
         }
     }
 
@@ -97,7 +98,6 @@ class TabViewHolder(
     fun unbind() {
         thumbnailJob?.cancel()
         iconJob?.cancel()
-        session?.unregister(this)
     }
 
     override fun onUrlChanged(session: Session, url: String) {

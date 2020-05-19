@@ -14,7 +14,7 @@ private object Versions {
     const val google_material = "1.2.0-alpha02"
 
     const val android_gradle_plugin = "3.6.0"
-    const val mozilla_android_components = "29.0.0"
+    const val mozilla_android_components = "39.0.2"
 
     const val glide = "4.11.0"
 

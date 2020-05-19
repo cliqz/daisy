@@ -40,6 +40,10 @@ class HistoryDatabase(context: Context) :
     SQLiteOpenHelper(context.applicationContext, DATABASE_NAME, null, DATABASE_VERSION),
     HistoryStorage {
 
+    override suspend fun warmUp() {
+        // Nothing to do here
+    }
+
     override suspend fun deleteEverything() {
         clearHistory(false)
     }

@@ -46,7 +46,7 @@ open class BrowserApplication : Application() {
                 components.core.addonUpdater
         )
         WebExtensionSupport.initialize(
-            engine = components.core.engine,
+            runtime = components.core.engine,
             store = components.core.store,
             onNewTabOverride = { _, engineSession, url ->
                 val session = Session(url)
@@ -75,7 +75,7 @@ open class BrowserApplication : Application() {
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         runOnlyInMainProcess {
-            components.core.sessionManager.onLowMemory()
+            components.core.sessionManager.onTrimMemory(level)
         }
     }
 
