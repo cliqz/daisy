@@ -48,11 +48,11 @@ class BookmarkFragment @JvmOverloads constructor(
 
     override fun onResume() {
         super.onResume()
-        bookmarkViewModel.bookmarkList.observe(this, Observer { bookmarkList ->
-            bookmarkView.updateEmptyState(userHasBookmarks = bookmarkList.isNotEmpty())
+        bookmarkViewModel.tree.observe(this, Observer { tree ->
+            bookmarkView.updateEmptyState(userHasBookmarks = tree != null && !tree.children.isNullOrEmpty())
             bookmarkView.update(
                 newViewMode = bookmarkViewModel.viewMode,
-                newBookmarkList = bookmarkList,
+                newBookmarkNode = tree,
                 newSelectedItems = bookmarkViewModel.selectedItems.value!!)
         })
 
@@ -65,7 +65,7 @@ class BookmarkFragment @JvmOverloads constructor(
             bookmarkView.update(
                 newViewMode = bookmarkViewModel.viewMode,
                 newSelectedItems = selectedItems,
-                newBookmarkList = bookmarkViewModel.bookmarkList.value!!)
+                newBookmarkNode = bookmarkViewModel.tree.value)
         })
     }
 
@@ -75,7 +75,7 @@ class BookmarkFragment @JvmOverloads constructor(
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_bookmark, container, false)
-        bookmarkView = BookmarkView(view.bookmark_layout, bookmarkViewModel, bookmarkInteractor)
+        bookmarkView = BookmarkView(view.bookmark_layout, this, bookmarkViewModel, bookmarkInteractor)
         return view
     }
 

@@ -17,6 +17,7 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.fetch.Client
+import mozilla.components.concept.storage.BookmarksStorage
 import mozilla.components.feature.addons.AddonManager
 import mozilla.components.feature.addons.amo.AddonCollectionProvider
 import mozilla.components.feature.addons.update.AddonUpdater
@@ -132,9 +133,14 @@ class Core(private val context: Context) {
     val lazyHistoryStorage: Lazy<HistoryStorage> = lazy { HistoryDatabase(context) }
 
     /**
-     * A convinience accessor to [HistoryDatabase]
+     * A convenience accessor to [HistoryDatabase]
      */
     val historyStorage by lazy { lazyHistoryStorage.value }
+
+    /**
+     * The storage component for bookmark management.
+     */
+    val bookmarksStorage by lazy { lazyHistoryStorage.value as BookmarksStorage }
 
     /**
      * Icons component for loading, caching and processing website icons.

@@ -7,37 +7,36 @@
 package org.mozilla.reference.browser.library.bookmarks.usecases
 
 import mozilla.components.concept.storage.BookmarkNode
-import mozilla.components.concept.storage.SearchResult
-import org.mozilla.reference.browser.concepts.HistoryStorage
+import mozilla.components.concept.storage.BookmarksStorage
 
-class BookmarkUseCases(historyStorage: HistoryStorage) {
+class BookmarkUseCases(bookmarksStorage: BookmarksStorage) {
 
-    class GetBookmarksUseCase(private val historyStorage: HistoryStorage) {
-        suspend operator fun invoke(): List<BookmarkNode> = historyStorage.getBookmarks()
+    class GetBookmarksUseCase(private val bookmarksStorage: BookmarksStorage) {
+        suspend operator fun invoke(id: String): BookmarkNode? = bookmarksStorage.getTree(id)
     }
 
-    class DeleteBookmarkUseCase(private val historyStorage: HistoryStorage) {
+    class DeleteBookmarkUseCase(private val bookmarksStorage: BookmarksStorage) {
         suspend operator fun invoke(bookmarkItem: BookmarkNode) {
-            historyStorage.deleteBookmark(bookmarkItem.guid.toInt())
+            bookmarksStorage.deleteNode(bookmarkItem.guid)
         }
     }
 
-    class DeleteMultipleBookmarkUseCase(private val historyStorage: HistoryStorage) {
+    class DeleteMultipleBookmarkUseCase(private val bookmarksStorage: BookmarksStorage) {
         suspend operator fun invoke(bookmarkItemList: Set<BookmarkNode>) {
             bookmarkItemList.forEach { bookmarkItem ->
-                historyStorage.deleteBookmark(bookmarkItem.guid.toInt())
+                bookmarksStorage.deleteNode(bookmarkItem.guid)
             }
         }
     }
 
-    class SearchBookmarksUseCase(private val historyStorage: HistoryStorage) {
-        operator fun invoke(query: String): List<SearchResult> {
-            return historyStorage.searchBookmarks(query)
+    class SearchBookmarksUseCase(private val bookmarksStorage: BookmarksStorage) {
+        suspend operator fun invoke(query: String): List<BookmarkNode> {
+            return bookmarksStorage.searchBookmarks(query, limit = Integer.MAX_VALUE)
         }
     }
 
-    val getBookmarks by lazy { GetBookmarksUseCase(historyStorage) }
-    val deleteBookmark by lazy { DeleteBookmarkUseCase(historyStorage) }
-    val deleteMultipleBookmarks by lazy { DeleteMultipleBookmarkUseCase(historyStorage) }
-    val searchBookmarks by lazy { SearchBookmarksUseCase(historyStorage) }
+    val getBookmarks by lazy { GetBookmarksUseCase(bookmarksStorage) }
+    val deleteBookmark by lazy { DeleteBookmarkUseCase(bookmarksStorage) }
+    val deleteMultipleBookmarks by lazy { DeleteMultipleBookmarkUseCase(bookmarksStorage) }
+    val searchBookmarks by lazy { SearchBookmarksUseCase(bookmarksStorage) }
 }

@@ -23,19 +23,19 @@ class BookmarkAdapter(
 
     private var viewMode = ViewMode.Normal
 
-    private var bookmarkList: List<BookmarkNode> = listOf()
+    private var tree: List<BookmarkNode> = listOf()
 
     override var selectedItems: Set<BookmarkNode> = setOf()
 
     fun updateData(
-        bookmarkList: List<BookmarkNode>,
+        newBookmarkNode: BookmarkNode?,
         viewMode: ViewMode,
         selectedItems: Set<BookmarkNode>
     ) {
         val diffUtil = DiffUtil.calculateDiff(
             BookmarkDiffUtil(
-                this.bookmarkList,
-                bookmarkList,
+                this.tree,
+                newBookmarkNode?.children.orEmpty(),
                 this.viewMode,
                 viewMode,
                 this.selectedItems,
@@ -43,7 +43,7 @@ class BookmarkAdapter(
             )
         )
 
-        this.bookmarkList = bookmarkList
+        this.tree = newBookmarkNode?.children.orEmpty()
         this.viewMode = viewMode
         this.selectedItems = HashSet(selectedItems)
 
@@ -85,12 +85,12 @@ class BookmarkAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return bookmarkList[position].type.ordinal
+        return tree[position].type.ordinal
     }
 
     override fun onBindViewHolder(holder: BookmarkNodeViewHolder, position: Int) {
-        holder.bind(bookmarkList[position])
+        holder.bind(tree[position])
     }
 
-    override fun getItemCount() = bookmarkList.count()
+    override fun getItemCount() = tree.count()
 }

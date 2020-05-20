@@ -14,31 +14,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.concept.storage.BookmarkNode
-import mozilla.components.concept.storage.SearchResult
 import org.mozilla.reference.browser.ext.notifyObserver
 import org.mozilla.reference.browser.library.bookmarks.usecases.BookmarkUseCases
 
 class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewModel() {
 
-    private val _bookmarkList = MutableLiveData<List<BookmarkNode>>()
-    val bookmarkList: LiveData<List<BookmarkNode>> = _bookmarkList
+    private val _tree = MutableLiveData<BookmarkNode?>()
+    val tree: LiveData<BookmarkNode?> = _tree
 
     var viewMode = ViewMode.Normal
 
     private val _selectedItems = MutableLiveData<MutableSet<BookmarkNode>>()
     val selectedItems: LiveData<MutableSet<BookmarkNode>> = _selectedItems
 
+    private val _bookmarkSearchList = MutableLiveData<List<BookmarkNode>>()
+    val bookmarkSearchList: LiveData<List<BookmarkNode>> = _bookmarkSearchList
+
     init {
-        _bookmarkList.value = listOf()
         _selectedItems.value = mutableSetOf()
-        fetchBookmarks()
+        _bookmarkSearchList.value = listOf()
+        fetchBookmarks("0")
     }
 
-    private fun fetchBookmarks() {
+    private fun fetchBookmarks(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val bookmarkList = bookmarkUseCases.getBookmarks()
+            val tree = bookmarkUseCases.getBookmarks.invoke(id)
             withContext(Dispatchers.Main) {
-                _bookmarkList.value = bookmarkList
+                _tree.value = tree
             }
         }
     }
@@ -75,12 +77,17 @@ class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewMo
         }
     }
 
-    fun searchBookmarks(query: String?): List<SearchResult> {
-        return bookmarkUseCases.searchBookmarks(query ?: "")
+    fun searchBookmarks(query: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val bookmarks = bookmarkUseCases.searchBookmarks(query ?: "")
+            withContext(Dispatchers.Main) {
+                _bookmarkSearchList.value = bookmarks
+            }
+        }
     }
 
     private fun invalidate() {
-        fetchBookmarks()
+        fetchBookmarks("0")
     }
 }
 

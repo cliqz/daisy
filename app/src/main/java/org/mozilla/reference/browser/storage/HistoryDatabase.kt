@@ -16,8 +16,10 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.util.Log
 import androidx.core.database.getStringOrNull
+import mozilla.components.concept.storage.BookmarkInfo
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.BookmarkNodeType
+import mozilla.components.concept.storage.BookmarksStorage
 import mozilla.components.concept.storage.HistoryAutocompleteResult
 import mozilla.components.concept.storage.PageObservation
 import mozilla.components.concept.storage.PageVisit
@@ -38,7 +40,7 @@ import java.net.URI
 @Suppress("LargeClass", "TooManyFunctions")
 class HistoryDatabase(context: Context) :
     SQLiteOpenHelper(context.applicationContext, DATABASE_NAME, null, DATABASE_VERSION),
-    HistoryStorage {
+    HistoryStorage, BookmarksStorage {
 
     override suspend fun warmUp() {
         // Nothing to do here
@@ -351,7 +353,9 @@ class HistoryDatabase(context: Context) :
         val domain = extractDomainFrom(url)
         urlsValues.put(UrlsTable.URL, url)
         urlsValues.put(UrlsTable.DOMAIN, domain)
-        urlsValues.put(UrlsTable.TITLE, title)
+        if (!title.isNullOrEmpty()) {
+            urlsValues.put(UrlsTable.TITLE, title)
+        }
         db.beginTransaction(
             transaction = {
                 if (q.count > 0) {
@@ -487,8 +491,8 @@ class HistoryDatabase(context: Context) :
         }
 
     @Synchronized
-    override suspend fun getBookmarks(): List<BookmarkNode> {
-        val results = mutableListOf<BookmarkNode>()
+    suspend fun getBookmarks(): List<BookmarkTreeNode> {
+        val results = mutableListOf<BookmarkTreeNode>()
         val db = dbHandler.database ?: return results
         val cursor = db.rawQuery(res.getString(R.string.get_all_bookmarks), null)
         cursor.use {
@@ -499,7 +503,7 @@ class HistoryDatabase(context: Context) :
                 val typeIndex = it.getColumnIndex(BookmarksTable.TYPE)
                 val parentIdIndex = it.getColumnIndex(BookmarksTable.PARENT_ID)
                 do {
-                    results.add(BookmarkNode(
+                    results.add(BookmarkTreeNode(
                         guid = it.getInt(idIndex).toString(),
                         type = if (it.getString(typeIndex) == "bookmark")
                             BookmarkNodeType.ITEM else BookmarkNodeType.FOLDER,
@@ -532,73 +536,114 @@ class HistoryDatabase(context: Context) :
         return rowId
     }
 
-    override suspend fun addBookmark(url: String, title: String, parentId: Int): Int {
+    override suspend fun addItem(parentGuid: String, url: String, title: String, position: Int?): String {
         return addBookmarkNode(
             url = url,
-            title = title,
-            parentId = parentId,
+            title = if (title.isEmpty()) "untitled" else title,
+            parentId = parentGuid.toInt(),
             type = "bookmark"
-        )
+        ).toString()
     }
 
-    override suspend fun addFolder(title: String, parentId: Int): Int {
+    override suspend fun addSeparator(parentGuid: String, position: Int?): String {
+        return ""
+    }
+
+    override suspend fun addFolder(parentGuid: String, title: String, position: Int?): String {
         return addBookmarkNode(
             title = title,
-            parentId = parentId,
+            parentId = parentGuid.toInt(),
             type = "folder"
-        )
+        ).toString()
     }
 
-    @Synchronized
-    override suspend fun getBookmarkWithUrl(url: String): BookmarkNode? {
-        val db = dbHandler.database ?: return null
+    override suspend fun getBookmarksWithUrl(url: String): List<BookmarkNode> {
+        val db = dbHandler.database ?: return listOf()
         val query = res.getString(R.string.get_bookmark)
         val cursor = db.rawQuery(query, arrayOf(String.format("%s", url)))
-        var bookmarkNode: BookmarkNode? = null
+        val bookmarks = mutableListOf<BookmarkNode>()
         cursor.use {
             if (it.moveToFirst()) {
                 val id = it.getString(it.getColumnIndex(BookmarksTable.ID))
                 val bookmarkedUrl = it.getString(it.getColumnIndex(BookmarksTable.URL))
                 val title = it.getString(it.getColumnIndex(BookmarksTable.TITLE))
                 val parentId = it.getString(it.getColumnIndex(BookmarksTable.PARENT_ID))
-                bookmarkNode = BookmarkNode(BookmarkNodeType.ITEM, id, parentId, 0, title, bookmarkedUrl, null)
+                val bookmarkNode = BookmarkNode(BookmarkNodeType.ITEM, id, parentId, 0, title, bookmarkedUrl, null)
+                bookmarks.add(bookmarkNode)
             }
         }
-        return bookmarkNode
+        return bookmarks
     }
 
-    override suspend fun deleteBookmark(id: Int): Boolean {
-        val db = dbHandler.database ?: return false
-        val values = ContentValues()
-        values.put(BookmarksTable.ID, id)
+    override suspend fun getTree(guid: String, recursive: Boolean): BookmarkNode? {
+        val bookmarks = getBookmarks()
+        val bookmarksMap = generateTree(bookmarks)
+        return bookmarksMap[guid]
+    }
 
+    private fun generateTree(bookmarks: List<BookmarkTreeNode>): Map<String, BookmarkNode> {
+        val bookmarkTreeMap = mutableMapOf<String, BookmarkTreeNode>()
+        for (bookmark in bookmarks) {
+            bookmarkTreeMap[bookmark.guid] = bookmark
+        }
+        // create a root node.
+        bookmarkTreeMap["0"] = BookmarkTreeNode(
+            type = BookmarkNodeType.FOLDER,
+            guid = "0",
+            children = mutableListOf()
+        )
+        for (bookmark in bookmarks) {
+            val parentNode = bookmarkTreeMap[bookmark.parentGuid]
+            parentNode?.let {
+                val children = parentNode.children ?: mutableListOf()
+                children.add(bookmark)
+                parentNode.children = children
+            }
+        }
+        val bookmarkMap = mutableMapOf<String, BookmarkNode>()
+        for ((key, value) in bookmarkTreeMap) {
+            bookmarkMap[key] = value.toBookmarkNode()
+        }
+        return bookmarkMap
+    }
+
+    override suspend fun deleteNode(guid: String): Boolean {
+        val db = dbHandler.database ?: return false
         var rowsAffected = 0
         db.beginTransaction {
-            rowsAffected = delete(BookmarksTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
+            rowsAffected = delete(BookmarksTable.TABLE_NAME, "id=?", arrayOf(guid))
         }
         return rowsAffected > 0
     }
 
-    override fun searchBookmarks(query: String): List<SearchResult> {
+    override suspend fun getBookmark(guid: String): BookmarkNode? {
+        return null
+    }
+
+    override suspend fun searchBookmarks(query: String, limit: Int): List<BookmarkNode> {
         val db = dbHandler.database ?: return listOf()
         val formattedSearch = String.format("%%%s%%", query)
         val selectQuery = res.getString(R.string.search_bookmarks)
         val cursor = db.rawQuery(selectQuery, arrayOf(formattedSearch, formattedSearch))
 
-        val bookmarkSuggestions = mutableListOf<SearchResult>()
+        val bookmarks = mutableListOf<BookmarkNode>()
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val id = it.getString(it.getColumnIndex(BookmarksTable.ID))
                     val url = it.getString(it.getColumnIndex(BookmarksTable.URL))
                     val title = it.getStringOrNull(it.getColumnIndex(BookmarksTable.TITLE))
-                    // The bookmark query we use does not return any 'score' attribute column
-                    val bookmarkSuggestion = SearchResult(id, url, 0, title)
-                    bookmarkSuggestions.add(bookmarkSuggestion)
+                    val parentId = it.getString(it.getColumnIndex(BookmarksTable.PARENT_ID))
+                    val bookmarkNode = BookmarkNode(BookmarkNodeType.ITEM, id, parentId, 0, title, url, null)
+                    bookmarks.add(bookmarkNode)
                 } while (it.moveToNext())
             }
         }
-        return bookmarkSuggestions
+        return bookmarks
+    }
+
+    override suspend fun updateNode(guid: String, info: BookmarkInfo) {
+        // to-do
     }
 
     /**
@@ -785,4 +830,24 @@ class HistoryDatabase(context: Context) :
                 arrayOf(id.toString()))
         }
     }
+}
+
+data class BookmarkTreeNode(
+    val type: BookmarkNodeType,
+    val guid: String,
+    val parentGuid: String? = null,
+    val position: Int? = null,
+    val title: String? = null,
+    val url: String? = null,
+    var children: MutableList<BookmarkTreeNode>? = null
+)
+
+private fun BookmarkTreeNode.toBookmarkNode(): BookmarkNode {
+    val children = mutableListOf<BookmarkNode>()
+    this.children?.let {
+        for (node in it) {
+            children.add(node.toBookmarkNode())
+        }
+    }
+    return BookmarkNode(type, guid, parentGuid, position, title, url, children)
 }
