@@ -9,6 +9,7 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mozilla.appservices.fxaclient.Config.Server
 import mozilla.components.browser.storage.sync.RemoteTabsStorage
 import mozilla.components.concept.sync.DeviceCapability
 import mozilla.components.concept.sync.DeviceType
@@ -22,7 +23,6 @@ import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.SyncEngine
 import mozilla.components.service.fxa.manager.FxaAccountManager
-import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.reference.browser.NotificationManager
 import org.mozilla.reference.browser.ext.components
@@ -46,10 +46,10 @@ class BackgroundServices(
         // Make the "history" store accessible to workers spawned by the sync manager.
         // Leaving out this since we don't use PlacesHistoryStorage(needed for sync manager to work)
         // GlobalSyncableStoreProvider.configureStore(SyncEngine.History to placesHistoryStorage)
-        GlobalSyncableStoreProvider.configureStore(SyncEngine.Tabs to remoteTabsStorage)
+        // GlobalSyncableStoreProvider.configureStore(SyncEngine.Tabs to remoteTabsStorage)
     }
 
-    private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
+    private val serverConfig = ServerConfig(Server.RELEASE, CLIENT_ID, REDIRECT_URL)
     private val deviceConfig = DeviceConfig(
         name = "Reference Browser on " + Build.MANUFACTURER + " " + Build.MODEL,
         type = DeviceType.MOBILE,

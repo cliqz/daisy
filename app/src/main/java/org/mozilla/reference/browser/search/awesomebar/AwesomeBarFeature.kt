@@ -11,7 +11,7 @@ import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.Session
-import mozilla.components.browser.session.SessionManager
+import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.fetch.Client
@@ -60,7 +60,11 @@ class AwesomeBarFeature(
     internal var isKeyboardDismissedProgrammatically: Boolean = false
 
     private val loadUrlUseCase = object : SessionUseCases.LoadUrlUseCase {
-        override fun invoke(url: String, flags: EngineSession.LoadUrlFlags) {
+        override fun invoke(
+            url: String,
+            flags: EngineSession.LoadUrlFlags,
+            additionalHeaders: Map<String, String>?
+        ) {
             interactor.onUrlTapped(url)
         }
     }
@@ -74,6 +78,10 @@ class AwesomeBarFeature(
     private val selectTabUseCase = object : TabsUseCases.SelectTabUseCase {
         override fun invoke(session: Session) {
             interactor.onExistingSessionSelected(session)
+        }
+
+        override fun invoke(tabId: String) {
+            TODO("Not yet implemented")
         }
     }
 
@@ -100,12 +108,13 @@ class AwesomeBarFeature(
      * Add a [AwesomeBar.SuggestionProvider] for "Open tabs" to the [AwesomeBar].
      */
     fun addSessionProvider(
-        sessionManager: SessionManager,
+        store: BrowserStore,
         icons: BrowserIcons? = null
     ): AwesomeBarFeature {
         awesomeBar.addProviders(
             SessionSuggestionProvider(
-                sessionManager,
+                awesomeBar.resources,
+                store,
                 selectTabUseCase,
                 icons,
                 excludeSelectedSession = true

@@ -134,25 +134,22 @@ class ThumbnailsRepositoryTest {
 
     @Test
     fun `getThumbnailOrNull should return null is there is no thumbnail`() = runBlockingTest {
-        val session = Session(DEFAULT_URL)
-        val thumbnail = repository.getThumbnailAsync(session).await()
+        val thumbnail = repository.getThumbnailAsync(DEFAULT_SESSION_ID).await()
         assertNull("The thumbnail should be null", thumbnail)
     }
 
     @Test
     fun `getThumbnailOrNull should return a thumbnail for a persisted session`() = runBlockingTest {
-        val session = Session(DEFAULT_URL)
-        repository.storeThumbnail(session.id, THUMBNAIL).join()
-        val thumbnail = repository.getThumbnailAsync(session)
+        repository.storeThumbnail(DEFAULT_SESSION_ID, THUMBNAIL).join()
+        val thumbnail = repository.getThumbnailAsync(DEFAULT_SESSION_ID)
         assertNotNull("The thumbnail should not be null", thumbnail)
     }
 
     @Test
     fun `loadIntoView should set the thumbnail to the given ImageView`() = runBlockingTest {
-        val session = Session(DEFAULT_URL)
-        repository.storeThumbnail(session.id, THUMBNAIL).join()
+        repository.storeThumbnail(DEFAULT_SESSION_ID, THUMBNAIL).join()
         val view: ImageView = mock()
-        repository.loadIntoView(view, session)
+        repository.loadIntoView(view, DEFAULT_SESSION_ID)
         verify(view).setImageBitmap(any())
     }
 

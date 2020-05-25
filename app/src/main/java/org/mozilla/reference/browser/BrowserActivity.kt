@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import kotlinx.coroutines.runBlocking
 import mozilla.components.browser.search.SearchEngine
 import mozilla.components.browser.session.Session
 import mozilla.components.browser.state.state.WebExtensionState
@@ -106,13 +107,15 @@ open class BrowserActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent ?: return
 
-        if (components.utils.startSearchIntentProcessor.process(intent)) {
-            val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
-            navHost.navController.navigate(direction)
-        } else if (components.utils.tabIntentProcessor.matches(intent)) {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.container, createBrowserFragment(null, openToSearch = false))
-                commit()
+        runBlocking {
+            if (components.utils.startSearchIntentProcessor.process(intent)) {
+                val direction = NavGraphDirections.actionWidgetSearch(sessionId = null)
+                navHost.navController.navigate(direction)
+            } else if (components.utils.tabIntentProcessor.process(intent)) {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.container, createBrowserFragment(null, openToSearch = false))
+                    commit()
+                }
             }
         }
     }

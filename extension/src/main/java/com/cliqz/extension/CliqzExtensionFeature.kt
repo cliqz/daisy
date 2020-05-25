@@ -18,15 +18,11 @@ import org.mozilla.geckoview.GeckoRuntime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 
-class CliqzExtensionFeature(val runtime: GeckoRuntime) {
+class CliqzExtensionFeature(runtime: GeckoRuntime) {
     private val logger = Logger("cliqz-extension")
 
-    private val appName = "cliqz"
-    private val privacyExtensionID = "cliqz@cliqz.com"
-    private val privacyExtensionUrl = "resource://android/assets/extensions/cliqz/"
-
-    private var extension = GeckoWebExtension(privacyExtensionID, privacyExtensionUrl,
-            runtime.webExtensionController, allowContentMessaging = true)
+    private var extension = GeckoWebExtension(PRIVACY_EXTENSION_ID, PRIVACY_EXTENSION_URL,
+            runtime, allowContentMessaging = true)
     private val messageHandler = CliqzBackgroundMessageHandler(this)
 
     private companion object ExtensionSettings {
@@ -42,6 +38,9 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
                 ),
                 "ADBLOCKER_PLATFORM" to adblockerPlatform
         )
+        private const val PRIVACY_EXTENSION_ID = "cliqz@cliqz.com"
+        private const val PRIVACY_EXTENSION_URL = "resource://android/assets/extensions/cliqz/"
+        private const val APP_NAME = "cliqz"
     }
 
     val extensionConfig: JSONObject by lazy {
@@ -56,7 +55,7 @@ class CliqzExtensionFeature(val runtime: GeckoRuntime) {
     }
 
     init {
-        extension.registerBackgroundMessageHandler(appName, messageHandler)
+        extension.registerBackgroundMessageHandler(ExtensionSettings.APP_NAME, messageHandler)
         runtime.registerWebExtension(extension.nativeExtension)
     }
 

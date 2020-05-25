@@ -14,10 +14,8 @@ import mozilla.components.concept.engine.DefaultSettings
 import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.fetch.Client
 import mozilla.components.feature.webcompat.WebCompatFeature
-import mozilla.components.lib.crash.handler.CrashHandlerService
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
-import org.mozilla.reference.browser.ext.isCrashReportActive
 import java.io.File
 
 object EngineProvider {
@@ -56,9 +54,8 @@ object EngineProvider {
         if (runtime == null) {
             val builder = GeckoRuntimeSettings.Builder()
 
-            if (isCrashReportActive) {
-                builder.crashHandler(CrashHandlerService::class.java)
-            }
+            // We use only Sentry, so the CrashHandlerService is disabled
+            // To restore see: https://git.io/JfuFX
 
             // Allow for exfiltrating Gecko metrics through the Glean SDK.
             builder.telemetryDelegate(GeckoAdapter())

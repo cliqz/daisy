@@ -33,8 +33,9 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler, SessionManager.Obse
 
         tabsFeature = TabsFeature(
             tabsTray,
-            requireComponents.core.sessionManager,
+            requireComponents.core.store,
             requireComponents.useCases.tabsUseCases,
+            { !it.content.private },
             ::closeTabsTray)
 
         tabsPanel.initialize(tabsFeature, ::closeTabsTray, ::openFreshTabFragment, ::openBrowserFragment)

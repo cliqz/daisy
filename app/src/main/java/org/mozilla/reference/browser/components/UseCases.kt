@@ -5,8 +5,8 @@
 package org.mozilla.reference.browser.components
 
 import android.content.Context
-import com.cliqz.browser.news.domain.GetNewsUseCase
 import com.cliqz.browser.news.data.source.NewsRepository
+import com.cliqz.browser.news.domain.GetNewsUseCase
 import mozilla.components.browser.search.SearchEngineManager
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
@@ -18,9 +18,9 @@ import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.SettingsUseCases
 import mozilla.components.feature.tabs.TabsUseCases
-import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 import org.mozilla.reference.browser.concepts.HistoryStorage
 import org.mozilla.reference.browser.library.bookmarks.usecases.BookmarkUseCases
+import org.mozilla.reference.browser.library.history.usecases.HistoryUseCases
 
 /**
  * Component group for all use cases. Use cases are provided by feature

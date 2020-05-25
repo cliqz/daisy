@@ -21,7 +21,7 @@ class IntentReceiverActivity : Activity() {
         MainScope().launch {
             utils.intentProcessors.any { it.process(intent) }
 
-            val className = if (utils.externalIntentProcessors.any { it.matches(intent) }) {
+            val className = if (utils.externalIntentProcessors.any { it.process(intent) }) {
                 ExternalAppBrowserActivity::class
             } else {
                 BrowserActivity::class
