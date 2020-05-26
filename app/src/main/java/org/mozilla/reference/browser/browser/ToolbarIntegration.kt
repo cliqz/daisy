@@ -34,6 +34,7 @@ import mozilla.components.browser.session.Session
 import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.toolbar.BrowserToolbar
 import mozilla.components.browser.toolbar.display.DisplayToolbar
+import mozilla.components.concept.storage.BookmarksStorage
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
 import mozilla.components.feature.session.SessionUseCases
@@ -60,6 +61,7 @@ class ToolbarIntegration(
     private val lifecycleScope: LifecycleCoroutineScope,
     private val lifecycleOwner: LifecycleOwner,
     private val historyStorage: HistoryStorage,
+    private val bookmarksStorage: BookmarksStorage,
     private val sessionManager: SessionManager,
     sessionUseCases: SessionUseCases,
     searchUseCases: SearchUseCases,
@@ -331,17 +333,24 @@ class ToolbarIntegration(
     private fun updateIsCurrentUrlBookmarked(url: String) {
         isBookmarkedJob?.cancel()
         isBookmarkedJob = lifecycleScope.launch {
-            isCurrentUrlBookmarked = historyStorage.isBookmark(url)
+            isCurrentUrlBookmarked = bookmarksStorage.getBookmarksWithUrl(url).isNotEmpty()
         }
     }
 
     private suspend fun bookmarkTapped(session: Session) = withContext(Dispatchers.IO) {
-        val isExistingBookmark = historyStorage.isBookmark(session.url)
-        if (isExistingBookmark) {
-            historyStorage.deleteBookmark(session.url)
+        val existing =
+                bookmarksStorage.getBookmarksWithUrl(session.url).firstOrNull { it.url == session.url }
+        if (existing != null) {
+            bookmarksStorage.deleteNode(existing.guid)
         } else {
             // Save bookmark
-            historyStorage.addBookmark(session.url, session.title)
+            bookmarksStorage.addItem(
+                parentGuid = 0.toString(),
+                url = session.url,
+                title = session.title,
+                position = null
+            )
+
             withContext(Dispatchers.Main) {
                 showBookmarkAddedSnackbar()
             }

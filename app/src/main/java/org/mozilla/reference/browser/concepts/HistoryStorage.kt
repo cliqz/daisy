@@ -1,8 +1,6 @@
 package org.mozilla.reference.browser.concepts
 
-import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.HistoryStorage
-import mozilla.components.concept.storage.SearchResult
 import org.mozilla.reference.browser.storage.model.TopSite
 
 /**
@@ -28,14 +26,4 @@ interface HistoryStorage : HistoryStorage {
      * Remove domains from the 'block list' which are blocked from top sites.
      */
     fun restoreTopSites()
-
-    suspend fun getBookmarks(): List<BookmarkNode>
-
-    suspend fun addBookmark(url: String, title: String)
-
-    suspend fun isBookmark(url: String): Boolean
-
-    suspend fun deleteBookmark(url: String)
-
-    fun searchBookmarks(query: String): List<SearchResult>
 }

@@ -30,10 +30,7 @@ class HistoryViewRobot {
         assertHistoryItem(url)
     }
 
-    fun verifyEmptyHistoryView() {
-        mDevice.waitAndInteract(Until.findObject(By.text("No history to show"))) {}
-        assertEmptyHistoryView()
-    }
+    fun verifyEmptyHistoryView() = assertEmptyHistoryView()
 
     fun verifyDeleteConfirmationMessage() = assertDeleteConfirmationMessage()
 
@@ -50,7 +47,7 @@ class HistoryViewRobot {
     }
 
     fun clickConfirmDeleteAllHistory() {
-        onView(withText("Clear"))
+        onView(withText(R.string.history_clear_all_dialog_positive_btn))
             .inRoot(isDialog())
             .check(matches(isDisplayed()))
             .click()
@@ -88,14 +85,14 @@ private fun assertEmptyHistoryView() =
             withEffectiveVisibility(Visibility.VISIBLE)
         )
     )
-        .check(matches(withText("No history to show")))
+        .check(matches(withText(R.string.no_history_available)))
 
 private fun assertHistoryItem(url: String) =
     historyItemUrl(url)
         .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
 private fun assertDeleteConfirmationMessage() =
-    onView(withText("Are you sure you want to clear history?"))
+    onView(withText(R.string.history_clear_all_dialog_title))
         .inRoot(isDialog())
         .check(matches(isDisplayed()))
 

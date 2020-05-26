@@ -12,6 +12,7 @@ import mozilla.components.browser.session.SessionManager
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Settings
 import mozilla.components.concept.fetch.Client
+import mozilla.components.concept.storage.BookmarksStorage
 import mozilla.components.feature.contextmenu.ContextMenuUseCases
 import mozilla.components.feature.pwa.WebAppUseCases
 import mozilla.components.feature.search.SearchUseCases
@@ -34,6 +35,7 @@ class UseCases(
     private val searchEngineManager: SearchEngineManager,
     private val client: Client,
     private val historyStorage: HistoryStorage,
+    private val bookmarksStorage: BookmarksStorage,
     private val newsRepository: NewsRepository
 ) {
     /**
@@ -74,7 +76,7 @@ class UseCases(
     /**
      * Use cases that provides bookmark management
      */
-    val bookmarkUseCases by lazy { BookmarkUseCases(historyStorage) }
+    val bookmarkUseCases by lazy { BookmarkUseCases(bookmarksStorage) }
 
     val getNewsUseCase: GetNewsUseCase by lazy { GetNewsUseCase(newsRepository) }
 }

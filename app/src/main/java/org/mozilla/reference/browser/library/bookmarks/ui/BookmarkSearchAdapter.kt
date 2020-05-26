@@ -13,8 +13,6 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.two_line_list_item_layout.view.*
 import mozilla.components.browser.icons.BrowserIcons
 import mozilla.components.concept.storage.BookmarkNode
-import mozilla.components.concept.storage.BookmarkNodeType
-import mozilla.components.concept.storage.SearchResult
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ext.inflate
 import org.mozilla.reference.browser.ext.loadIntoView
@@ -24,7 +22,7 @@ class BookmarkSearchAdapter(
     private val browserIcons: BrowserIcons
 ) : RecyclerView.Adapter<BookmarkSearchAdapter.ViewHolder>() {
 
-    private var searchResult: List<SearchResult> = listOf()
+    private var searchResult: List<BookmarkNode> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.two_line_list_item_layout))
@@ -35,7 +33,7 @@ class BookmarkSearchAdapter(
         holder.bind(searchResult[position])
     }
 
-    fun setData(data: List<SearchResult>) {
+    fun setData(data: List<BookmarkNode>) {
         searchResult = data
         notifyDataSetChanged()
     }
@@ -43,27 +41,21 @@ class BookmarkSearchAdapter(
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(searchResult: SearchResult) {
+        fun bind(bookmark: BookmarkNode) {
             with(containerView) {
-                val title = if (!searchResult.title.isNullOrBlank()) {
-                    searchResult.title!!
+                val title = if (!bookmark.title.isNullOrBlank()) {
+                    bookmark.title!!
                 } else {
                     resources.getString(R.string.history_title_untitled)
                 }
                 title_view.text = title
-                url_view.text = searchResult.url
-                browserIcons.loadIntoView(favicon, searchResult.url)
+                bookmark.url?.let {
+                    url_view.text = it
+                    browserIcons.loadIntoView(favicon, it)
+                }
                 setOnClickListener {
                     interactor.open(setOf(
-                        BookmarkNode(
-                            type = BookmarkNodeType.ITEM,
-                            guid = "",
-                            parentGuid = null,
-                            url = title,
-                            title = searchResult.url,
-                            position = null,
-                            children = null
-                        )
+                        bookmark
                     ))
                 }
             }

@@ -58,7 +58,9 @@ class TestBrowserApplication : BrowserApplication() {
             doReturn(client).whenever(it).client
             doReturn(BrowserStore()).whenever(it).store
             doReturnMock<BrowserIcons>().whenever(it).icons
-            doReturn(HistoryDatabase(this)).whenever(it).historyStorage
+            val historyDatabase = HistoryDatabase(this)
+            doReturn(historyDatabase).whenever(it).historyStorage
+            doReturn(historyDatabase).whenever(it).bookmarksStorage
         }
     }
 
@@ -79,6 +81,7 @@ class TestBrowserApplication : BrowserApplication() {
                     realSearch.searchEngineManager,
                     core.client,
                     core.historyStorage,
+                    core.bookmarksStorage,
                     realNews.newsRepository
             ))
             val realUtils = spy(Utilities(

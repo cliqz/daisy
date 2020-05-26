@@ -77,7 +77,7 @@ private fun assertMultiSelectionCheckmark() =
 
 private fun assertMultiSelectionCounter() {
     val resources = InstrumentationRegistry.getInstrumentation().context.resources
-    onView(withText(resources.getQuantityString(R.plurals.bookmark_items_selected, 1, 1)))
+    onView(withText("1 selected"))
         .check(matches(isDisplayed()))
 }
 

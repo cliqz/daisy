@@ -101,6 +101,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler {
                 lifecycleScope,
                 viewLifecycleOwner,
                 requireComponents.core.historyStorage,
+                requireComponents.core.bookmarksStorage,
                 requireComponents.core.sessionManager,
                 requireComponents.useCases.sessionUseCases,
                 requireComponents.useCases.searchUseCases,

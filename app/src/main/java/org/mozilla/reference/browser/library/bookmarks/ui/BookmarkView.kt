@@ -11,6 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.component_bookmark.view.bookmarks_list
 import kotlinx.android.synthetic.main.component_bookmark.view.bookmark_search_list
 import kotlinx.android.synthetic.main.component_bookmark.view.empty_view
@@ -26,6 +28,7 @@ import org.mozilla.reference.browser.library.LibraryToolbar
 
 class BookmarkView(
     containerView: ViewGroup,
+    lifecycleOwner: LifecycleOwner,
     private val bookmarkViewModel: BookmarkViewModel,
     private val interactor: BookmarkViewInteractor
 ) : LibraryPageView(containerView), UserInteractionHandler {
@@ -74,18 +77,21 @@ class BookmarkView(
             override fun searchQueryChanged(query: String) {
                 if (query.isBlank()) return
                 view.bookmark_search_list.visibility = View.VISIBLE
-                bookmarkSearchAdapter.setData(bookmarkViewModel.searchBookmarks(query))
+                bookmarkViewModel.searchBookmarks(query)
             }
+        })
+        bookmarkViewModel.bookmarkSearchList.observe(lifecycleOwner, Observer { bookmarkList ->
+            bookmarkSearchAdapter.setData(bookmarkList)
         })
         update(ViewMode.Normal)
     }
 
     fun update(
         newViewMode: ViewMode,
-        newBookmarkList: List<BookmarkNode> = listOf(),
+        newBookmarkNode: BookmarkNode? = null,
         newSelectedItems: Set<BookmarkNode> = setOf()
     ) {
-        bookmarkAdapter.updateData(newBookmarkList, newViewMode, newSelectedItems)
+        bookmarkAdapter.updateData(newBookmarkNode, newViewMode, newSelectedItems)
 
         if (newViewMode == ViewMode.Normal) {
             setUiForNormalMode(
