@@ -170,6 +170,7 @@ class HistoryDatabase(context: Context) :
     }
 
     // HistoryItems table name
+    @Suppress("unused")
     private object UrlsTable {
         const val TABLE_NAME = "urls"
         // Columns
@@ -179,8 +180,8 @@ class HistoryDatabase(context: Context) :
         const val TITLE = "title"
         const val VISITS = "visits"
         const val TIME = "time"
-        const val FAVORITE = "favorite"
-        const val FAV_TIME = "fav_time"
+        const val FAVORITE = "favorite" // DO NOT USE THIS COLUMN, it's here as reference
+        const val FAV_TIME = "fav_time" // DO NOT USE THIS COLUMN, it's here as reference
     }
 
     private object HistoryTable {
@@ -231,7 +232,7 @@ class HistoryDatabase(context: Context) :
     // Creating Tables
     override fun onCreate(db: SQLiteDatabase) {
         db.beginTransaction {
-            createV9DB(db)
+            createV10DB(db)
         }
     }
 
@@ -242,7 +243,7 @@ class HistoryDatabase(context: Context) :
         db.execSQL(res.getString(R.string.create_visits_index_v4))
     }
 
-    private fun createV9DB(db: SQLiteDatabase) {
+    private fun createV10DB(db: SQLiteDatabase) {
         db.execSQL(res.getString(R.string.create_urls_table_v6))
         db.execSQL(res.getString(R.string.create_history_table_v5))
         db.execSQL(res.getString(R.string.create_urls_index_v5))
@@ -251,7 +252,6 @@ class HistoryDatabase(context: Context) :
         db.execSQL(res.getString(R.string.create_queries_table_v7))
         db.execSQL(res.getString(R.string.create_history_time_index_v8))
         db.execSQL(res.getString(R.string.create_url_index_v9))
-
         db.execSQL(res.getString(R.string.create_bookmarks_table))
     }
 
@@ -316,6 +316,11 @@ class HistoryDatabase(context: Context) :
         db.execSQL(res.getString(R.string.create_url_index_v9))
     }
 
+    private fun upgradeV9toV10(db: SQLiteDatabase) {
+        db.execSQL(res.getString(R.string.create_bookmarks_table))
+        db.execSQL(res.getString(R.string.move_favorites_to_bookmarks_v10))
+    }
+
     // Upgrading database
     @Suppress("ComplexMethod")
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -327,13 +332,15 @@ class HistoryDatabase(context: Context) :
             if (oldVersion < V7) upgradeV6toV7(db)
             if (oldVersion < V8) upgradeV7toV8(db)
             if (oldVersion < V9) upgradeV8toV9(db)
+            if (oldVersion < V10) upgradeV9toV10(db)
             else {
-                execSQL("DROP TABLE IF EXISTS " + UrlsTable.TABLE_NAME)
-                execSQL("DROP TABLE IF EXISTS " + HistoryTable.TABLE_NAME)
-                execSQL("DROP TABLE IF EXISTS " + BlockedTopSitesTable.TABLE_NAME)
-                execSQL("DROP TABLE IF EXISTS " + QueriesTable.TABLE_NAME)
+                execSQL("DROP TABLE IF EXISTS ${UrlsTable.TABLE_NAME}")
+                execSQL("DROP TABLE IF EXISTS ${HistoryTable.TABLE_NAME}")
+                execSQL("DROP TABLE IF EXISTS ${BlockedTopSitesTable.TABLE_NAME}")
+                execSQL("DROP TABLE IF EXISTS ${QueriesTable.TABLE_NAME}")
+                execSQL("DROP TABLE IF EXISTS ${BookmarksTable.TABLE_NAME}")
                 // Create tables again
-                createV9DB(this)
+                createV10DB(this)
             }
         }
     }
@@ -491,7 +498,7 @@ class HistoryDatabase(context: Context) :
         }
 
     @Synchronized
-    suspend fun getBookmarks(): List<BookmarkTreeNode> {
+    fun getBookmarks(): List<BookmarkTreeNode> {
         val results = mutableListOf<BookmarkTreeNode>()
         val db = dbHandler.database ?: return results
         val cursor = db.rawQuery(res.getString(R.string.get_all_bookmarks), null)
@@ -666,17 +673,9 @@ class HistoryDatabase(context: Context) :
             arrayOf(id.toString()))
         if (cursor.moveToFirst()) {
             val uid = cursor.getLong(cursor.getColumnIndex(UrlsTable.ID))
-            val visits = cursor.getLong(cursor.getColumnIndex(UrlsTable.VISITS)) - 1
-            val favorite = cursor.getInt(cursor.getColumnIndex(UrlsTable.FAVORITE)) > 0
             db.beginTransaction {
                 delete(HistoryTable.TABLE_NAME, "id=?", arrayOf(id.toString()))
-                if (visits <= 0 && !favorite) {
-                    delete(UrlsTable.TABLE_NAME, "id=?", arrayOf(uid.toString()))
-                } else {
-                    val value = ContentValues()
-                    value.put(UrlsTable.VISITS, if (visits < 0) 0 else visits)
-                    update(UrlsTable.TABLE_NAME, value, "id=?", arrayOf(uid.toString()))
-                }
+                delete(UrlsTable.TABLE_NAME, "id=?", arrayOf(uid.toString()))
             }
         }
         cursor.close()
@@ -692,20 +691,9 @@ class HistoryDatabase(context: Context) :
         val db = dbHandler.database ?: return
         db.beginTransaction {
             if (deleteFavorites) { // mark all entries in urls table as favorite = false
-                val contentValues = ContentValues()
-                contentValues.put(UrlsTable.FAVORITE, false)
-                update(UrlsTable.TABLE_NAME, contentValues, null, null)
-                // delete all entries with visits = 0;
-                delete(UrlsTable.TABLE_NAME, "visits=0", null)
-            } else { // empty history table
-                delete(HistoryTable.TABLE_NAME, null, null)
-                // delete rows where favorite != 1
-                delete(UrlsTable.TABLE_NAME, "favorite<1", null)
-                // update "visits" of remaining rows to 0
-                val contentValues = ContentValues()
-                contentValues.put(UrlsTable.VISITS, 0)
-                update(UrlsTable.TABLE_NAME, contentValues, null, null)
+                delete(BookmarksTable.TABLE_NAME, null, null)
             }
+            delete(UrlsTable.TABLE_NAME, null, null)
             delete(QueriesTable.TABLE_NAME, null, null)
             // way to flush ghost entries on older sqlite version
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -794,8 +782,9 @@ class HistoryDatabase(context: Context) :
         private const val V7 = 7
         private const val V8 = 8
         private const val V9 = 9
+        private const val V10 = 10
         private const val MAX_TOP_SITE_LIMIT = 100
-        private const val DATABASE_VERSION = 9
+        private const val DATABASE_VERSION = V10
         private const val DOMAIN_START_INDEX = 4
         // Database Name
         const val DATABASE_NAME = "historyManager"

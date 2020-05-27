@@ -30,8 +30,8 @@ import org.mozilla.reference.browser.components.Services
 import org.mozilla.reference.browser.components.TestEngineView
 import org.mozilla.reference.browser.components.UseCases
 import org.mozilla.reference.browser.components.Utilities
-import org.mozilla.reference.browser.storage.HistoryDatabase
 import org.mozilla.reference.browser.ext.whenever
+import org.mozilla.reference.browser.storage.HistoryDatabase
 import org.mozilla.reference.browser.utils.ClipboardHandler
 
 class TestBrowserApplication : BrowserApplication() {

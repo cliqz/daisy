@@ -15,6 +15,7 @@ import mozilla.components.support.test.robolectric.testContext
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -71,5 +72,18 @@ class HistoryDatabaseTest {
     fun `should return false for not visited pages`() = runBlockingTest {
         assertFalse("cliqz.com should not have been visited",
             db.getVisited(listOf("https://facebook.com")).all { it })
+    }
+
+    @Test
+    fun `should record bookmarks`() = runBlockingTest {
+        val rowId = db.addItem("0", "https://cliqz.com", "Cliqz", null)
+        assertEquals("1", rowId)
+
+        val bookmarks = db.getTree("0")
+        assertNotNull(bookmarks)
+        assertNotNull(bookmarks?.children)
+        assertEquals(1, bookmarks?.children?.size)
+        assertEquals("Cliqz", bookmarks?.children?.first()?.title)
+        assertEquals("https://cliqz.com", bookmarks?.children?.first()?.url)
     }
 }

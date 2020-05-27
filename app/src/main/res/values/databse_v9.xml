@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="create_url_index_v9" translatable="false">"create index if not exists url on urls(url)"</string>
-</resources>
