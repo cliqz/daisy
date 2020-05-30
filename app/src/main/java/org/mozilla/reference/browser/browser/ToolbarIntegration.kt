@@ -52,6 +52,7 @@ import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.share
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
+import org.mozilla.reference.browser.storage.HistoryDatabase.Companion.bookmarksRootFolder
 import org.mozilla.reference.browser.view.DaisySnackbar
 
 @Suppress("TooManyFunctions")
@@ -384,7 +385,7 @@ class ToolbarIntegration(
     }
 
     private fun openBookmarkFragment() {
-        val direction = BrowserFragmentDirections.actionBrowserFragmentToBookmarkFragment()
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToBookmarkFragment(bookmarksRootFolder)
         navController.nav(R.id.browserFragment, direction)
     }
 

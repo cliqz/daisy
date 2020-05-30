@@ -50,6 +50,10 @@ class LibraryToolbar @JvmOverloads constructor(
         fun searchClosed()
 
         fun searchQueryChanged(query: String)
+
+        fun add()
+
+        fun confirm()
     }
 
     var title: CharSequence
@@ -105,6 +109,14 @@ class LibraryToolbar @JvmOverloads constructor(
                 }
                 R.id.open_in_private_tab -> {
                     notifyObservers { openAll(newTab = true, private = true) }
+                    true
+                }
+                R.id.add_folder -> {
+                    notifyObservers { add() }
+                    true
+                }
+                R.id.confirm -> {
+                    notifyObservers { confirm() }
                     true
                 }
                 else -> throw IllegalArgumentException("Invalid menu item")

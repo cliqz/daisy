@@ -1,0 +1,88 @@
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="19dp"
+    android:height="18dp"
+    android:viewportWidth="19"
+    android:viewportHeight="18">
+  <path
+      android:pathData="M9.5924,4.9008L16.6897,4.9008"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M2.1654,5.5486L9.9445,5.5486"
+      android:strokeWidth="0.7"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M1.5924,1.8542L7.5134,1.8542"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M2.1292,16.8064L9.5924,16.8064"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M1.5924,15.9784L1.5924,1.8542"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M2.0341,17.8067C2.5028,17.8067 4.1623,17.8067 4.1623,17.8067C4.1623,17.8067 2.8476,17.1865 2.2453,16.5342C1.9902,16.2579 2.1112,15.7653 2.1112,15.6533C2.1112,14.8082 2.1269,14.2925 1.2819,14.2925C0.8461,14.2925 0.5897,14.7135 0.5897,14.7135C0.5897,14.7135 0.5897,15.8675 0.5897,16.2767C0.5897,17.1217 1.1891,17.8067 2.0341,17.8067Z"
+      android:strokeWidth="1"
+      android:fillColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M16.8022,3.9035C16.3336,3.9035 14.674,3.9035 14.674,3.9035C14.674,3.9035 15.9888,4.5237 16.5911,5.176C16.8462,5.4523 16.7251,5.945 16.7251,6.057C16.7251,6.902 16.7094,7.4178 17.5544,7.4178C17.9903,7.4178 18.2467,6.9968 18.2467,6.9968C18.2467,6.9968 18.2467,5.8428 18.2467,5.4336C18.2467,4.5886 17.6473,3.9035 16.8022,3.9035Z"
+      android:strokeWidth="1"
+      android:fillColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M9.5924,4.9008L7.5134,1.8542"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M16.6897,14.6066L12.0877,14.6066"
+      android:strokeWidth="1.6"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M17.2508,10.9054L17.2508,5.7908"
+      android:strokeLineJoin="bevel"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M14.3887,17.2276L14.3887,11.9965"
+      android:strokeWidth="1.6"
+      android:fillColor="#00000000"
+      android:strokeColor="#4A4A4A"
+      android:fillType="evenOdd"
+      android:strokeLineCap="round"/>
+</vector>

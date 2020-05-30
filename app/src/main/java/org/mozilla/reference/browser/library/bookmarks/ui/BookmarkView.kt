@@ -79,6 +79,14 @@ class BookmarkView(
                 view.bookmark_search_list.visibility = View.VISIBLE
                 bookmarkViewModel.searchBookmarks(query)
             }
+
+            override fun confirm() {
+                // no-op
+            }
+
+            override fun add() {
+                interactor.navigateToAddFolder()
+            }
         })
         bookmarkViewModel.bookmarkSearchList.observe(lifecycleOwner, Observer { bookmarkList ->
             bookmarkSearchAdapter.setData(bookmarkList)

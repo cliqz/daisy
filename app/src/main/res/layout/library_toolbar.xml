@@ -17,7 +17,7 @@
         android:id="@+id/inner_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -33,7 +33,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:visibility="gone">
 
         <View
             android:layout_width="match_parent"

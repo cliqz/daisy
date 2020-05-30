@@ -7,6 +7,8 @@ package org.mozilla.reference.browser
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.mozilla.reference.browser.library.bookmarks.ui.BookmarkViewModel
+import org.mozilla.reference.browser.library.bookmarks.ui.addfolder.AddBookmarkFolderViewModel
+import org.mozilla.reference.browser.library.bookmarks.ui.selectfolder.SelectBookmarkViewModel
 import org.mozilla.reference.browser.library.history.ui.HistoryViewModel
 import java.lang.IllegalArgumentException
 
@@ -15,17 +17,25 @@ import java.lang.IllegalArgumentException
  */
 class ViewModelFactory(private val applicationContext: BrowserApplication) : ViewModelProvider.Factory {
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        when (modelClass) {
-            HistoryViewModel::class.java -> with(applicationContext.components.useCases) {
+    @Suppress("UNCHECKED_CAST", "ComplexMethod")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        val useCases = applicationContext.components.useCases
+        return when (modelClass) {
+            HistoryViewModel::class.java -> with(useCases) {
                 HistoryViewModel(historyUseCases) as T
             }
-            BookmarkViewModel::class.java -> with(applicationContext.components.useCases) {
+            BookmarkViewModel::class.java -> with(useCases) {
                 BookmarkViewModel(bookmarkUseCases) as T
+            }
+            AddBookmarkFolderViewModel::class.java -> with(useCases) {
+                AddBookmarkFolderViewModel(bookmarkUseCases) as T
+            }
+            SelectBookmarkViewModel::class.java -> with(useCases) {
+                SelectBookmarkViewModel(bookmarkUseCases) as T
             }
             else -> throw IllegalArgumentException("Unknown model class $modelClass")
         }
+    }
 
     companion object {
         private var INSTANCE: ViewModelFactory? = null

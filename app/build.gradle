@@ -258,6 +258,7 @@ dependencies {
     implementation Deps.kotlin_coroutines
 
     implementation Deps.androidx_appcompat
+    implementation Deps.androidx_core
     implementation Deps.androidx_core_ktx
     implementation Deps.androidx_paging
     implementation Deps.androidx_navigation_fragment

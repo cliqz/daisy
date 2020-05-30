@@ -33,10 +33,9 @@ class BookmarkViewModel(private val bookmarkUseCases: BookmarkUseCases) : ViewMo
     init {
         _selectedItems.value = mutableSetOf()
         _bookmarkSearchList.value = listOf()
-        fetchBookmarks("0")
     }
 
-    private fun fetchBookmarks(id: String) {
+    fun fetchBookmarks(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val tree = bookmarkUseCases.getBookmarks.invoke(id)
             withContext(Dispatchers.Main) {

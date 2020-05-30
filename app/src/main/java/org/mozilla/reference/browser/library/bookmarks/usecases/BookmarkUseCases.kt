@@ -35,8 +35,15 @@ class BookmarkUseCases(bookmarksStorage: BookmarksStorage) {
         }
     }
 
+    class AddBookmarkFolderUseCase(private val bookmarksStorage: BookmarksStorage) {
+        suspend operator fun invoke(parentGuid: String, title: String): String {
+            return bookmarksStorage.addFolder(parentGuid, title)
+        }
+    }
+
     val getBookmarks by lazy { GetBookmarksUseCase(bookmarksStorage) }
     val deleteBookmark by lazy { DeleteBookmarkUseCase(bookmarksStorage) }
     val deleteMultipleBookmarks by lazy { DeleteMultipleBookmarkUseCase(bookmarksStorage) }
     val searchBookmarks by lazy { SearchBookmarksUseCase(bookmarksStorage) }
+    val addFolder by lazy { AddBookmarkFolderUseCase(bookmarksStorage) }
 }

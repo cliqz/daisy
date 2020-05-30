@@ -818,6 +818,8 @@ class HistoryDatabase(context: Context) :
             db.update(UrlsTable.TABLE_NAME, domainValues, UrlsTable.ID + " = ?",
                 arrayOf(id.toString()))
         }
+
+        const val bookmarksRootFolder = 0.toString()
     }
 }
 

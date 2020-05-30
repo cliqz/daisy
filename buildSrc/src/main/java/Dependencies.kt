@@ -54,7 +54,6 @@ object Deps {
 
     const val testing_junit = "junit:junit:${Versions.junit}"
     const val testing_mockk = "io.mockk:mockk:${Versions.mockk}"
-    const val androidx_test_junit = "androidx.test.ext:junit:${Versions.AndroidX.test_ext}"
 
     const val mozilla_concept_engine = "org.mozilla.components:concept-engine:${Versions.mozilla_android_components}"
     const val mozilla_concept_tabstray = "org.mozilla.components:concept-tabstray:${Versions.mozilla_android_components}"
@@ -129,6 +128,7 @@ object Deps {
     const val androidx_paging = "androidx.paging:paging-runtime-ktx:${Versions.AndroidX.paging}"
     const val androidx_safeargs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.AndroidX.navigation}"
     const val androidx_navigation_fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.AndroidX.navigation}"
+    const val androidx_core = "androidx.core:core:${Versions.AndroidX.core}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"
     const val androidx_constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintlayout}"
     const val androidx_preference_ktx = "androidx.preference:preference-ktx:${Versions.AndroidX.preference}"
@@ -148,7 +148,7 @@ object Deps {
     const val espresso_web = "androidx.test.espresso:espresso-web:${Versions.AndroidX.espresso}"
     const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}"
     const val orchestrator =  "androidx.test:orchestrator:${Versions.orchestrator}"
-    const val tools_test_ext_junit = "androidx.test.ext:junit:${Versions.AndroidX.core}"
+    const val tools_test_ext_junit = "androidx.test.ext:junit:${Versions.AndroidX.test_ext}"
     const val tools_test_rules = "androidx.test:rules:${Versions.tools_test_rules}"
     const val tools_test_runner = "androidx.test:runner:${Versions.tools_test_runner}"
     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"

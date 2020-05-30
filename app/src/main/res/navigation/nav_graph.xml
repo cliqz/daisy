@@ -140,10 +140,37 @@
         tools:layout="@layout/fragment_bookmark">
 
         <action
+            android:id="@+id/action_bookmarkFragment_self"
+            app:destination="@id/bookmarkFragment" />
+
+        <action
             android:id="@+id/action_bookmarkFragment_to_browserFragment"
             app:destination="@id/browserFragment"
             app:popUpTo="@id/freshTabFragment" />
 
+        <action
+            android:id="@+id/action_bookmarkFragment_to_addBookmarkFolderFragment"
+            app:destination="@id/addBookmarkFolderFragment" />
+
+        <argument
+            android:name="currentRoot"
+            app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/addBookmarkFolderFragment"
+        android:name="org.mozilla.reference.browser.library.bookmarks.ui.addfolder.AddBookmarkFolderFragment"
+        tools:layout="@layout/fragment_edit_bookmark">
+
+        <action
+            android:id="@+id/action_addBookmarkFolderFragment_to_selectBookmarkFolderFragment"
+            app:destination="@id/selectBookmarkFolderFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectBookmarkFolderFragment"
+        android:name="org.mozilla.reference.browser.library.bookmarks.ui.selectfolder.SelectBookmarkFolderFragment"
+        tools:layout="@layout/fragment_select_bookmark_folder">
+
+    </fragment>
 </navigation>

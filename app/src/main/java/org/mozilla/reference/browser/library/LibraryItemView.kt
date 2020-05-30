@@ -53,7 +53,8 @@ class LibraryItemView @JvmOverloads constructor(
     val urlView: TextView
     val actionButton: ImageButton
 
-    private val iconView: ViewSwitcher
+    val iconView: ViewSwitcher
+
     private val favicon: ImageView
 
     init {
