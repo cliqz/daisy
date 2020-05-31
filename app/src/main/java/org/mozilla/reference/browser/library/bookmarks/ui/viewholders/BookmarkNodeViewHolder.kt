@@ -44,6 +44,7 @@ abstract class BookmarkNodeViewHolder(
                 BookmarkItemMenu.Item.OpenInNewTab -> interactor.onOpenInNormalTab(item)
                 BookmarkItemMenu.Item.OpenInPrivateTab -> interactor.onOpenInPrivateTab(item)
                 BookmarkItemMenu.Item.Delete -> interactor.onDelete(item)
+                BookmarkItemMenu.Item.Edit -> interactor.onEdit(item)
             }
         }
 

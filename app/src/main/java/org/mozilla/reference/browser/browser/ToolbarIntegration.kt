@@ -338,34 +338,36 @@ class ToolbarIntegration(
         }
     }
 
-    private suspend fun bookmarkTapped(session: Session) = withContext(Dispatchers.IO) {
-        val existing =
+    private suspend fun bookmarkTapped(session: Session) {
+        withContext(Dispatchers.IO) {
+            val existing =
                 bookmarksStorage.getBookmarksWithUrl(session.url).firstOrNull { it.url == session.url }
-        if (existing != null) {
-            bookmarksStorage.deleteNode(existing.guid)
-        } else {
-            // Save bookmark
-            bookmarksStorage.addItem(
-                parentGuid = 0.toString(),
-                url = session.url,
-                title = session.title,
-                position = null
-            )
+            if (existing != null) {
+                bookmarksStorage.deleteNode(existing.guid)
+            } else {
+                // Save bookmark
+                val guid = bookmarksStorage.addItem(
+                    parentGuid = 0.toString(),
+                    url = session.url,
+                    title = session.title,
+                    position = null
+                )
 
-            withContext(Dispatchers.Main) {
-                showBookmarkAddedSnackbar()
+                withContext(Dispatchers.Main) {
+                    showBookmarkAddedSnackbar(guid)
+                }
             }
         }
     }
 
-    private fun showBookmarkAddedSnackbar() {
+    private fun showBookmarkAddedSnackbar(guid: String) {
         DaisySnackbar.make(
             view = parentView,
             duration = DaisySnackbar.LENGTH_LONG
         )
             .setText(context.getString(R.string.bookmark_added_snackbar_text))
             .setAction(context.getString(R.string.bookmark_added_snackbar_edit_action)) {
-                openBookmarkEditFragment()
+                openBookmarkEditFragment(guid)
             }
             .show()
     }
@@ -375,8 +377,9 @@ class ToolbarIntegration(
         context.startActivity(intent)
     }
 
-    private fun openBookmarkEditFragment() {
-        // to-do go to bookmark edit fragment
+    private fun openBookmarkEditFragment(guid: String) {
+        val direction = BrowserFragmentDirections.actionBrowserFragmentToEditBookmarkFragment(guid)
+        navController.nav(R.id.browserFragment, direction)
     }
 
     private fun openHistoryFragment() {

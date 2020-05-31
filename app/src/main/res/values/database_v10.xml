@@ -10,5 +10,5 @@
     <string name="get_all_bookmarks" translatable="false">SELECT * FROM bookmarks</string>
     <string name="get_bookmark" translatable="false">SELECT * FROM bookmarks WHERE type=\'bookmark\' AND url=? LIMIT 1</string>
     <string name="search_bookmarks" translatable="false">SELECT * FROM bookmarks WHERE type=\'bookmark\' AND (url LIKE ? OR title LIKE ?)</string>
-    <string name="move_favorites_to_bookmarks_v10">INSERT INTO bookmarks (url, title , parent_id, type) SELECT urls.url, urls.title, 0, \'bookmark\' FROM urls WHERE favorite=1</string>
+    <string name="move_favorites_to_bookmarks_v10" translatable="false">INSERT INTO bookmarks (url, title , parent_id, type) SELECT urls.url, urls.title, 0, \'bookmark\' FROM urls WHERE favorite=1</string>
 </resources>

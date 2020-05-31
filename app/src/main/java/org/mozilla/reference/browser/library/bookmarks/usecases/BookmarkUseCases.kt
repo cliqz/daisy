@@ -6,6 +6,7 @@
 
 package org.mozilla.reference.browser.library.bookmarks.usecases
 
+import mozilla.components.concept.storage.BookmarkInfo
 import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.BookmarksStorage
 
@@ -41,9 +42,16 @@ class BookmarkUseCases(bookmarksStorage: BookmarksStorage) {
         }
     }
 
+    class EditBookmarkFolderUseCase(private val bookmarksStorage: BookmarksStorage) {
+        suspend operator fun invoke(guid: String, bookmarkInfo: BookmarkInfo) {
+            return bookmarksStorage.updateNode(guid, bookmarkInfo)
+        }
+    }
+
     val getBookmarks by lazy { GetBookmarksUseCase(bookmarksStorage) }
     val deleteBookmark by lazy { DeleteBookmarkUseCase(bookmarksStorage) }
     val deleteMultipleBookmarks by lazy { DeleteMultipleBookmarkUseCase(bookmarksStorage) }
     val searchBookmarks by lazy { SearchBookmarksUseCase(bookmarksStorage) }
     val addFolder by lazy { AddBookmarkFolderUseCase(bookmarksStorage) }
+    val editBookmark by lazy { EditBookmarkFolderUseCase(bookmarksStorage) }
 }

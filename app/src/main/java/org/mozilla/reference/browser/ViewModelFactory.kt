@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.mozilla.reference.browser.library.bookmarks.ui.BookmarkViewModel
 import org.mozilla.reference.browser.library.bookmarks.ui.addfolder.AddBookmarkFolderViewModel
+import org.mozilla.reference.browser.library.bookmarks.ui.edit.EditBookmarkViewModel
 import org.mozilla.reference.browser.library.bookmarks.ui.selectfolder.SelectBookmarkViewModel
 import org.mozilla.reference.browser.library.history.ui.HistoryViewModel
 import java.lang.IllegalArgumentException
@@ -32,6 +33,9 @@ class ViewModelFactory(private val applicationContext: BrowserApplication) : Vie
             }
             SelectBookmarkViewModel::class.java -> with(useCases) {
                 SelectBookmarkViewModel(bookmarkUseCases) as T
+            }
+            EditBookmarkViewModel::class.java -> with(useCases) {
+                EditBookmarkViewModel(bookmarkUseCases) as T
             }
             else -> throw IllegalArgumentException("Unknown model class $modelClass")
         }

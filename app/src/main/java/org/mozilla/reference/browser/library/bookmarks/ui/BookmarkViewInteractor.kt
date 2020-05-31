@@ -10,12 +10,14 @@ import mozilla.components.concept.storage.BookmarkNode
 import mozilla.components.concept.storage.BookmarkNodeType
 import org.mozilla.reference.browser.library.MultiSelectionInteractor
 
+@Suppress("TooManyFunctions")
 class BookmarkViewInteractor(
     private val bookmarkViewModel: BookmarkViewModel,
     private val openToBrowser: (items: Set<BookmarkNode>, private: Boolean) -> Unit,
     private val expandBookmarkFolder: (item: BookmarkNode) -> Unit,
     private val onBackPressed: () -> Boolean,
-    private val navigateToAddFolder: () -> Unit
+    private val navigateToAddFolder: () -> Unit,
+    private val navigateToEditBookmark: (item: BookmarkNode) -> Unit
 ) : MultiSelectionInteractor<BookmarkNode> {
 
     override fun open(items: Set<BookmarkNode>, newTab: Boolean, private: Boolean) {
@@ -52,6 +54,10 @@ class BookmarkViewInteractor(
 
     fun navigateToAddFolder() {
         navigateToAddFolder.invoke()
+    }
+
+    fun onEdit(item: BookmarkNode) {
+        navigateToEditBookmark.invoke(item)
     }
 
     fun onOpenInNormalTab(item: BookmarkNode) {

@@ -80,18 +80,21 @@ class AddBookmarkFolderFragment : Fragment(R.layout.fragment_edit_bookmark) {
 
         addBookmarkFolderViewModel.tree.observe(viewLifecycleOwner, Observer { tree ->
             sharedViewModel.selectedFolder = tree
+            bookmark_parent_folder_selector.text = sharedViewModel.selectedFolder!!.title
         })
     }
 
     override fun onResume() {
         super.onResume()
 
-        sharedViewModel.selectedFolder ?: addBookmarkFolderViewModel.fetchBookmarks(bookmarksRootFolder)
-
-        bookmark_parent_folder_selector.text = if (sharedViewModel.selectedFolder!!.guid == bookmarksRootFolder) {
-            getString(R.string.bookmarks_folder_root)
+        if (sharedViewModel.selectedFolder != null) {
+            bookmark_parent_folder_selector.text = if (sharedViewModel.selectedFolder!!.guid == bookmarksRootFolder) {
+                getString(R.string.bookmarks_folder_root)
+            } else {
+                sharedViewModel.selectedFolder!!.title
+            }
         } else {
-            sharedViewModel.selectedFolder!!.title
+            addBookmarkFolderViewModel.fetchBookmarks(bookmarksRootFolder)
         }
         bookmark_parent_folder_selector.setOnClickListener {
             nav(

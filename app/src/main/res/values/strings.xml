@@ -208,6 +208,8 @@
     <string name="bookmark_menu_delete_button">Delete</string>
     <string name="bookmarks_folder_root">Bookmarks</string>
     <string name="bookmark_add_folder_title">Add Folder</string>
+    <string name="bookmark_edit_folder_title">Edit Folder</string>
+    <string name="bookmark_edit_bookmark_title">Edit Bookmark</string>
     <string name="bookmark_edit_title_label">Title (Required)</string>
     <string name="bookmark_edit_url_label">Url</string>
     <string name="bookmark_edit_parent_folder_label">Choose Parent Folder</string>

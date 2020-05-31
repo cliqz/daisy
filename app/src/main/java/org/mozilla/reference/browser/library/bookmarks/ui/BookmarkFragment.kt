@@ -49,7 +49,8 @@ class BookmarkFragment @JvmOverloads constructor(
             ::openBookmarkItem,
             ::expandBookmarkFolder,
             ::onBackPressed,
-            ::navigateToAddFolder
+            ::navigateToAddFolder,
+            ::navigateToEditBookmark
         )
     }
 
@@ -115,6 +116,11 @@ class BookmarkFragment @JvmOverloads constructor(
     private fun navigateToAddFolder() {
         findNavController().nav(R.id.bookmarkFragment,
             BookmarkFragmentDirections.actionBookmarkFragmentToAddBookmarkFolderFragment())
+    }
+
+    fun navigateToEditBookmark(bookmarkNode: BookmarkNode) {
+        findNavController().nav(R.id.bookmarkFragment,
+            BookmarkFragmentDirections.actionBookmarkFragmentToEditBookmarkFragment(bookmarkNode.guid))
     }
 
     override fun onBackPressed(): Boolean {

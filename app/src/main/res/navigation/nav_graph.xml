@@ -97,6 +97,10 @@
             android:id="@+id/action_browserFragment_to_bookmarkFragment"
             app:destination="@id/bookmarkFragment" />
 
+        <action
+            android:id="@+id/action_browserFragment_to_editBookmarkFragment"
+            app:destination="@id/editBookmarkFragment" />
+
         <argument
             android:name="session_id"
             app:argType="string"
@@ -152,6 +156,10 @@
             android:id="@+id/action_bookmarkFragment_to_addBookmarkFolderFragment"
             app:destination="@id/addBookmarkFolderFragment" />
 
+        <action
+            android:id="@+id/action_bookmarkFragment_to_editBookmarkFragment"
+            app:destination="@id/editBookmarkFragment" />
+
         <argument
             android:name="currentRoot"
             app:argType="string" />
@@ -165,6 +173,21 @@
         <action
             android:id="@+id/action_addBookmarkFolderFragment_to_selectBookmarkFolderFragment"
             app:destination="@id/selectBookmarkFolderFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editBookmarkFragment"
+        android:name="org.mozilla.reference.browser.library.bookmarks.ui.edit.EditBookmarkFragment"
+        tools:layout="@layout/fragment_edit_bookmark">
+
+        <action
+            android:id="@+id/action_editBookmarkFragment_to_selectBookmarkFolderFragment"
+            app:destination="@id/selectBookmarkFolderFragment" />
+
+        <argument
+            android:name="guidToEdit"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
     <fragment
