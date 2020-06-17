@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.ext
 
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
@@ -19,6 +20,10 @@ import org.mozilla.reference.browser.Components
  */
 val Fragment.requireComponents: Components
     get() = requireContext().components
+
+fun Fragment.navController(): NavController {
+    return NavHostFragment.findNavController(this)
+}
 
 fun Fragment.nav(@IdRes id: Int?, directions: NavDirections) {
     NavHostFragment.findNavController(this).nav(id, directions)

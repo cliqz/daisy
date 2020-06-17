@@ -80,6 +80,14 @@ class HistoryView(
                 view.history_search_list.visibility = View.VISIBLE
                 historySearchAdapter.setData(historyViewModel.searchHistory(query))
             }
+
+            override fun confirm() {
+                // no-op
+            }
+
+            override fun add() {
+                // no-op
+            }
         })
         update(ViewMode.Normal, emptySet())
     }

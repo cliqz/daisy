@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -22,7 +23,9 @@ import org.mozilla.reference.browser.BrowserDirection
 import org.mozilla.reference.browser.R
 import org.mozilla.reference.browser.ViewModelFactory
 import org.mozilla.reference.browser.ext.application
+import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
+import org.mozilla.reference.browser.storage.HistoryDatabase.Companion.bookmarksRootFolder
 
 class BookmarkFragment @JvmOverloads constructor(
     private val initialBookmarkViewModel: BookmarkViewModel? = null
@@ -33,6 +36,8 @@ class BookmarkFragment @JvmOverloads constructor(
     private lateinit var bookmarkView: BookmarkView
     private lateinit var bookmarkInteractor: BookmarkViewInteractor
 
+    private val sharedViewModel: BookmarksSharedViewModel by activityViewModels()
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -42,7 +47,10 @@ class BookmarkFragment @JvmOverloads constructor(
         bookmarkInteractor = BookmarkViewInteractor(
             bookmarkViewModel,
             ::openBookmarkItem,
-            ::onBackPressed
+            ::expandBookmarkFolder,
+            ::onBackPressed,
+            ::navigateToAddFolder,
+            ::navigateToEditBookmark
         )
     }
 
@@ -54,6 +62,7 @@ class BookmarkFragment @JvmOverloads constructor(
                 newViewMode = bookmarkViewModel.viewMode,
                 newBookmarkNode = tree,
                 newSelectedItems = bookmarkViewModel.selectedItems.value!!)
+            sharedViewModel.selectedFolder = tree
         })
 
         bookmarkViewModel.selectedItems.observe(this, Observer { selectedItems ->
@@ -67,6 +76,15 @@ class BookmarkFragment @JvmOverloads constructor(
                 newSelectedItems = selectedItems,
                 newBookmarkNode = bookmarkViewModel.tree.value)
         })
+
+        val currentGuid = BookmarkFragmentArgs.fromBundle(requireArguments()).currentRoot.ifEmpty {
+            bookmarksRootFolder
+        }
+        loadRootFolder(currentGuid)
+    }
+
+    private fun loadRootFolder(currentGuid: String) {
+        bookmarkViewModel.fetchBookmarks(currentGuid)
     }
 
     override fun onCreateView(
@@ -88,6 +106,21 @@ class BookmarkFragment @JvmOverloads constructor(
                 private = private
             )
         }
+    }
+
+    private fun expandBookmarkFolder(folder: BookmarkNode) {
+        findNavController().nav(R.id.bookmarkFragment,
+            BookmarkFragmentDirections.actionBookmarkFragmentSelf(folder.guid))
+    }
+
+    private fun navigateToAddFolder() {
+        findNavController().nav(R.id.bookmarkFragment,
+            BookmarkFragmentDirections.actionBookmarkFragmentToAddBookmarkFolderFragment())
+    }
+
+    fun navigateToEditBookmark(bookmarkNode: BookmarkNode) {
+        findNavController().nav(R.id.bookmarkFragment,
+            BookmarkFragmentDirections.actionBookmarkFragmentToEditBookmarkFragment(bookmarkNode.guid))
     }
 
     override fun onBackPressed(): Boolean {

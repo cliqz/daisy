@@ -17,6 +17,7 @@ import org.mozilla.reference.browser.ext.nav
 import org.mozilla.reference.browser.ext.openToBrowserAndLoad
 import org.mozilla.reference.browser.settings.SettingsActivity
 import org.mozilla.reference.browser.settings.deletebrowsingdata.DeleteBrowsingData
+import org.mozilla.reference.browser.storage.HistoryDatabase.Companion.bookmarksRootFolder
 
 @Suppress("TooManyFunctions")
 interface FreshTabController {
@@ -91,7 +92,7 @@ class DefaultFreshTabController(
     }
 
     override fun handleBookmarksClicked() {
-        val direction = FreshTabFragmentDirections.actionFreshTabFragmentToBookmarkFragment()
+        val direction = FreshTabFragmentDirections.actionFreshTabFragmentToBookmarkFragment(bookmarksRootFolder)
         navController.nav(R.id.freshTabFragment, direction)
     }
 

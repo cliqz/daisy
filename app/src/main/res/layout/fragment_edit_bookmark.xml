@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <org.mozilla.reference.browser.library.LibraryToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?android:attr/windowBackground" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bookmark_title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:labelFor="@id/bookmark_title_edit"
+            android:text="@string/bookmark_edit_title_label"
+            android:textAllCaps="true"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="12sp" />
+
+        <org.mozilla.reference.browser.utils.ClearableEditText
+            android:id="@+id/bookmark_title_edit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="8dp"
+            android:ellipsize="none"
+            android:fadingEdgeLength="8dp"
+            android:inputType="textAutoComplete"
+            android:requiresFadingEdge="horizontal"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="15sp"
+            tools:text="Cliqz Search" />
+
+        <TextView
+            android:id="@+id/bookmark_url_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@id/bookmark_url_edit"
+            android:text="@string/bookmark_edit_url_label"
+            android:textAllCaps="true"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="12sp" />
+
+        <org.mozilla.reference.browser.utils.ClearableEditText
+            android:id="@+id/bookmark_url_edit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="8dp"
+            android:ellipsize="none"
+            android:fadingEdgeLength="8dp"
+            android:inputType="textUri"
+            android:requiresFadingEdge="horizontal"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="15sp"
+            tools:text="https://cliqz.com" />
+
+        <TextView
+            android:id="@+id/bookmark_parent_folder_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@id/bookmark_parent_folder_selector"
+            android:text="@string/bookmark_edit_parent_folder_label"
+            android:textAllCaps="true"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/bookmark_parent_folder_selector"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            android:drawablePadding="15dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/dark_grey_5"
+            android:textSize="16sp"
+            app:drawableEndCompat="@drawable/ic_next_level_icon"
+            app:drawableStartCompat="@drawable/ic_folder_icon"
+            app:drawableTint="@color/dark_grey_5"
+            tools:text="Bookmarks" />
+
+    </LinearLayout>
+</LinearLayout>

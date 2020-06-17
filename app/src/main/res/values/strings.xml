@@ -206,6 +206,16 @@
     <string name="bookmark_menu_open_in_new_tab_button">Open in New Tab</string>
     <string name="bookmark_menu_open_in_private_tab_button">Open in Private Tab</string>
     <string name="bookmark_menu_delete_button">Delete</string>
+    <string name="bookmarks_folder_root">Bookmarks</string>
+    <string name="bookmark_add_folder_title">Add Folder</string>
+    <string name="bookmark_edit_folder_title">Edit Folder</string>
+    <string name="bookmark_edit_bookmark_title">Edit Bookmark</string>
+    <string name="bookmark_edit_title_label">Title (Required)</string>
+    <string name="bookmark_edit_url_label">Url</string>
+    <string name="bookmark_edit_parent_folder_label">Choose Parent Folder</string>
+    <string name="bookmark_empty_title_error">Must have a title</string>
+    <string name="bookmark_add_folder">Add Folder</string>
+    <string name="bookmark_select_folder_title">Choose parent folder</string>
 
     <!-- Search Widget -->
     <string name="search_widget_text_long">Search or type web address</string>

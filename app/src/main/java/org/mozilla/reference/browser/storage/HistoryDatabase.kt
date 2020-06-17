@@ -649,7 +649,22 @@ class HistoryDatabase(context: Context) :
     }
 
     override suspend fun updateNode(guid: String, info: BookmarkInfo) {
-        // to-do
+        val db = dbHandler.database ?: return
+        val bookmarkValues = ContentValues().apply {
+            put(BookmarksTable.TITLE, info.title)
+            info.url?.let {
+                put(BookmarksTable.URL, it)
+            }
+            put(BookmarksTable.PARENT_ID, info.parentGuid)
+        }
+        db.beginTransaction(
+            transaction = {
+                db.update(BookmarksTable.TABLE_NAME, bookmarkValues, "${BookmarksTable.ID} = ?", arrayOf(guid))
+            },
+            catchBlock = {
+                Log.e("HistoryDatabase", "Error updating BookmarkNode with guid: $guid")
+            }
+        )
     }
 
     /**
@@ -817,6 +832,8 @@ class HistoryDatabase(context: Context) :
             db.update(UrlsTable.TABLE_NAME, domainValues, UrlsTable.ID + " = ?",
                 arrayOf(id.toString()))
         }
+
+        const val bookmarksRootFolder = 0.toString()
     }
 }
 

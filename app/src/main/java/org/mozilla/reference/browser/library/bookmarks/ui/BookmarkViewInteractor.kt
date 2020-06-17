@@ -7,16 +7,29 @@
 package org.mozilla.reference.browser.library.bookmarks.ui
 
 import mozilla.components.concept.storage.BookmarkNode
+import mozilla.components.concept.storage.BookmarkNodeType
 import org.mozilla.reference.browser.library.MultiSelectionInteractor
 
+@Suppress("TooManyFunctions")
 class BookmarkViewInteractor(
     private val bookmarkViewModel: BookmarkViewModel,
     private val openToBrowser: (items: Set<BookmarkNode>, private: Boolean) -> Unit,
-    private val onBackPressed: () -> Boolean
+    private val expandBookmarkFolder: (item: BookmarkNode) -> Unit,
+    private val onBackPressed: () -> Boolean,
+    private val navigateToAddFolder: () -> Unit,
+    private val navigateToEditBookmark: (item: BookmarkNode) -> Unit
 ) : MultiSelectionInteractor<BookmarkNode> {
 
     override fun open(items: Set<BookmarkNode>, newTab: Boolean, private: Boolean) {
-        openToBrowser.invoke(items, private)
+        when (items.first().type) {
+            BookmarkNodeType.ITEM -> {
+                openToBrowser.invoke(items, private)
+            }
+            BookmarkNodeType.FOLDER -> {
+                expandBookmarkFolder.invoke(items.first())
+            }
+            BookmarkNodeType.SEPARATOR -> throw IllegalStateException("Cannot open separators")
+        }
     }
 
     override fun select(item: BookmarkNode) {
@@ -37,6 +50,14 @@ class BookmarkViewInteractor(
             return true
         }
         return false
+    }
+
+    fun navigateToAddFolder() {
+        navigateToAddFolder.invoke()
+    }
+
+    fun onEdit(item: BookmarkNode) {
+        navigateToEditBookmark.invoke(item)
     }
 
     fun onOpenInNormalTab(item: BookmarkNode) {
