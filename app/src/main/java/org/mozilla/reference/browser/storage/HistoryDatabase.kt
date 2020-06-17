@@ -426,7 +426,6 @@ class HistoryDatabase(context: Context) :
                 historyValues.put(HistoryTable.URL_ID, urlId)
                 historyValues.put(HistoryTable.TIME, time)
                 historyID = db.insert(HistoryTable.TABLE_NAME, null, historyValues)
-                db.setTransactionSuccessful()
                 historyID
             },
             catchBlock = {
